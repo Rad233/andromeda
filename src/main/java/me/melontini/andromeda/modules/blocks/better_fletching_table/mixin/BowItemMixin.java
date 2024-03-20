@@ -1,6 +1,6 @@
 package me.melontini.andromeda.modules.blocks.better_fletching_table.mixin;
 
-import me.melontini.dark_matter.api.minecraft.data.NbtUtil;
+import me.melontini.dark_matter.api.data.nbt.NbtUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;

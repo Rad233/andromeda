@@ -1,11 +1,11 @@
 package me.melontini.andromeda.modules.mechanics.throwable_items;
 
 import me.melontini.andromeda.common.conflicts.CommonRegistries;
-import me.melontini.andromeda.common.data.ServerResourceReloadersEvent;
 import me.melontini.andromeda.common.registries.Keeper;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.DefaultBehaviors;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager;
 import me.melontini.dark_matter.api.content.RegistryUtil;
+import me.melontini.dark_matter.api.data.loading.ServerReloadersEvent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -33,6 +33,7 @@ import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 
 import static me.melontini.andromeda.common.registries.Common.id;
+import static me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager.RELOADER;
 import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public class Main {
@@ -67,9 +68,9 @@ public class Main {
     };
 
     Main() {
-        FLYING_ITEM.init(RegistryUtil.createEntityType(id("flying_item"), FabricEntityTypeBuilder.<FlyingItemEntity>create(SpawnGroup.MISC, FlyingItemEntity::new)
+        FLYING_ITEM.init(RegistryUtil.register(CommonRegistries.entityTypes(), id("flying_item"), () -> FabricEntityTypeBuilder.<FlyingItemEntity>create(SpawnGroup.MISC, FlyingItemEntity::new)
                 .dimensions(new EntityDimensions(0.25F, 0.25F, true))
-                .trackRangeChunks(4).trackedUpdateRate(10)));
+                .trackRangeChunks(4).trackedUpdateRate(10).build()));
 
         ITEM_CONTEXT.init(LootContextTypes.register("andromeda:throwable_items", builder -> builder
                 .require(LootContextParameters.DIRECT_KILLER_ENTITY)
@@ -83,17 +84,17 @@ public class Main {
         BRICKED = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("bricked"));
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            var packet = sendItemsS2CPacket(ItemBehaviorManager.get(server));
+            var packet = sendItemsS2CPacket(server.dm$getReloader(RELOADER));
             sender.sendPacket(ITEMS_WITH_BEHAVIORS, packet);
         });
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
-            var packet = sendItemsS2CPacket(ItemBehaviorManager.get(server));
+            var packet = sendItemsS2CPacket(server.dm$getReloader(RELOADER));
             for (ServerPlayerEntity player : PlayerLookup.all(server)) {
                 ServerPlayNetworking.send(player, ITEMS_WITH_BEHAVIORS, packet);
             }
         });
 
-        ServerResourceReloadersEvent.EVENT.register(context -> context.register(new ItemBehaviorManager()));
+        ServerReloadersEvent.EVENT.register(context -> context.register(new ItemBehaviorManager()));
 
         DefaultBehaviors.init();
     }

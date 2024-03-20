@@ -1,6 +1,7 @@
 package me.melontini.andromeda.modules.items.infinite_totem;
 
 import me.melontini.andromeda.common.conflicts.CommonItemGroups;
+import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.common.registries.AndromedaItemGroup;
 import me.melontini.andromeda.common.registries.Keeper;
 import me.melontini.dark_matter.api.content.ContentBuilder;
@@ -28,7 +29,7 @@ public class Main {
                 .create(id("infinite_totem"), () -> new Item(new FabricItemSettings().maxCount(1).rarity(Rarity.EPIC)))
                 .itemGroup(CommonItemGroups.combat()).build());
 
-        KNOCKOFF_TOTEM_PARTICLE.init(RegistryUtil.create(id("knockoff_totem_particles"), "particle_type", FabricParticleTypes::simple));
+        KNOCKOFF_TOTEM_PARTICLE.init(RegistryUtil.register(CommonRegistries.particleTypes(), id("knockoff_totem_particles"), FabricParticleTypes::simple));
 
         AndromedaItemGroup.accept(acceptor -> acceptor.keeper(module, INFINITE_TOTEM));
     }

@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.events.Event;
-import me.melontini.dark_matter.api.minecraft.data.ExtraCodecs;
+import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
 import net.minecraft.item.Item;
 
 import java.util.Collections;

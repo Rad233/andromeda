@@ -1,6 +1,5 @@
 package me.melontini.andromeda.modules.mechanics.throwable_items;
 
-import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.events.Event;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.events.EventType;
 import net.minecraft.block.entity.BlockEntity;
@@ -23,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager.RELOADER;
+
 public class FlyingItemEntity extends ThrownItemEntity {
 
     private final List<Event> behaviors;
@@ -40,7 +41,7 @@ public class FlyingItemEntity extends ThrownItemEntity {
             this.behaviors = Collections.emptyList();
             return;
         }
-        this.behaviors = ItemBehaviorManager.get(world.getServer()).getBehaviors(getItem().getItem(), EventType.TICK);
+        this.behaviors = world.getServer().dm$getReloader(RELOADER).getBehaviors(getItem().getItem(), EventType.TICK);
     }
 
     public FlyingItemEntity(ItemStack stack, Entity entity, World world) {
@@ -51,7 +52,7 @@ public class FlyingItemEntity extends ThrownItemEntity {
             this.behaviors = Collections.emptyList();
             return;
         }
-        this.behaviors = ItemBehaviorManager.get(world.getServer()).getBehaviors(getItem().getItem(), EventType.TICK);
+        this.behaviors = world.getServer().dm$getReloader(RELOADER).getBehaviors(getItem().getItem(), EventType.TICK);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class FlyingItemEntity extends ThrownItemEntity {
 
     public void onThrow() {
         if (this.world.isClient()) return;
-        var events = ItemBehaviorManager.get(world.getServer()).getBehaviors(getItem().getItem(), EventType.THROW);
+        var events = world.getServer().dm$getReloader(RELOADER).getBehaviors(getItem().getItem(), EventType.THROW);
         if (events.isEmpty()) return;
 
         var context = makeContext(null);
@@ -77,7 +78,7 @@ public class FlyingItemEntity extends ThrownItemEntity {
     @Override
     protected void onCollision(HitResult hitResult) {
         if (!this.world.isClient()) {
-            var manager = ItemBehaviorManager.get(world.getServer());
+            var manager = world.getServer().dm$getReloader(RELOADER);
 
             List<Event> events = switch (hitResult.getType()) {
                 case BLOCK -> manager.getBehaviors(getItem().getItem(), EventType.BLOCK);

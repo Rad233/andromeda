@@ -89,9 +89,9 @@ public class Main {
                         () -> new PouchItem(PouchEntity.Type.CUSTOM, new FabricItemSettings().maxCount(16)))
                 .itemGroup(CommonItemGroups.tools()).register(() -> config.specialPouch).build());
 
-        POUCH.init(RegistryUtil.createEntityType(id("pouch"), FabricEntityTypeBuilder.<PouchEntity>create(SpawnGroup.MISC, PouchEntity::new)
+        POUCH.init(RegistryUtil.register(CommonRegistries.entityTypes(), id("pouch"), () -> FabricEntityTypeBuilder.<PouchEntity>create(SpawnGroup.MISC, PouchEntity::new)
                 .dimensions(new EntityDimensions(0.25F, 0.25F, true))
-                .trackRangeChunks(4).trackedUpdateRate(10)));
+                .trackRangeChunks(4).trackedUpdateRate(10).build()));
 
         Trades.register();
 

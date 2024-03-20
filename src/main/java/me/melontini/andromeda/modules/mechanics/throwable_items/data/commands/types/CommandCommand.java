@@ -10,7 +10,7 @@ import me.melontini.andromeda.modules.mechanics.throwable_items.data.commands.Co
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.commands.CommandType;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.commands.Selector;
 import me.melontini.andromeda.util.Debug;
-import me.melontini.dark_matter.api.minecraft.data.ExtraCodecs;
+import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
 import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.server.command.ServerCommandSource;
 

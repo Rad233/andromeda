@@ -14,7 +14,7 @@ import me.melontini.andromeda.modules.items.minecart_block_picking.MinecartBlock
 import me.melontini.andromeda.modules.items.minecart_block_picking.PickUpBehaviorHandler;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.content.ContentBuilder;
-import me.melontini.dark_matter.api.minecraft.data.NbtBuilder;
+import me.melontini.dark_matter.api.data.nbt.NbtBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NoteBlock;

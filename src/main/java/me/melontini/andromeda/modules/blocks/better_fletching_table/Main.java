@@ -23,7 +23,7 @@ public class Main {
     public static final Keeper<ScreenHandlerType<FletchingScreenHandler>> FLETCHING = Keeper.create();
 
     Main(BetterFletchingTable module) {
-        FLETCHING.init(RegistryUtil.createScreenHandler(id("fletching"), () -> FletchingScreenHandler::new));
+        FLETCHING.init(RegistryUtil.register(CommonRegistries.screenHandlers(), id("fletching"), RegistryUtil.screenHandlerType(FletchingScreenHandler::new)));
 
         Set<Item> tightable = Sets.newHashSet(Items.BOW, Items.CROSSBOW);
 

@@ -95,7 +95,7 @@ public class DefaultBehaviors {
             world.playSound(null, fie.getBlockPos(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
         }), Items.FIRE_CHARGE);
 
-        ItemBehaviorManager.register(Event.of(EventType.BLOCK, context -> {
+        ItemBehaviorManager.register(Event.of(EventType.ENTITY, context -> {
             var world = context.world(); var fie = context.fie();
             EntityHitResult result = (EntityHitResult) context.hitResult();
             Entity entity = result.getEntity();

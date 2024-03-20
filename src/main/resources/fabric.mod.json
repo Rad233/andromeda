@@ -58,9 +58,6 @@
     "loom:injected_interfaces": {
       "net/minecraft/class_1937": [
         "me/melontini/andromeda/common/config/ScopedConfigs\u0024WorldExtension"
-      ],
-      "net/minecraft/server/MinecraftServer": [
-        "me/melontini/andromeda/common/data/DataPackContentsAccessor"
       ]
     }
   }

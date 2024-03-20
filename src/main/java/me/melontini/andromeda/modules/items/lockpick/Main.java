@@ -1,6 +1,7 @@
 package me.melontini.andromeda.modules.items.lockpick;
 
 import me.melontini.andromeda.common.conflicts.CommonItemGroups;
+import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.common.registries.AndromedaItemGroup;
 import me.melontini.dark_matter.api.content.ContentBuilder;
 import me.melontini.dark_matter.api.content.RegistryUtil;
@@ -14,8 +15,8 @@ public class Main {
         LockpickItem.INSTANCE.init(ContentBuilder.ItemBuilder
                 .create(id("lockpick"), () -> new LockpickItem(new FabricItemSettings().maxCount(16)))
                 .itemGroup(CommonItemGroups.tools()).build());
-        MerchantInventoryScreenHandler.INSTANCE.init(RegistryUtil.createScreenHandler(config.villagerInventory,
-                id("merchant_inventory"), () -> MerchantInventoryScreenHandler::new));
+        MerchantInventoryScreenHandler.INSTANCE.init(RegistryUtil.register(config.villagerInventory, CommonRegistries.screenHandlers(),
+                id("merchant_inventory"), RegistryUtil.screenHandlerType(MerchantInventoryScreenHandler::new)));
 
         AndromedaItemGroup.accept(acceptor -> acceptor.keeper(module, LockpickItem.INSTANCE));
     }

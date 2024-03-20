@@ -8,8 +8,9 @@ import com.google.gson.JsonObject;
 import lombok.CustomLog;
 import me.melontini.andromeda.base.Bootstrap;
 import me.melontini.andromeda.util.CommonValues;
-import me.melontini.dark_matter.api.base.util.classes.ThrowingRunnable;
+import me.melontini.dark_matter.api.base.util.functions.ThrowingRunnable;
 import me.melontini.dark_matter.api.crash_handler.Prop;
+import me.melontini.dark_matter.api.crash_handler.Props;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -95,10 +96,10 @@ public class AndromedaException extends RuntimeException {
         private static final Map<String, Consumer<Builder>> DEFAULT_KEYS = Map.of(
                 "bootstrap_status", b -> b.add("bootstrap_status", Bootstrap.Status.get()),
                 "platform", b -> b.add("platform", CommonValues.platform()),
-                prop(Prop.ENVIRONMENT), b -> b.add(Prop.ENVIRONMENT),
-                prop(Prop.OS), b -> b.add(Prop.OS),
-                prop(Prop.JAVA_VERSION), b -> b.add(Prop.JAVA_VERSION),
-                prop(Prop.JAVA_VENDOR), b -> b.add(Prop.JAVA_VENDOR)
+                prop(Props.ENVIRONMENT), b -> b.add(Props.ENVIRONMENT),
+                prop(Props.OS), b -> b.add(Props.OS),
+                prop(Props.JAVA_VERSION), b -> b.add(Props.JAVA_VERSION),
+                prop(Props.JAVA_VENDOR), b -> b.add(Props.JAVA_VENDOR)
         );
 
         private static String prop(Prop prop) {

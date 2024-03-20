@@ -6,17 +6,16 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.melontini.andromeda.common.conflicts.CommonRegistries;
-import me.melontini.andromeda.common.data.ServerResourceReloadersEvent;
 import me.melontini.andromeda.common.registries.Common;
 import me.melontini.andromeda.common.util.JsonDataLoader;
-import me.melontini.dark_matter.api.base.util.MakeSure;
-import me.melontini.dark_matter.api.minecraft.data.ExtraCodecs;
+import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
+import me.melontini.dark_matter.api.data.loading.ReloaderType;
+import me.melontini.dark_matter.api.data.loading.ServerReloadersEvent;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.WeightedList;
 import net.minecraft.util.profiler.Profiler;
@@ -42,22 +41,18 @@ public record EggProcessingData(Item item, WeightedList<Entry> entity, int time)
         ).apply(data, Entry::new));
     }
 
-    public static final Identifier RELOADER_ID = Common.id("egg_processing");
+    public static final ReloaderType<Reloader> RELOADER = ReloaderType.create(Common.id("egg_processing"));
 
     public static void init() {
-        ServerResourceReloadersEvent.EVENT.register(context -> context.register(new Reloader(RELOADER_ID)));
-    }
-
-    public static EggProcessingData get(MinecraftServer server, Item item) {
-        return MakeSure.notNull(server).<EggProcessingData.Reloader>am$getReloader(EggProcessingData.RELOADER_ID).get(item);
+        ServerReloadersEvent.EVENT.register(context -> context.register(new Reloader()));
     }
 
     public static class Reloader extends JsonDataLoader {
 
         private Map<Item, EggProcessingData> map;
 
-        protected Reloader(Identifier id) {
-            super(id);
+        protected Reloader() {
+            super(RELOADER.identifier());
         }
 
         public EggProcessingData get(Item item) {

@@ -11,6 +11,7 @@ import me.melontini.andromeda.modules.mechanics.throwable_items.data.events.Even
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.events.EventType;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.base.util.Utilities;
+import me.melontini.dark_matter.api.data.loading.ReloaderType;
 import net.minecraft.item.Item;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.MinecraftServer;
@@ -24,18 +25,18 @@ import static me.melontini.andromeda.common.registries.Common.id;
 @CustomLog
 public class ItemBehaviorManager extends JsonDataLoader {
 
-    public static final Identifier RELOADER_ID = id("item_throw_behaviors");
+    public static final ReloaderType<ItemBehaviorManager> RELOADER = ReloaderType.create(id("item_throw_behaviors"));
 
     public static ItemBehaviorManager get(MinecraftServer server) {
-        return MakeSure.notNull(server).am$getReloader(RELOADER_ID);
+        return MakeSure.notNull(server).dm$getReloader(RELOADER);
     }
 
     public ItemBehaviorManager() {
-        super(RELOADER_ID);
+        super(RELOADER.identifier());
     }
 
     private final Map<Item, Holder> itemBehaviors = new IdentityHashMap<>();
-    private final Object2IntOpenHashMap<Item> customCooldowns = Utilities.consume(new Object2IntOpenHashMap<>(), map -> {
+    private final Object2IntOpenHashMap<Item> customCooldowns = Utilities.supply(new Object2IntOpenHashMap<>(), map -> {
         map.defaultReturnValue(50);
     });
     private final Set<Item> overrideVanilla = new HashSet<>();

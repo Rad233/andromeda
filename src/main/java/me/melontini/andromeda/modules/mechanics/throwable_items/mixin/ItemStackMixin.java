@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager.RELOADER;
+
 @Mixin(ItemStack.class)
 abstract class ItemStackMixin {
 
@@ -30,7 +32,7 @@ abstract class ItemStackMixin {
     private void andromeda$throwableBehavior(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir) {
         if (world.isClient()) return;
 
-        var manager = ItemBehaviorManager.get(world.getServer());
+        var manager = world.getServer().dm$getReloader(RELOADER);
         if (manager.hasBehaviors(getItem()) && manager.overridesVanilla(getItem())) {
             if (andromeda$runBehaviors(world, manager, user)) {
                 cir.setReturnValue(TypedActionResult.success((ItemStack) (Object) this));
@@ -42,7 +44,7 @@ abstract class ItemStackMixin {
     private TypedActionResult<ItemStack> andromeda$throwableBehavior(TypedActionResult<ItemStack> original, World world, PlayerEntity user, Hand hand) {
         if (world.isClient()) return original;
 
-        var manager = ItemBehaviorManager.get(world.getServer());
+        var manager = world.getServer().dm$getReloader(RELOADER);
         if (original.getResult() == ActionResult.PASS && manager.hasBehaviors(getItem()) && !manager.overridesVanilla(getItem())) {
             if (andromeda$runBehaviors(world, manager, user)) {
                 return TypedActionResult.success((ItemStack) (Object) this);

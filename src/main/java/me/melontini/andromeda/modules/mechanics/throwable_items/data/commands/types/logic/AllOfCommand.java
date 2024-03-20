@@ -8,7 +8,7 @@ import me.melontini.andromeda.common.util.MiscUtil;
 import me.melontini.andromeda.modules.mechanics.throwable_items.Context;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.commands.Command;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.commands.CommandType;
-import me.melontini.dark_matter.api.minecraft.data.ExtraCodecs;
+import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
 import net.minecraft.loot.condition.LootCondition;
 
 import java.util.List;

@@ -4,8 +4,8 @@ import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.common.util.ServerHelper;
 import me.melontini.andromeda.modules.blocks.incubator.data.EggProcessingData;
 import me.melontini.dark_matter.api.base.util.MakeSure;
-import me.melontini.dark_matter.api.base.util.MathStuff;
-import me.melontini.dark_matter.api.minecraft.data.NbtUtil;
+import me.melontini.dark_matter.api.base.util.MathUtil;
+import me.melontini.dark_matter.api.data.nbt.NbtUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
@@ -60,9 +60,9 @@ public class IncubatorBlockEntity extends BlockEntity implements SidedInventory 
         if (world.isClient()) return;
         ItemStack stack = this.inventory.get(0);
         if (!stack.isEmpty() && this.processingTime == -1) {
-            EggProcessingData data = EggProcessingData.get(world.getServer(), stack.getItem());
+            EggProcessingData data = world.getServer().dm$getReloader(EggProcessingData.RELOADER).get(stack.getItem());
             if (data != null) {
-                this.processingTime = module.config().randomness ? (data.time() + MathStuff.nextInt(data.time() / -3, data.time() / 3)) : data.time();
+                this.processingTime = module.config().randomness ? (data.time() + MathUtil.nextInt(data.time() / -3, data.time() / 3)) : data.time();
                 this.update(state);
             }
         } else if (stack.isEmpty() && this.processingTime != -1) {
@@ -74,7 +74,7 @@ public class IncubatorBlockEntity extends BlockEntity implements SidedInventory 
     }
 
     private void spawnResult(ItemStack stack, ServerWorld world, BlockState state) {
-        EggProcessingData data = EggProcessingData.get(world.getServer(), stack.getItem());
+        EggProcessingData data = world.getServer().dm$getReloader(EggProcessingData.RELOADER).get(stack.getItem());
         if (data != null) {
             EggProcessingData.Entry entry = data.entity().shuffle().stream().findFirst().orElseThrow();
             Entity entity = entry.type().create(world);
@@ -118,8 +118,8 @@ public class IncubatorBlockEntity extends BlockEntity implements SidedInventory 
         if (isLitCampfire(state)) return;
 
         if (world.isClient && world.random.nextInt(4) == 0) {
-            double i = MathStuff.threadRandom().nextDouble(0.6) - 0.3;
-            double j = MathStuff.threadRandom().nextDouble(0.6) - 0.3;
+            double i = MathUtil.threadRandom().nextDouble(0.6) - 0.3;
+            double j = MathUtil.threadRandom().nextDouble(0.6) - 0.3;
             world.addParticle(ParticleTypes.SMOKE, (pos.getX() + 0.5) + i, pos.getY() + 0.5, (pos.getZ() + 0.5) + j, 0F, 0.07F, 0F);
             return;
         }
@@ -241,7 +241,7 @@ public class IncubatorBlockEntity extends BlockEntity implements SidedInventory 
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return dir != MakeSure.notNull(world).getBlockState(this.pos).get(IncubatorBlock.FACING) && EggProcessingData.get(ServerHelper.getContext(), stack.getItem()) != null;
+        return dir != MakeSure.notNull(world).getBlockState(this.pos).get(IncubatorBlock.FACING) && ServerHelper.getContext().dm$getReloader(EggProcessingData.RELOADER).get(stack.getItem()) != null;
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.util.mixin.ErrorHandler;
 import me.melontini.dark_matter.api.base.config.ConfigManager;
+import me.melontini.dark_matter.api.base.util.Context;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.util.*;
@@ -26,8 +27,8 @@ public class Debug {
     }
 
     public static void load() {
-        CONFIG = MANAGER.load(FabricLoader.getInstance().getConfigDir());
-        MANAGER.save(FabricLoader.getInstance().getConfigDir(), CONFIG);
+        CONFIG = MANAGER.load(FabricLoader.getInstance().getConfigDir(), Context.of());
+        MANAGER.save(FabricLoader.getInstance().getConfigDir(), CONFIG, Context.of());
     }
 
     @Getter

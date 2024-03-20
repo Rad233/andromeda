@@ -7,12 +7,10 @@ import me.melontini.andromeda.base.AndromedaConfig;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.events.BlockadesEvent;
 import me.melontini.andromeda.base.util.Promise;
-import me.melontini.andromeda.common.client.config.AutoConfigScreen;
 import me.melontini.andromeda.common.client.config.FeatureBlockade;
 import me.melontini.andromeda.common.registries.AndromedaItemGroup;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
-import me.melontini.dark_matter.api.base.util.Support;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,7 +48,6 @@ public class AndromedaClient {
     }
 
     public void onInitializeClient(ModuleManager manager) {
-        Support.run("cloth-config", () -> AutoConfigScreen::register);
         if (!AndromedaConfig.get().sideOnlyMode) ClientSideNetworking.register();
         else {
             manager.all().stream().map(Promise::get).forEach(module -> {
