@@ -5,7 +5,7 @@ import me.melontini.andromeda.common.registries.Keeper;
 import me.melontini.andromeda.modules.entities.minecarts.entities.AnvilMinecartEntity;
 import me.melontini.andromeda.modules.entities.minecarts.entities.JukeboxMinecartEntity;
 import me.melontini.andromeda.modules.entities.minecarts.entities.NoteBlockMinecartEntity;
-import me.melontini.dark_matter.api.content.RegistryUtil;
+import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;

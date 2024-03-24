@@ -11,6 +11,7 @@ import me.melontini.andromeda.common.client.config.FeatureBlockade;
 import me.melontini.andromeda.common.registries.AndromedaItemGroup;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
+import me.melontini.dark_matter.api.item_group.ItemGroupAnimaton;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -62,7 +63,7 @@ public class AndromedaClient {
         BlockadesEvent.BUS.invoker().explain(FeatureBlockade.get());
 
         ResourceManagerHelper.registerBuiltinResourcePack(id("dark"), CommonValues.mod(), ResourcePackActivationType.NORMAL);
-        AndromedaItemGroup.GROUP.dm$setIconAnimation((group, context, itemX, itemY, selected, isTopRow) -> {
+        ItemGroupAnimaton.setIconAnimation(AndromedaItemGroup.GROUP, (group, context, itemX, itemY, selected, isTopRow) -> {
             try {
                 if (!animate) return;
                 drawTexture(context.getMatrices(), itemX + 8, itemY + 8, stack -> {
