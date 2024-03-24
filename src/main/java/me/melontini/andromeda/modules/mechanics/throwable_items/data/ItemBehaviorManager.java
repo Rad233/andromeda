@@ -2,13 +2,10 @@ package me.melontini.andromeda.modules.mechanics.throwable_items.data;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import lombok.CustomLog;
 import lombok.Getter;
 import me.melontini.andromeda.common.util.JsonDataLoader;
-import me.melontini.andromeda.modules.mechanics.throwable_items.data.events.Event;
-import me.melontini.andromeda.modules.mechanics.throwable_items.data.events.EventType;
+import me.melontini.andromeda.modules.mechanics.throwable_items.ItemBehavior;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.base.util.Utilities;
 import me.melontini.dark_matter.api.data.loading.ReloaderType;
@@ -22,7 +19,6 @@ import java.util.*;
 
 import static me.melontini.andromeda.common.registries.Common.id;
 
-@CustomLog
 public class ItemBehaviorManager extends JsonDataLoader {
 
     public static final ReloaderType<ItemBehaviorManager> RELOADER = ReloaderType.create(id("item_throw_behaviors"));
@@ -44,31 +40,39 @@ public class ItemBehaviorManager extends JsonDataLoader {
 
     private static final Map<Item, Holder> STATIC = new IdentityHashMap<>();
 
-    public static void register(Event behavior, Item... items) {
+    public static void register(ItemBehavior behavior, Item... items) {
         register(behavior, Arrays.asList(items));
     }
 
-    public static void register(Event behavior, Collection<Item> items) {
+    public static void register(ItemBehavior behavior, Collection<Item> items) {
         for (Item item : items) {
             Holder holder = STATIC.computeIfAbsent(item, Holder::new);
-            holder.addBehavior(behavior);
+            holder.addBehavior(behavior, true);
         }
     }
 
-    public List<Event> getBehaviors(Item item, EventType type) {
+    public List<ItemBehavior> getBehaviors(Item item) {
         Holder holder = itemBehaviors.get(item);
         if (holder == null) return Collections.emptyList();
-        return Collections.unmodifiableList(holder.behaviors.getOrDefault(type, Collections.emptyList()));
+        return Collections.unmodifiableList(holder.behaviors);
     }
 
-    public void addBehavior(Item item, Event behavior) {
+    public void addBehavior(Item item, ItemBehavior behavior, boolean complement) {
         if (disabled.contains(item)) return;
 
         Holder holder = itemBehaviors.computeIfAbsent(item, Holder::new);
-        holder.addBehavior(behavior);
+        holder.addBehavior(behavior, complement);
     }
 
-    public void addBehaviors(Event behavior, Item... items) {
+    public void addBehavior(Item item, ItemBehavior behavior) {
+        addBehavior(item, behavior, true);
+    }
+
+    public void addBehaviors(ItemBehavior behavior, boolean complement, Item... items) {
+        for (Item item : items) addBehavior(item, behavior, complement);
+    }
+
+    public void addBehaviors(ItemBehavior behavior, Item... items) {
         for (Item item : items) addBehavior(item, behavior);
     }
 
@@ -95,7 +99,6 @@ public class ItemBehaviorManager extends JsonDataLoader {
     public void overrideVanilla(Item item) {
         overrideVanilla.add(item);
     }
-
     public boolean overridesVanilla(Item item) {
         return overrideVanilla.contains(item);
     }
@@ -103,59 +106,51 @@ public class ItemBehaviorManager extends JsonDataLoader {
     public void addCustomCooldown(Item item, int cooldown) {
         customCooldowns.putIfAbsent(item, cooldown);
     }
-
     public void replaceCustomCooldown(Item item, int cooldown) {
         customCooldowns.put(item, cooldown);
     }
-
     public int getCooldown(Item item) {
         return customCooldowns.getInt(item);
     }
 
     @Override
-    protected void apply(Map<Identifier, JsonElement> prepared, ResourceManager manager, Profiler profiler) {
+    protected void apply(Map<Identifier, JsonElement> data, ResourceManager manager, Profiler profiler) {
         this.clear();
-        STATIC.forEach((item, holder) -> this.itemBehaviors.put(item, new Holder(item, holder.behaviors)));
+        itemBehaviors.putAll(STATIC);
 
-        Maps.transformValues(prepared, input -> ItemBehaviorData.CODEC.parse(JsonOps.INSTANCE, input).getOrThrow(false, string -> {
-            throw new RuntimeException(string);
-        })).forEach((id, data) -> {
-            if (data.items().isEmpty()) return;
+        Maps.transformValues(data, input -> ItemBehaviorData.create(input.getAsJsonObject())).forEach((id, behaviorData) -> {
+            if (behaviorData.items().isEmpty()) return;
 
-            for (Item item : data.items()) {
-                if (this.disabled.contains(item)) continue;
-
-                if (data.disabled()) {
+            for (Item item : behaviorData.items()) {
+                if (behaviorData.disabled()) {
                     this.disable(item);
                     continue;
                 }
 
-                for (Event event : data.events()) {
-                    this.addBehavior(item, event);
-                }
-                if (data.override_vanilla()) this.overrideVanilla(item);
+                this.addBehavior(item, ItemBehaviorAdder.dataPack(behaviorData), behaviorData.complement());
+                if (behaviorData.override_vanilla()) this.overrideVanilla(item);
 
-                data.cooldown().ifPresent(integer -> this.addCustomCooldown(item, integer));
+                if (behaviorData.cooldown() != 50) this.addCustomCooldown(item, behaviorData.cooldown());
             }
         });
     }
 
     private static class Holder {
-        final Map<EventType, List<Event>> behaviors;
+        final List<ItemBehavior> behaviors = new ArrayList<>();
         @Getter
         private final Item item;
+        private boolean locked;
 
         public Holder(Item item) {
-            this(item, Collections.emptyMap());
-        }
-
-        public Holder(Item item, Map<EventType, List<Event>> behaviors) {
             this.item = item;
-            this.behaviors = new HashMap<>(behaviors);
         }
 
-        public void addBehavior(Event behavior) {
-            this.behaviors.computeIfAbsent(behavior.type(), type -> new ArrayList<>()).add(behavior);
+        public void addBehavior(ItemBehavior behavior, boolean complement) {
+            if (!this.locked) {
+                if (!complement) this.behaviors.clear();
+                this.behaviors.add(behavior);
+                if (!complement) this.locked = true;
+            }
         }
     }
 }

@@ -52,7 +52,6 @@ abstract class ZombieEntityMixin extends HostileEntity implements ItemThrowerMob
 
         var entity = andromeda$getFlyingItemEntity(target);
         world.spawnEntity(entity);
-        entity.onThrow();
         if (MathUtil.threadRandom().nextBoolean())
             this.andromeda$cooldown += Math.max(MathUtil.nextInt((int) (this.distanceTo(target) * 28) / 2, (int) (this.distanceTo(target) * 28)), world.getServer().dm$getReloader(RELOADER).getCooldown(this.getMainHandStack().getItem()));
         this.getMainHandStack().decrement(1);
