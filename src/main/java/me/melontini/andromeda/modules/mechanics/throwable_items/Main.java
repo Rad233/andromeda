@@ -4,6 +4,7 @@ import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.common.registries.Keeper;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.DefaultBehaviors;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager;
+import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemPlopEffect;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ParticleCommand;
 import me.melontini.commander.command.CommandType;
 import me.melontini.commander.data.types.CommandTypes;
@@ -59,6 +60,7 @@ public class Main {
 
     public static final Keeper<LootContextType> CONTEXT_TYPE = Keeper.create();
     public static final Keeper<CommandType> PARTICLE_COMMAND = Keeper.create();
+    public static final Keeper<CommandType> ITEM_PLOP_COMMAND = Keeper.create();
 
     Main() {
         FLYING_ITEM.init(RegistryUtil.register(CommonRegistries.entityTypes(), id("flying_item"), () -> FabricEntityTypeBuilder.<FlyingItemEntity>create(SpawnGroup.MISC, FlyingItemEntity::new)
@@ -73,6 +75,7 @@ public class Main {
                 .allow(LootContextParameters.THIS_ENTITY).allow(LootContextParameters.BLOCK_STATE)
                 .allow(LootContextParameters.BLOCK_ENTITY)));
         PARTICLE_COMMAND.init(CommandTypes.register(id("particles"), ParticleCommand.CODEC));
+        ITEM_PLOP_COMMAND.init(CommandTypes.register(id("item_plop"), ItemPlopEffect.CODEC));
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             var packet = sendItemsS2CPacket(server.dm$getReloader(RELOADER));
