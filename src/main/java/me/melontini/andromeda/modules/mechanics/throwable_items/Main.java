@@ -4,6 +4,9 @@ import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.common.registries.Keeper;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.DefaultBehaviors;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager;
+import me.melontini.andromeda.modules.mechanics.throwable_items.data.ParticleCommand;
+import me.melontini.commander.command.CommandType;
+import me.melontini.commander.data.types.CommandTypes;
 import me.melontini.dark_matter.api.data.loading.ServerReloadersEvent;
 import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -20,6 +23,9 @@ import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootContextType;
+import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -51,12 +57,22 @@ public class Main {
         }
     };
 
+    public static final Keeper<LootContextType> CONTEXT_TYPE = Keeper.create();
+    public static final Keeper<CommandType> PARTICLE_COMMAND = Keeper.create();
+
     Main() {
         FLYING_ITEM.init(RegistryUtil.register(CommonRegistries.entityTypes(), id("flying_item"), () -> FabricEntityTypeBuilder.<FlyingItemEntity>create(SpawnGroup.MISC, FlyingItemEntity::new)
                 .dimensions(new EntityDimensions(0.25F, 0.25F, true))
                 .trackRangeChunks(4).trackedUpdateRate(10).build()));
 
         BRICKED = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("bricked"));
+
+        CONTEXT_TYPE.init(LootContextTypes.register("andromeda:throwable_items", builder -> builder
+                .require(LootContextParameters.ORIGIN).require(LootContextParameters.DIRECT_KILLER_ENTITY)
+                .require(LootContextParameters.TOOL).allow(LootContextParameters.KILLER_ENTITY)
+                .allow(LootContextParameters.THIS_ENTITY).allow(LootContextParameters.BLOCK_STATE)
+                .allow(LootContextParameters.BLOCK_ENTITY)));
+        PARTICLE_COMMAND.init(CommandTypes.register(id("particles"), ParticleCommand.CODEC));
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             var packet = sendItemsS2CPacket(server.dm$getReloader(RELOADER));
@@ -82,5 +98,9 @@ public class Main {
             packet.writeIdentifier(CommonRegistries.items().getId(item));
         }
         return packet;
+    }
+
+    public enum Event {
+        BLOCK, ENTITY, MISS, ANY
     }
 }

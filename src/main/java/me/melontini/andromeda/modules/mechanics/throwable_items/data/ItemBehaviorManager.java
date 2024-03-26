@@ -6,12 +6,10 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import me.melontini.andromeda.common.util.JsonDataLoader;
 import me.melontini.andromeda.modules.mechanics.throwable_items.ItemBehavior;
-import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.base.util.Utilities;
 import me.melontini.dark_matter.api.data.loading.ReloaderType;
 import net.minecraft.item.Item;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 
@@ -22,10 +20,6 @@ import static me.melontini.andromeda.common.registries.Common.id;
 public class ItemBehaviorManager extends JsonDataLoader {
 
     public static final ReloaderType<ItemBehaviorManager> RELOADER = ReloaderType.create(id("item_throw_behaviors"));
-
-    public static ItemBehaviorManager get(MinecraftServer server) {
-        return MakeSure.notNull(server).dm$getReloader(RELOADER);
-    }
 
     public ItemBehaviorManager() {
         super(RELOADER.identifier());
@@ -119,18 +113,18 @@ public class ItemBehaviorManager extends JsonDataLoader {
         itemBehaviors.putAll(STATIC);
 
         Maps.transformValues(data, input -> ItemBehaviorData.create(input.getAsJsonObject())).forEach((id, behaviorData) -> {
-            if (behaviorData.items().isEmpty()) return;
+            if (behaviorData.parameters().items().isEmpty()) return;
 
-            for (Item item : behaviorData.items()) {
-                if (behaviorData.disabled()) {
+            for (Item item : behaviorData.parameters().items()) {
+                if (behaviorData.parameters().disabled()) {
                     this.disable(item);
                     continue;
                 }
 
-                this.addBehavior(item, ItemBehaviorAdder.dataPack(behaviorData), behaviorData.complement());
-                if (behaviorData.override_vanilla()) this.overrideVanilla(item);
+                this.addBehavior(item, behaviorData, behaviorData.parameters().complement());
+                if (behaviorData.parameters().override_vanilla()) this.overrideVanilla(item);
 
-                if (behaviorData.cooldown() != 50) this.addCustomCooldown(item, behaviorData.cooldown());
+                if (behaviorData.parameters().cooldown() != 50) this.addCustomCooldown(item, behaviorData.parameters().cooldown());
             }
         });
     }

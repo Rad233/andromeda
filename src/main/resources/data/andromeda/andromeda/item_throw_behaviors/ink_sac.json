@@ -1,7 +1,12 @@
 {
   "items": "minecraft:ink_sac",
   "complement": true,
-  "particles": {
-    "colors": [24, 27, 50]
+  "events": {
+    "event": "any",
+    "commands": {
+      "type": "andromeda:particles",
+      "selector": "minecraft:direct_killer_entity",
+      "colors": [24, 27, 50]
+    }
   }
 }

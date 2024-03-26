@@ -1,7 +1,12 @@
 {
   "items": "minecraft:gray_dye",
   "complement": true,
-  "particles": {
-    "colors": [128, 128, 128]
+  "events": {
+    "event": "any",
+    "commands": {
+      "type": "andromeda:particles",
+      "selector": "minecraft:direct_killer_entity",
+      "colors": [128, 128, 128]
+    }
   }
 }
