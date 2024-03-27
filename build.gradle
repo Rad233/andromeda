@@ -4,12 +4,15 @@ plugins {
     id 'io.freefair.lombok' version '8.3'
 }
 
-version = project.mod_version
+def local = !System.getenv().containsKey("GITHUB_RUN_NUMBER")
+
+version = "${project.mod_version}-${project.minecraft_version}-${local ? 'local' : "build.${System.getenv("GITHUB_RUN_NUMBER")}"}"
 loader_version = project.loader_version
 group = project.maven_group
 
-apply from: "https://raw.githubusercontent.com/constellation-mc/artifacts/main/dark_matter.groovy"
-apply from: "https://raw.githubusercontent.com/constellation-mc/artifacts/main/commander.groovy"
+apply from: "https://raw.githubusercontent.com/constellation-mc/artifacts/main/artifacts.groovy"
+constellationRepo(project, "dark-matter")
+constellationRepo(project, "commander")
 
 repositories {
     maven { url "https://maven.shedaniel.me/" }
@@ -116,7 +119,7 @@ sourcesJar {
 
 tasks.register('printVersionName') {
     doLast {
-        println version.split("-")[0] + " (${version.split("-")[1]})"
+        println "${project.mod_version} (${project.minecraft_version})"
     }
 }
 
@@ -134,5 +137,13 @@ publishing {
     }
 
     repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/constellation-mc/andromeda"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
