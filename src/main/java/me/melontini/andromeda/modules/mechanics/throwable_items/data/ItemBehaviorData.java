@@ -10,7 +10,8 @@ import me.melontini.andromeda.modules.mechanics.throwable_items.ItemBehavior;
 import me.melontini.andromeda.modules.mechanics.throwable_items.Main;
 import me.melontini.commander.command.ConditionedCommand;
 import me.melontini.commander.event.EventContext;
-import me.melontini.commander.event.builtin.BuiltInEvents;
+import me.melontini.commander.event.EventKey;
+import me.melontini.commander.event.EventType;
 import me.melontini.commander.util.MagicCodecs;
 import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
 import net.minecraft.entity.Entity;
@@ -63,7 +64,9 @@ public record ItemBehaviorData(Parameters parameters, List<Subscription> subscri
         }
 
         LootContext lootContext = new LootContext.Builder(builder.build(Main.CONTEXT_TYPE.orThrow())).build(null);
-        EventContext context = new EventContext(lootContext, BuiltInEvents.NULL);
+        EventContext context = EventContext.builder(EventType.NULL)
+                .addParameter(EventKey.LOOT_CONTEXT, lootContext)
+                .build();
         list.forEach(s -> s.commands().forEach(cc -> cc.execute(context)));
     }
 

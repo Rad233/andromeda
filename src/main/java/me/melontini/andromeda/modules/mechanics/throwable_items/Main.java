@@ -7,7 +7,6 @@ import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehavio
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemPlopEffect;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ParticleCommand;
 import me.melontini.commander.command.CommandType;
-import me.melontini.commander.data.types.CommandTypes;
 import me.melontini.dark_matter.api.data.loading.ServerReloadersEvent;
 import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -74,8 +73,8 @@ public class Main {
                 .require(LootContextParameters.TOOL).allow(LootContextParameters.KILLER_ENTITY)
                 .allow(LootContextParameters.THIS_ENTITY).allow(LootContextParameters.BLOCK_STATE)
                 .allow(LootContextParameters.BLOCK_ENTITY)));
-        PARTICLE_COMMAND.init(CommandTypes.register(id("particles"), ParticleCommand.CODEC));
-        ITEM_PLOP_COMMAND.init(CommandTypes.register(id("item_plop"), ItemPlopEffect.CODEC));
+        PARTICLE_COMMAND.init(CommandType.register(id("particles"), ParticleCommand.CODEC));
+        ITEM_PLOP_COMMAND.init(CommandType.register(id("item_plop"), ItemPlopEffect.CODEC));
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             var packet = sendItemsS2CPacket(server.dm$getReloader(RELOADER));
