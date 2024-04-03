@@ -6,7 +6,7 @@ import me.melontini.andromeda.modules.mechanics.throwable_items.data.DefaultBeha
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemPlopEffect;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ParticleCommand;
-import me.melontini.commander.command.CommandType;
+import me.melontini.commander.api.command.CommandType;
 import me.melontini.dark_matter.api.data.loading.ServerReloadersEvent;
 import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;

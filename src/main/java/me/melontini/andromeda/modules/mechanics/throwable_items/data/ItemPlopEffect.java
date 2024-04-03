@@ -2,10 +2,10 @@ package me.melontini.andromeda.modules.mechanics.throwable_items.data;
 
 import com.mojang.serialization.Codec;
 import me.melontini.andromeda.modules.mechanics.throwable_items.Main;
-import me.melontini.commander.command.Command;
-import me.melontini.commander.command.CommandType;
-import me.melontini.commander.command.selector.ConditionedSelector;
-import me.melontini.commander.event.EventContext;
+import me.melontini.commander.api.command.Command;
+import me.melontini.commander.api.command.CommandType;
+import me.melontini.commander.api.command.selector.Selector;
+import me.melontini.commander.api.event.EventContext;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
@@ -16,9 +16,9 @@ import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public record ItemPlopEffect(ConditionedSelector selector) implements Command {
+public record ItemPlopEffect(Selector.Conditioned selector) implements Command {
 
-    public static final Codec<ItemPlopEffect> CODEC = ConditionedSelector.CODEC.fieldOf("selector").xmap(ItemPlopEffect::new, ItemPlopEffect::selector).codec();
+    public static final Codec<ItemPlopEffect> CODEC = Selector.CODEC.fieldOf("selector").xmap(ItemPlopEffect::new, ItemPlopEffect::selector).codec();
 
     @Override
     public boolean execute(EventContext context) {

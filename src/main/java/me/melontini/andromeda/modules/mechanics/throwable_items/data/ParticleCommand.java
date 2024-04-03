@@ -3,10 +3,10 @@ package me.melontini.andromeda.modules.mechanics.throwable_items.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.melontini.andromeda.modules.mechanics.throwable_items.Main;
-import me.melontini.commander.command.Command;
-import me.melontini.commander.command.CommandType;
-import me.melontini.commander.command.selector.ConditionedSelector;
-import me.melontini.commander.event.EventContext;
+import me.melontini.commander.api.command.Command;
+import me.melontini.commander.api.command.CommandType;
+import me.melontini.commander.api.command.selector.Selector;
+import me.melontini.commander.api.event.EventContext;
 import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -21,10 +21,10 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.Optional;
 
-public record ParticleCommand(ConditionedSelector selector, boolean item, Optional<Integer> colors) implements Command {
+public record ParticleCommand(Selector.Conditioned selector, boolean item, Optional<Integer> colors) implements Command {
 
     public static final Codec<ParticleCommand> CODEC = RecordCodecBuilder.create(data -> data.group(
-            ConditionedSelector.CODEC.fieldOf("selector").forGetter(ParticleCommand::selector),
+            Selector.CODEC.fieldOf("selector").forGetter(ParticleCommand::selector),
             ExtraCodecs.optional("item", Codec.BOOL, true).forGetter(ParticleCommand::item),
             ExtraCodecs.optional("colors", ExtraCodecs.COLOR).forGetter(ParticleCommand::colors)
     ).apply(data, ParticleCommand::new));

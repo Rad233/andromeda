@@ -8,11 +8,11 @@ import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.modules.mechanics.throwable_items.FlyingItemEntity;
 import me.melontini.andromeda.modules.mechanics.throwable_items.ItemBehavior;
 import me.melontini.andromeda.modules.mechanics.throwable_items.Main;
-import me.melontini.commander.command.ConditionedCommand;
-import me.melontini.commander.event.EventContext;
-import me.melontini.commander.event.EventKey;
-import me.melontini.commander.event.EventType;
-import me.melontini.commander.util.MagicCodecs;
+import me.melontini.commander.api.command.Command;
+import me.melontini.commander.api.event.EventContext;
+import me.melontini.commander.api.event.EventKey;
+import me.melontini.commander.api.event.EventType;
+import me.melontini.commander.impl.util.MagicCodecs;
 import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -70,10 +70,10 @@ public record ItemBehaviorData(Parameters parameters, List<Subscription> subscri
         list.forEach(s -> s.commands().forEach(cc -> cc.execute(context)));
     }
 
-    public record Subscription(Main.Event event, List<ConditionedCommand> commands) {
+    public record Subscription(Main.Event event, List<Command.Conditioned> commands) {
         public static final Codec<Subscription> CODEC = RecordCodecBuilder.create(data -> data.group(
                 MagicCodecs.enumCodec(Main.Event.class).fieldOf("event").forGetter(Subscription::event),
-                ExtraCodecs.list(ConditionedCommand.CODEC).fieldOf("commands").forGetter(Subscription::commands)
+                ExtraCodecs.list(Command.CODEC).fieldOf("commands").forGetter(Subscription::commands)
         ).apply(data, Subscription::new));
         public static final Codec<List<Subscription>> LIST_CODEC = ExtraCodecs.list(CODEC);
     }
