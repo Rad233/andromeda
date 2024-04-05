@@ -49,18 +49,30 @@ public class AndromedaClient {
     }
 
     public void onInitializeClient(ModuleManager manager) {
+        var blockade = FeatureBlockade.get();
+        if (!FabricLoader.getInstance().isModLoaded("commander")) {
+            manager.all().stream().map(Promise::get).forEach(module -> {
+                switch (module.meta().environment()) {
+                    case ANY, CLIENT -> {
+                    }
+                    default -> blockade.explain(module, "enabled", () -> true,
+                            blockade.andromeda("missing_commander"));
+                }
+            });
+        }
+
         if (!AndromedaConfig.get().sideOnlyMode) ClientSideNetworking.register();
         else {
             manager.all().stream().map(Promise::get).forEach(module -> {
                 switch (module.meta().environment()) {
                     case ANY, CLIENT -> {
                     }
-                    default -> FeatureBlockade.get().explain(module, "enabled", () -> true,
-                            "andromeda.config.option_manager.reason.andromeda.side_only_enabled");
+                    default -> blockade.explain(module, "enabled", () -> true,
+                            blockade.andromeda("side_only_enabled"));
                 }
             });
         }
-        BlockadesEvent.BUS.invoker().explain(FeatureBlockade.get());
+        BlockadesEvent.BUS.invoker().explain(blockade);
 
         ResourceManagerHelper.registerBuiltinResourcePack(id("dark"), CommonValues.mod(), ResourcePackActivationType.NORMAL);
         ItemGroupAnimaton.setIconAnimation(AndromedaItemGroup.GROUP, (group, context, itemX, itemY, selected, isTopRow) -> {

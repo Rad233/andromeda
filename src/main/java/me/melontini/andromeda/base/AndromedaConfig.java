@@ -27,10 +27,8 @@ public class AndromedaConfig {
     }
 
     public static class Config {
-
         @ConfigEntry.Gui.RequiresRestart
         public boolean sideOnlyMode = false;
-
         public boolean sendCrashReports = true;
     }
 }

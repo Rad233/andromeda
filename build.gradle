@@ -70,7 +70,8 @@ processResources {
             "loader_version": project.loader_version,
             "fabric_version": project.fabric_version,
             "cloth_version": project.cloth_version,
-            "modmenu_version": project.modmenu_version
+            "modmenu_version": project.modmenu_version,
+            "commander_version": project.commander_version
     ]
     inputs.properties(map)
     filteringCharset "UTF-8"
