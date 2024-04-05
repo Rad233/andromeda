@@ -12,7 +12,7 @@ import me.melontini.commander.api.command.Command;
 import me.melontini.commander.api.event.EventContext;
 import me.melontini.commander.api.event.EventKey;
 import me.melontini.commander.api.event.EventType;
-import me.melontini.commander.impl.util.MagicCodecs;
+import me.melontini.commander.api.expression.Arithmetica;
 import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -72,20 +72,20 @@ public record ItemBehaviorData(Parameters parameters, List<Subscription> subscri
 
     public record Subscription(Main.Event event, List<Command.Conditioned> commands) {
         public static final Codec<Subscription> CODEC = RecordCodecBuilder.create(data -> data.group(
-                MagicCodecs.enumCodec(Main.Event.class).fieldOf("event").forGetter(Subscription::event),
+                ExtraCodecs.enumCodec(Main.Event.class).fieldOf("event").forGetter(Subscription::event),
                 ExtraCodecs.list(Command.CODEC).fieldOf("commands").forGetter(Subscription::commands)
         ).apply(data, Subscription::new));
         public static final Codec<List<Subscription>> LIST_CODEC = ExtraCodecs.list(CODEC);
     }
 
-    public record Parameters(List<Item> items, boolean disabled, boolean override_vanilla, boolean complement, int cooldown) {
+    public record Parameters(List<Item> items, boolean disabled, boolean override_vanilla, boolean complement, Arithmetica cooldown) {
         public static final MapCodec<Parameters> CODEC = RecordCodecBuilder.mapCodec(data -> data.group(
                 ExtraCodecs.list(CommonRegistries.items().getCodec()).fieldOf("items").forGetter(Parameters::items),
 
                 ExtraCodecs.optional("disabled", Codec.BOOL, false).forGetter(Parameters::disabled),
                 ExtraCodecs.optional("override_vanilla", Codec.BOOL, false).forGetter(Parameters::override_vanilla),
                 ExtraCodecs.optional("complement", Codec.BOOL, true).forGetter(Parameters::complement),
-                ExtraCodecs.optional("cooldown", Codec.INT, 50).forGetter(Parameters::cooldown)
+                ExtraCodecs.optional("cooldown", Arithmetica.CODEC, Arithmetica.constant(50)).forGetter(Parameters::cooldown)
         ).apply(data, Parameters::new));
     }
     public static final Codec<ItemBehaviorData> CODEC = new MapCodec<ItemBehaviorData>() {

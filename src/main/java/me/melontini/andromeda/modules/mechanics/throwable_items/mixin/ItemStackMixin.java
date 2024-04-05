@@ -2,10 +2,12 @@ package me.melontini.andromeda.modules.mechanics.throwable_items.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import me.melontini.andromeda.modules.mechanics.throwable_items.FlyingItemEntity;
+import me.melontini.andromeda.modules.mechanics.throwable_items.ItemBehavior;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -56,14 +58,13 @@ abstract class ItemStackMixin {
     @Unique
     private boolean andromeda$runBehaviors(World world, ItemBehaviorManager manager, PlayerEntity user) {
         world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
-        if (!world.isClient) {
-            var entity = new FlyingItemEntity((ItemStack) (Object) this, user, world);
-            entity.setPos(user.getX(), user.getEyeY() - 0.1F, user.getZ());
-            entity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
-            world.spawnEntity(entity);
-        }
 
-        user.getItemCooldownManager().set(getItem(), manager.getCooldown(getItem()));
+        var entity = new FlyingItemEntity((ItemStack) (Object) this, user, world);
+        entity.setPos(user.getX(), user.getEyeY() - 0.1F, user.getZ());
+        entity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
+        world.spawnEntity(entity);
+
+        user.getItemCooldownManager().set(getItem(), ItemBehavior.getCooldown((ServerWorld) world, user, entity, (ItemStack) (Object) this));
         user.incrementStat(Stats.USED.getOrCreateStat(getItem()));
 
         if (!user.getAbilities().creativeMode) {

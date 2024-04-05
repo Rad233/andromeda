@@ -38,7 +38,7 @@ import static me.melontini.andromeda.common.registries.Common.id;
 import static me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager.RELOADER;
 import static me.melontini.andromeda.util.CommonValues.MODID;
 
-public class Main {
+public class Main implements ServerReloadersEvent {
 
     public static final Keeper<EntityType<FlyingItemEntity>> FLYING_ITEM = Keeper.create();
 
@@ -87,7 +87,7 @@ public class Main {
             }
         });
 
-        ServerReloadersEvent.EVENT.register(context -> context.register(new ItemBehaviorManager()));
+        ServerReloadersEvent.EVENT.register(this);
 
         DefaultBehaviors.init();
     }
@@ -100,6 +100,11 @@ public class Main {
             packet.writeIdentifier(CommonRegistries.items().getId(item));
         }
         return packet;
+    }
+
+    @Override
+    public void onServerReloaders(Context context) {
+        context.register(new ItemBehaviorManager());
     }
 
     public enum Event {

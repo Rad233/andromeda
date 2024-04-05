@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.melontini.andromeda.modules.mechanics.throwable_items.Main;
 import me.melontini.commander.api.command.Command;
 import me.melontini.commander.api.command.CommandType;
-import me.melontini.commander.api.command.selector.Selector;
+import me.melontini.commander.api.command.Selector;
 import me.melontini.commander.api.event.EventContext;
 import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

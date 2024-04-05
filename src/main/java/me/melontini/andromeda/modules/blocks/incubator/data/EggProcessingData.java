@@ -8,6 +8,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.common.registries.Common;
 import me.melontini.andromeda.common.util.JsonDataLoader;
+import me.melontini.commander.api.command.Command;
+import me.melontini.commander.api.expression.Arithmetica;
 import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
 import me.melontini.dark_matter.api.data.loading.ReloaderType;
 import me.melontini.dark_matter.api.data.loading.ServerReloadersEvent;
@@ -25,19 +27,19 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public record EggProcessingData(Item item, WeightedList<Entry> entity, int time) {
+public record EggProcessingData(Item item, WeightedList<Entry> entity, Arithmetica time) {
 
     public static final Codec<EggProcessingData> CODEC = RecordCodecBuilder.create(data -> data.group(
             CommonRegistries.items().getCodec().fieldOf("identifier").forGetter(EggProcessingData::item),
             ExtraCodecs.weightedList(Entry.CODEC).fieldOf("entries").forGetter(EggProcessingData::entity),
-            Codec.INT.fieldOf("time").forGetter(EggProcessingData::time)
+            Arithmetica.CODEC.fieldOf("time").forGetter(EggProcessingData::time)
     ).apply(data, EggProcessingData::new));
 
-    public record Entry(EntityType<?> type, NbtCompound nbt, List<String> commands) {
+    public record Entry(EntityType<?> type, NbtCompound nbt, List<Command.Conditioned> commands) {
         public static final Codec<Entry> CODEC = RecordCodecBuilder.create(data -> data.group(
                 CommonRegistries.entityTypes().getCodec().fieldOf("entity").forGetter(Entry::type),
                 NbtCompound.CODEC.optionalFieldOf("nbt", new NbtCompound()).forGetter(Entry::nbt),
-                ExtraCodecs.list(Codec.STRING).optionalFieldOf("commands", Collections.emptyList()).forGetter(Entry::commands)
+                ExtraCodecs.list(Command.CODEC).optionalFieldOf("commands", Collections.emptyList()).forGetter(Entry::commands)
         ).apply(data, Entry::new));
     }
 
@@ -67,7 +69,7 @@ public record EggProcessingData(Item item, WeightedList<Entry> entity, int time)
                 if (item instanceof SpawnEggItem egg) {
                     WeightedList<Entry> list =  new WeightedList<>();
                     list.add(new Entry(egg.getEntityType(new NbtCompound()), new NbtCompound(), Collections.emptyList()), 1);
-                    result.put(egg, new EggProcessingData(egg, list, 8000));
+                    result.put(egg, new EggProcessingData(egg, list, Arithmetica.constant(8000)));
                 }
             }
 

@@ -1,16 +1,14 @@
 package me.melontini.andromeda.modules.mechanics.throwable_items.mixin;
 
 import me.melontini.andromeda.base.ModuleManager;
-import me.melontini.andromeda.modules.mechanics.throwable_items.FlyingItemEntity;
-import me.melontini.andromeda.modules.mechanics.throwable_items.ItemThrowerMob;
-import me.melontini.andromeda.modules.mechanics.throwable_items.ThrowableItemAttackGoal;
-import me.melontini.andromeda.modules.mechanics.throwable_items.ThrowableItems;
+import me.melontini.andromeda.modules.mechanics.throwable_items.*;
 import me.melontini.dark_matter.api.base.util.MathUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
@@ -20,8 +18,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager.RELOADER;
 
 @Mixin(ZombieEntity.class)
 abstract class ZombieEntityMixin extends HostileEntity implements ItemThrowerMob<ZombieEntity> {
@@ -53,7 +49,7 @@ abstract class ZombieEntityMixin extends HostileEntity implements ItemThrowerMob
         var entity = andromeda$getFlyingItemEntity(target);
         world.spawnEntity(entity);
         if (MathUtil.threadRandom().nextBoolean())
-            this.andromeda$cooldown += Math.max(MathUtil.nextInt((int) (this.distanceTo(target) * 28) / 2, (int) (this.distanceTo(target) * 28)), world.getServer().dm$getReloader(RELOADER).getCooldown(this.getMainHandStack().getItem()));
+            this.andromeda$cooldown += Math.max(MathUtil.nextInt((int) (this.distanceTo(target) * 28) / 2, (int) (this.distanceTo(target) * 28)), ItemBehavior.getCooldown((ServerWorld) world, this, entity, this.getMainHandStack()));
         this.getMainHandStack().decrement(1);
     }
 
