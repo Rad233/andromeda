@@ -9,6 +9,7 @@ import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
 import me.melontini.dark_matter.api.base.config.ConfigManager;
 import me.melontini.dark_matter.api.base.reflect.Reflect;
+import me.melontini.dark_matter.api.base.util.Context;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.base.util.PrependingLogger;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -55,7 +56,7 @@ public abstract class Module<T extends Module.BaseConfig> {
     }
 
     public final void save() {
-        manager.save(FabricLoader.getInstance().getConfigDir(), config());
+        manager.save(FabricLoader.getInstance().getConfigDir(), config(), Context.of());
     }
 
     public final boolean enabled() {

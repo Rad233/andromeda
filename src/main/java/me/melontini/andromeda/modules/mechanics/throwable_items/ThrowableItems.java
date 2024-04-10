@@ -20,13 +20,10 @@ public class ThrowableItems extends Module<ThrowableItems.Config> {
     }
 
     public static class Config extends BaseConfig {
-
         @SpecialEnvironment(Environment.SERVER)
         public boolean canZombiesThrowItems = true;
-
         @SpecialEnvironment(Environment.SERVER)
         public int zombieThrowInterval = 40;
-
         @SpecialEnvironment(Environment.BOTH)
         public boolean tooltip = true;
     }

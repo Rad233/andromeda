@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "andromeda-testmod",
+  "version": "1.0.0",
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "me.melontini.andromeda.test.client.AndromedaClientTest"
+    ],
+    "server": [
+      "me.melontini.andromeda.test.server.AndromedaServerTest"
+    ]
+  }
+}

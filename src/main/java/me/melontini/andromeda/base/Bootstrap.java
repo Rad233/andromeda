@@ -12,10 +12,10 @@ import me.melontini.andromeda.util.CrashHandler;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
 import me.melontini.andromeda.util.mixin.AndromedaMixins;
+import me.melontini.dark_matter.api.base.util.Context;
 import me.melontini.dark_matter.api.base.util.EntrypointRunner;
 import me.melontini.dark_matter.api.base.util.Support;
-import me.melontini.dark_matter.api.base.util.classes.Context;
-import me.melontini.dark_matter.api.base.util.classes.ThrowingRunnable;
+import me.melontini.dark_matter.api.base.util.functions.ThrowingRunnable;
 import me.melontini.dark_matter.api.crash_handler.Crashlytics;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +25,6 @@ import net.fabricmc.loader.api.VersionParsingException;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.api.metadata.version.VersionPredicate;
-import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.IOException;
@@ -81,9 +80,6 @@ public class Bootstrap {
     }
 
     private static void onMerged() {
-        if (Debug.Keys.VERIFY_MIXINS.isPresent())
-            MixinEnvironment.getCurrentEnvironment().audit();
-
         for (Module<?> module : ModuleManager.get().loaded()) {
             runInit("merged", module);
         }

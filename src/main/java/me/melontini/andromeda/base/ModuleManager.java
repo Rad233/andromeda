@@ -9,6 +9,7 @@ import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
 import me.melontini.dark_matter.api.base.config.ConfigManager;
+import me.melontini.dark_matter.api.base.util.Context;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.base.util.Utilities;
 import net.fabricmc.api.EnvType;
@@ -68,9 +69,20 @@ public class ModuleManager {
         this.setUpConfigs(sorted);
 
         CompletableFuture.allOf(sorted.stream().map(m -> CompletableFuture.runAsync(() -> {
-            m.config = Utilities.cast(m.manager.load(FabricLoader.getInstance().getConfigDir()));
+            m.config = Utilities.cast(m.manager.load(FabricLoader.getInstance().getConfigDir(), Context.of()));
             m.defaultConfig = Utilities.cast(m.manager.createDefault());
         })).toArray(CompletableFuture[]::new)).join();
+
+        if (!FabricLoader.getInstance().isModLoaded("commander")) {
+            for (Module<?> module : sorted) {
+                if (!module.enabled()) continue;
+
+                if (!module.meta().environment().isClient() && !module.meta().environment().isAny())
+                    throw AndromedaException.builder().report(false)
+                            .message("Server and common modules require Commander to be installed! Get it here: https://modrinth.com/project/cmd")
+                            .build();
+            }
+        }
 
         if (Debug.Keys.ENABLE_ALL_MODULES.isPresent())
             sorted.forEach(module -> module.config().enabled = true);
@@ -304,7 +316,7 @@ public class ModuleManager {
     }
 
     void print() {
-        Map<String, Set<Module<?>>> categories = Utilities.consume(new LinkedHashMap<>(), map -> get().loaded().forEach(m ->
+        Map<String, Set<Module<?>>> categories = Utilities.supply(new LinkedHashMap<>(), map -> get().loaded().forEach(m ->
                 map.computeIfAbsent(m.meta().category(), s -> new LinkedHashSet<>()).add(m)));
 
         StringBuilder builder = new StringBuilder();

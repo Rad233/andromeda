@@ -1,12 +1,18 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
     id 'io.freefair.lombok' version '8.3'
 }
 
-version = project.mod_version
+def local = !System.getenv().containsKey("GITHUB_RUN_NUMBER")
+
+version = "${project.mod_version}-${project.minecraft_version}-${local ? 'local' : "build.${System.getenv("GITHUB_RUN_NUMBER")}"}"
 loader_version = project.loader_version
 group = project.maven_group
+
+apply from: "https://raw.githubusercontent.com/constellation-mc/artifacts/main/artifacts.groovy"
+constellationRepo(project, "dark-matter")
+constellationRepo(project, "commander")
 
 repositories {
     maven { url "https://maven.shedaniel.me/" }
@@ -20,6 +26,13 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+sourceSets {
+    testmod {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -29,15 +42,19 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    def dmModules = ["base", "minecraft", "content", "crash-handler", "mirage", "glitter"]
+    def dmModules = ["base", "mixin", "minecraft", "crash-handler", "data", "mirage", "glitter", "item-group"]
     for (final def module in dmModules) {
-        modApi include("me.melontini.dark-matter:dark-matter-${module}:${project.dark_matter}")
+        modApi include("me.melontini:dark-matter-${module}:${project.dark_matter}")
     }
+
+    modApi "me.melontini:commander:${project.commander_version}"
 
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+
+    testmodImplementation sourceSets.main.output
 }
 
 loom {
@@ -45,14 +62,32 @@ loom {
 
     runs {
         client {
-            vmArgs("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition", "-Dmixin.debug.export=true")
+            vmArgs("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition")
+            property("mixin.debug.export", "true")
             runDir("run_client")
         }
         server {
-            vmArgs("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition", "-Dmixin.debug.export=true")
+            vmArgs("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition")
+            property("mixin.debug.export", "true")
             runDir("run_server")
         }
+        testClient {
+            client()
+            source sourceSets.testmod
+        }
+        testServer {
+            server()
+            source sourceSets.testmod
+        }
     }
+}
+
+loom.mods.register(project.name) {
+    sourceSet project.sourceSets.main
+}
+
+loom.mods.register(project.name + "-testmod") {
+    sourceSet project.sourceSets.testmod
 }
 
 processResources {
@@ -62,7 +97,8 @@ processResources {
             "loader_version": project.loader_version,
             "fabric_version": project.fabric_version,
             "cloth_version": project.cloth_version,
-            "modmenu_version": project.modmenu_version
+            "modmenu_version": project.modmenu_version,
+            "commander_version": project.commander_version
     ]
     inputs.properties(map)
     filteringCharset "UTF-8"
@@ -111,7 +147,7 @@ sourcesJar {
 
 tasks.register('printVersionName') {
     doLast {
-        println version.split("-")[0] + " (${version.split("-")[1]})"
+        println "${project.mod_version} (${project.minecraft_version})"
     }
 }
 
@@ -129,5 +165,13 @@ publishing {
     }
 
     repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/constellation-mc/andromeda"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
