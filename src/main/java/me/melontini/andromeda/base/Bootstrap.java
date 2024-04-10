@@ -25,7 +25,6 @@ import net.fabricmc.loader.api.VersionParsingException;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.api.metadata.version.VersionPredicate;
-import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.IOException;
@@ -81,9 +80,6 @@ public class Bootstrap {
     }
 
     private static void onMerged() {
-        if (Debug.Keys.VERIFY_MIXINS.isPresent())
-            MixinEnvironment.getCurrentEnvironment().audit();
-
         for (Module<?> module : ModuleManager.get().loaded()) {
             runInit("merged", module);
         }

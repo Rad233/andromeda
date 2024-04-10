@@ -26,6 +26,13 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+sourceSets {
+    testmod {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -46,6 +53,8 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+
+    testmodImplementation sourceSets.main.output
 }
 
 loom {
@@ -53,14 +62,32 @@ loom {
 
     runs {
         client {
-            vmArgs("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition", "-Dmixin.debug.export=true")
+            vmArgs("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition")
+            property("mixin.debug.export", "true")
             runDir("run_client")
         }
         server {
-            vmArgs("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition", "-Dmixin.debug.export=true")
+            vmArgs("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition")
+            property("mixin.debug.export", "true")
             runDir("run_server")
         }
+        testClient {
+            client()
+            source sourceSets.testmod
+        }
+        testServer {
+            server()
+            source sourceSets.testmod
+        }
     }
+}
+
+loom.mods.register(project.name) {
+    sourceSet project.sourceSets.main
+}
+
+loom.mods.register(project.name + "-testmod") {
+    sourceSet project.sourceSets.testmod
 }
 
 processResources {
