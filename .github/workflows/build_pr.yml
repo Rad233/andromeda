@@ -62,8 +62,4 @@ jobs:
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: run testmod
-        uses: modmuss50/xvfb-action@v1
-        with:
-          run: |
-            mkdir run && echo "eula=true" >> run/eula.txt
-            ./gradlew runTestServer --stacktrace --warning-mode=fail
+        run: ./gradlew runTestServer --stacktrace --warning-mode=fail
