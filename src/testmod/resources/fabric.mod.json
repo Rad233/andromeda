@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "environment": "*",
+  "mixins": [
+    "andromeda-testmod.mixins.json"
+  ],
   "entrypoints": {
     "client": [
       "me.melontini.andromeda.test.client.AndromedaClientTest"
