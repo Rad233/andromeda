@@ -75,11 +75,20 @@ loom {
             client()
             source sourceSets.testmod
             runDir("run_test_client")
+
+            property("andromeda.enableAllModules", "true")
+            property("andromeda.skipMixinErrorHandler", "true")
+            property("andromeda.disableNetworkFeatures", "true")
+            property("andromeda.printMissingTooltips", "true")
         }
         testServer {
             server()
             source sourceSets.testmod
             runDir("run_test_server")
+
+            property("andromeda.enableAllModules", "true")
+            property("andromeda.skipMixinErrorHandler", "true")
+            property("andromeda.disableNetworkFeatures", "true")
         }
     }
 }
