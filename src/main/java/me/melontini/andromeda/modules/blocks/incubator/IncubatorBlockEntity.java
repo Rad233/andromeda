@@ -43,8 +43,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 @SuppressWarnings("UnstableApiUsage")
 public class IncubatorBlockEntity extends BlockEntity implements SidedInventory {
 
@@ -106,15 +104,7 @@ public class IncubatorBlockEntity extends BlockEntity implements SidedInventory 
                 if (entity instanceof PassiveEntity passive) passive.setBaby(true);
 
                 world.spawnEntity(entity);
-                executeCommands(entry, () -> {
-                    LootContextParameterSet.Builder builder = new LootContextParameterSet.Builder(world);
-                    builder.add(LootContextParameters.BLOCK_STATE, this.getCachedState());
-                    builder.add(LootContextParameters.TOOL, stack);
-                    builder.add(LootContextParameters.ORIGIN, Vec3d.ofCenter(this.getPos()));
-                    builder.add(LootContextParameters.BLOCK_ENTITY, this);
-                    builder.add(LootContextParameters.THIS_ENTITY, entity);
-                    return new LootContext.Builder(builder.build(LootContextTypes.BLOCK)).build(null);
-                });
+                executeCommands(entry, world, stack, entity);
 
                 stack.decrement(1);
             }
@@ -123,10 +113,20 @@ public class IncubatorBlockEntity extends BlockEntity implements SidedInventory 
         this.update(state);
     }
 
-    private static void executeCommands(EggProcessingData.Entry entry, Supplier<LootContext> supplier) {
+    private void executeCommands(EggProcessingData.Entry entry, ServerWorld world, ItemStack stack, Entity entity) {
         if (entry.commands().isEmpty()) return;
 
-        EventContext context = EventContext.builder(EventType.NULL).addParameter(EventKey.LOOT_CONTEXT, supplier.get()).build();
+        LootContextParameterSet.Builder builder = new LootContextParameterSet.Builder(world);
+        builder.add(LootContextParameters.BLOCK_STATE, this.getCachedState());
+        builder.add(LootContextParameters.TOOL, stack);
+        builder.add(LootContextParameters.ORIGIN, Vec3d.ofCenter(this.getPos()));
+        builder.add(LootContextParameters.BLOCK_ENTITY, this);
+        builder.add(LootContextParameters.THIS_ENTITY, entity);
+
+        EventContext context = EventContext.builder(EventType.NULL)
+                .addParameter(EventKey.LOOT_CONTEXT, new LootContext.Builder(builder
+                        .build(LootContextTypes.BLOCK))
+                .build(null)).build();
         for (Command.Conditioned command : entry.commands()) {
             command.execute(context);
         }
