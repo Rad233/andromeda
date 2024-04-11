@@ -73,17 +73,6 @@ public class ModuleManager {
             m.defaultConfig = Utilities.cast(m.manager.createDefault());
         })).toArray(CompletableFuture[]::new)).join();
 
-        if (!FabricLoader.getInstance().isModLoaded("commander")) {
-            for (Module<?> module : sorted) {
-                if (!module.enabled()) continue;
-
-                if (!module.meta().environment().isClient() && !module.meta().environment().isAny())
-                    throw AndromedaException.builder().report(false)
-                            .message("Server and common modules require Commander to be installed! Get it here: https://modrinth.com/project/cmd")
-                            .build();
-            }
-        }
-
         if (Debug.Keys.ENABLE_ALL_MODULES.isPresent())
             sorted.forEach(module -> module.config().enabled = true);
         fixScopes(sorted);
