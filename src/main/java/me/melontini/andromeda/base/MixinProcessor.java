@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @CustomLog
 public class MixinProcessor {
 
-    public static final String NOTICE = "## Mixin configs are internal mod components and are not the same as user configs! ##";
+    public static final String NOTICE = "mixin_processor.config_notice";
     public static final String JAVA_VERSION = "JAVA_17";
     public static final String MIXIN_VERSION = "0.8.5";
 
@@ -68,7 +68,7 @@ public class MixinProcessor {
                 this.mixinConfigs.put(cfg, module);
             } catch (IOException e) {
                 throw AndromedaException.builder()
-                        .message("Couldn't inject mixin config for module '%s'".formatted(module.meta().id())).message(NOTICE)
+                        .literal("Couldn't inject mixin config for module '%s'".formatted(module.meta().id())).translatable(NOTICE)
                         .add("mixin_config", cfg).add("module", module.meta().id()).build();
             }
         }));

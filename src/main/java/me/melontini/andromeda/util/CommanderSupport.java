@@ -17,13 +17,13 @@ public class CommanderSupport {
             manager.onLoad((config, path) -> {
                 if (!LOADED && config.enabled)
                     throw AndromedaException.builder().report(false)
-                            .message("This module requires Commander to be installed! Get it here: https://modrinth.com/project/cmd")
+                            .translatable("module_manager.requires_commander", "https://modrinth.com/project/cmd")
                             .build();
             });
             manager.onSave((config, path) -> {
                 if (!LOADED && config.enabled)
                     throw AndromedaException.builder().report(false)
-                        .message("This module requires Commander to be installed! Get it here: https://modrinth.com/project/cmd")
+                            .translatable("module_manager.requires_commander", "https://modrinth.com/project/cmd")
                         .build();
             });
         });

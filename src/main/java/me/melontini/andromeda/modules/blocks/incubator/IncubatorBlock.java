@@ -126,7 +126,7 @@ public class IncubatorBlock extends BlockWithEntity implements InventoryProvider
     public SidedInventory getInventory(BlockState state, WorldAccess world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof IncubatorBlockEntity incubatorBlockEntity) return incubatorBlockEntity;
-        throw AndromedaException.builder().message("Invalid block entity type! Must be an instance of %s".formatted(IncubatorBlockEntity.class.getName()))
+        throw AndromedaException.builder().literal("Invalid block entity type! Must be an instance of %s".formatted(IncubatorBlockEntity.class.getName()))
                 .add("block_entity", blockEntity).build();
     }
 }

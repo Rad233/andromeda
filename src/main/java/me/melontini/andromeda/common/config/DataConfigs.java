@@ -47,7 +47,7 @@ public class DataConfigs extends JsonDataLoader {
             return server.dm$getReloader(RELOADER);
         } catch (NullPointerException e) {
             throw AndromedaException.builder().cause(e).report(false)
-                    .message("Couldn't get Scoped Configs reloader! Have you restarted the game as you were asked to?")
+                    .translatable("scoped_configs.no_reloader")
                     .build();
         }
     }

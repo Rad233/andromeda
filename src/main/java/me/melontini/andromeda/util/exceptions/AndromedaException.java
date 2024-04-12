@@ -7,7 +7,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.CustomLog;
 import me.melontini.andromeda.base.Bootstrap;
+import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.util.CommonValues;
+import me.melontini.andromeda.util.EarlyLanguage;
 import me.melontini.dark_matter.api.base.util.functions.ThrowingRunnable;
 import me.melontini.dark_matter.api.crash_handler.Prop;
 import me.melontini.dark_matter.api.crash_handler.Props;
@@ -65,7 +67,7 @@ public class AndromedaException extends RuntimeException {
     @SuppressWarnings("unused")
     public static AndromedaException moduleException(Throwable t, String module) {
         return AndromedaException.builder()
-                .message("Andromeda module caught a mixin handler exception! There's no guarantee that this is Andromeda's fault.")
+                .translatable("mixin_processor.handler_failed")
                 .cause(t).add("module", module).build();
     }
 
@@ -116,7 +118,17 @@ public class AndromedaException extends RuntimeException {
             DEFAULT_KEYS.values().forEach(c -> c.accept(this));
         }
 
-        public Builder message(String message) {
+        public Builder translatable(String key, Object... args) {
+            this.message.add(EarlyLanguage.translate("andromeda.exception." + key, args));
+            return this;
+        }
+
+        public Builder translatable(Module<?> module, String key, Object... args) {
+            this.message.add(EarlyLanguage.translate("andromeda.%s.exception.%s".formatted(module.meta().dotted(), key), args));
+            return this;
+        }
+
+        public Builder literal(String message) {
             this.message.add(message);
             return this;
         }

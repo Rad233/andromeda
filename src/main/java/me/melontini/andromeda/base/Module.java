@@ -79,7 +79,7 @@ public abstract class Module<T extends Module.BaseConfig> {
         var ctx = Reflect.setAccessible(cls.getDeclaredConstructors()[0]);
 
         if (ctx.getParameterCount() == 0) {
-            AndromedaException.run(ctx::newInstance, b -> b.message("Failed to construct module class!").add("class", cls.getName()));
+            AndromedaException.run(ctx::newInstance, b -> b.literal("Failed to construct module class!").add("class", cls.getName()));
         } else {
             Map<Class<?>, Object> args = Map.of(
                     this.getClass(), this,
@@ -91,7 +91,7 @@ public abstract class Module<T extends Module.BaseConfig> {
                 var value = MakeSure.notNull(args.get(parameterType));
                 passed.add(value);
             }
-            AndromedaException.run(() -> ctx.newInstance(passed.toArray(Object[]::new)), b -> b.message("Failed to construct module class!").add("class", cls.getName()));
+            AndromedaException.run(() -> ctx.newInstance(passed.toArray(Object[]::new)), b -> b.literal("Failed to construct module class!").add("class", cls.getName()));
         }
     }
 
