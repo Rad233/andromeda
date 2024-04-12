@@ -106,6 +106,7 @@
   "andromeda.config.option_manager.reason.andromeda.module_conflict": "启用了冲突的特性！",
   "andromeda.config.option_manager.reason.andromeda.iceberg": "与低于1.1.13的Iceberg前置冲突。",
   "andromeda.config.option_manager.reason.andromeda.side_only_enabled": "此特性因启用了“客户端模式”被禁用！",
+  "andromeda.config.option_manager.reason.andromeda.missing_commander": "此特性依赖于命令官模组！",
 
   "andromeda.config.tooltip.environment.client": "[E] 客户端",
   "andromeda.config.tooltip.environment.server": "[E] 服务端",
