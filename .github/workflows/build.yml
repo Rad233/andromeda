@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.1
         with:
           name: Artifacts
-          path: ~/.m2/repository/me/melontini/andromeda/${{ env.VERSION_INFORMATION }}
+          path: ~/.m2/repository/me/melontini/andromeda/${{ env.VERSION_PLAIN }}
 
   client_test:
     needs: build
