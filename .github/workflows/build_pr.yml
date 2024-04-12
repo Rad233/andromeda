@@ -23,6 +23,7 @@ jobs:
           ./gradlew build
 
   client_test:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
@@ -47,6 +48,7 @@ jobs:
       #    path: run/screenshots
 
   server_test:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
