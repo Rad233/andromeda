@@ -1,3 +1,5 @@
+import net.fabricmc.loom.api.RemapConfigurationSettings
+
 plugins {
     id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
@@ -13,6 +15,7 @@ group = project.maven_group
 apply from: "https://raw.githubusercontent.com/constellation-mc/artifacts/main/artifacts.groovy"
 constellationRepo(project, "dark-matter")
 constellationRepo(project, "commander")
+constellationRepo(project, "handy-tests")
 
 repositories {
     maven { url "https://maven.shedaniel.me/" }
@@ -31,6 +34,15 @@ sourceSets {
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
     }
+}
+
+loom {
+    addRemapConfiguration("testmodRemapImplementation", (RemapConfigurationSettings configuration) -> {
+        configuration.getTargetConfigurationName().convention("testmodImplementation")
+        configuration.getOnCompileClasspath().convention(true)
+        configuration.getOnRuntimeClasspath().convention(true)
+        configuration.getPublishingMode().convention(RemapConfigurationSettings.PublishingMode.COMPILE_AND_RUNTIME)
+    })
 }
 
 dependencies {
@@ -55,6 +67,7 @@ dependencies {
     }
 
     testmodImplementation sourceSets.main.output
+    testmodRemapImplementation "me.melontini:handy-tests:0.1.0-1.20.1-build.4"
 }
 
 loom {
@@ -71,6 +84,7 @@ loom {
             property("mixin.debug.export", "true")
             runDir("run_server")
         }
+
         testClient {
             client()
             source sourceSets.testmod
