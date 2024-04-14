@@ -16,7 +16,7 @@
         "type": "commander:commands",
         "selector": "minecraft:this_entity",
         "commands": [
-          "/effect give @s minecraft:blindness 5 0 true"
+          "/effect give @s minecraft:blindness $(long){{random(4, 7)}} 0 true"
         ]
       }
     }
