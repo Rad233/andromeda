@@ -4,7 +4,7 @@ This version adds [Commander](https://modrinth.com/mod/cmd) support to two modul
 
 [`blocks/incubator`]:
 
-* Processing time now accept [Arithmetica](https://constellation-mc.github.io/commander/Arithmetica). (context: `block_state`, `block_entity`, `tool`, `origin`)
+* Processing time now accepts [Expressions](https://constellation-mc.github.io/commander/Expressions). (context: `block_state`, `block_entity`, `tool`, `origin`)
 * The list of Brigadier (`/`) commands was replaced by Commander [commands](https://constellation-mc.github.io/commander/Commands). (context: `this_entity`, `block_state`, `block_entity`, `tool`, `origin`)
 
 [`entities/slimes`]:
