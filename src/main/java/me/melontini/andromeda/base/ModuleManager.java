@@ -16,6 +16,7 @@ import me.melontini.dark_matter.api.base.util.Utilities;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -38,6 +39,7 @@ public class ModuleManager {
 
     public static final List<String> CATEGORIES = List.of("world", "blocks", "entities", "items", "bugfixes", "mechanics", "gui", "misc");
 
+    @Nullable
     private static ModuleManager INSTANCE;
 
     private final Map<Class<?>, PromiseImpl<?>> discoveredModules;
@@ -70,8 +72,8 @@ public class ModuleManager {
         this.setUpConfigs(sorted);
 
         CompletableFuture.allOf(sorted.stream().map(m -> CompletableFuture.runAsync(() -> {
-            m.config = Utilities.cast(m.manager.load(FabricLoader.getInstance().getConfigDir(), Context.of()));
-            m.defaultConfig = Utilities.cast(m.manager.createDefault());
+            m.config = Utilities.cast(m.manager().load(FabricLoader.getInstance().getConfigDir(), Context.of()));
+            m.defaultConfig = Utilities.cast(m.manager().createDefault());
         })).toArray(CompletableFuture[]::new)).join();
 
         if (Debug.Keys.ENABLE_ALL_MODULES.isPresent())
@@ -141,7 +143,7 @@ public class ModuleManager {
                     }
                 }
             });
-            manager.exceptionHandler((e, stage, path) -> LOGGER.error("Failed to %s config for module: %s".formatted(stage.toString().toLowerCase(), m.meta().id()), e));
+            manager.exceptionHandler((e, stage, path) -> LOGGER.error("Failed to %s config for module: %s".formatted(stage.toString().toLowerCase(Locale.ROOT), m.meta().id()), e));
 
             Bus<ConfigEvent<?>> e = m.getOrCreateBus("config_event", null);
             if (e != null) e.invoker().accept(Utilities.cast(manager));
@@ -177,7 +179,7 @@ public class ModuleManager {
 
     public void cleanConfigs(Path root, Collection<? extends Module<?>> modules) {
         if (Files.exists(root)) {
-            Set<Path> paths = collectPaths(root.getParent(), modules);
+            Set<Path> paths = collectPaths(Objects.requireNonNull(root.getParent(), () -> "Root config folder? %s".formatted(root)), modules);
             Bootstrap.wrapIO(() -> Files.walkFileTree(root, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -277,6 +279,8 @@ public class ModuleManager {
     }
 
     /**
+     * Returns a collection of all loaded modules.
+     *
      * @return a collection of all loaded modules.
      */
     public Collection<Module<?>> loaded() {
@@ -297,6 +301,8 @@ public class ModuleManager {
     }
 
     /**
+     * Returns The module manager.
+     *
      * @return The module manager.
      */
     public static ModuleManager get() {

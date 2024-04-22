@@ -15,6 +15,7 @@ import me.melontini.dark_matter.api.base.util.PrependingLogger;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,11 +57,11 @@ public abstract class Module<T extends Module.BaseConfig> {
     }
 
     public final void save() {
-        manager.save(FabricLoader.getInstance().getConfigDir(), config(), Context.of());
+        manager().save(FabricLoader.getInstance().getConfigDir(), config(), Context.of());
     }
 
     public final boolean enabled() {
-        return config.enabled;
+        return config().enabled;
     }
 
     @Override
@@ -69,7 +70,7 @@ public abstract class Module<T extends Module.BaseConfig> {
     }
 
     @ApiStatus.Internal
-    public <E> Bus<E> getOrCreateBus(String id, Supplier<Bus<E>> supplier) {
+    public <E> Bus<E> getOrCreateBus(String id, @Nullable Supplier<Bus<E>> supplier) {
         return (Bus<E>) busMap.computeIfAbsent(id, aClass -> supplier == null ? null : supplier.get());
     }
 

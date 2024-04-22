@@ -21,6 +21,7 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.WeightedList;
 import net.minecraft.util.profiler.Profiler;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -51,19 +52,19 @@ public record EggProcessingData(Item item, WeightedList<Entry> entity, Arithmeti
 
     public static class Reloader extends JsonDataLoader {
 
-        private Map<Item, EggProcessingData> map;
+        private IdentityHashMap<Item, EggProcessingData> map = new IdentityHashMap<>();
 
         protected Reloader() {
             super(RELOADER.identifier());
         }
 
-        public EggProcessingData get(Item item) {
+        public @Nullable EggProcessingData get(Item item) {
             return this.map.get(item);
         }
 
         @Override
         protected void apply(Map<Identifier, JsonElement> data, ResourceManager manager, Profiler profiler) {
-            Map<Item, EggProcessingData> result = new IdentityHashMap<>();
+            IdentityHashMap<Item, EggProcessingData> result = new IdentityHashMap<>();
 
             for (Item item : CommonRegistries.items()) {
                 if (item instanceof SpawnEggItem egg) {

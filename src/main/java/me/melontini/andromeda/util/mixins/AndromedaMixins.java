@@ -1,5 +1,6 @@
-package me.melontini.andromeda.util.mixin;
+package me.melontini.andromeda.util.mixins;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import lombok.CustomLog;
 import me.melontini.andromeda.base.util.Environment;
@@ -46,7 +47,7 @@ public class AndromedaMixins {
                 })
                 .filter(AndromedaMixins::checkNode)
                 .map((n) -> n.name.replace('/', '.').substring((pck + ".").length()))
-                .toList();
+                .collect(ImmutableList.toImmutableList());
     }
 
     public static boolean checkNode(ClassNode n) {

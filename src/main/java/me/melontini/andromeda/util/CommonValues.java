@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.Locale;
 import java.util.Optional;
 
 @CustomLog
@@ -86,19 +87,25 @@ public class CommonValues {
     }
 
     private static Platform resolvePlatform() {
-        if (FabricLoader.getInstance().isModLoaded(Platform.CONNECTOR.modId)) {
-            try {
-                //The above check should be fine, but just in case.
-                Class.forName("dev.su5ed.sinytra.connector.mod.ConnectorMod", false, CommonValues.class.getClassLoader());
-                return Platform.CONNECTOR;
-            } catch (ClassNotFoundException ignored) {
-            }
-        }
+        if (isConnector()) return Platform.CONNECTOR;
         if (FabricLoader.getInstance().isModLoaded(Platform.QUILT.modId)) {
             String sn = MixinService.getService().getName().replaceAll("^Knot|^Launchwrapper|^ModLauncher|/", "");
             if ("quilt".equalsIgnoreCase(sn)) return Platform.QUILT;
         }
         return Platform.FABRIC;
+    }
+
+    private static boolean isConnector() {
+        if (FabricLoader.getInstance().isModLoaded(Platform.CONNECTOR.modId)) {
+            try {
+                //The above check should be fine, but just in case.
+                Class.forName("dev.su5ed.sinytra.connector.mod.ConnectorMod", false, CommonValues.class.getClassLoader());
+                return true;
+            } catch (ClassNotFoundException ignored) {
+                return false;
+            }
+        }
+        return false;
     }
 
     public enum Platform {
@@ -130,7 +137,7 @@ public class CommonValues {
 
         @Override
         public String toString() {
-            return StringUtils.capitalize(name().toLowerCase());
+            return StringUtils.capitalize(name().toLowerCase(Locale.ROOT));
         }
     }
 }

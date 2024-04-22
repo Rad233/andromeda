@@ -17,6 +17,7 @@ public class MerchantInventoryScreen extends HandledScreen<MerchantInventoryScre
         super(handler, inventory, title);
     }
 
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
         super.render(context, mouseX, mouseY, delta);

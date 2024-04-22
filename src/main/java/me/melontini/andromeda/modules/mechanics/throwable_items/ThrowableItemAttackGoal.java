@@ -6,8 +6,10 @@ import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 import static me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager.RELOADER;
 
@@ -15,6 +17,7 @@ public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
 
     private final ItemThrowerMob<T> owner;
     private final MobEntity mob;
+    @Nullable
     private LivingEntity target;
 
     private final double mobSpeed;
@@ -61,8 +64,9 @@ public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
         return false;
     }
 
+    @Override
     public boolean shouldContinue() {
-        return this.canStart() || this.target.isAlive() && !this.mob.getNavigation().isIdle();
+        return this.canStart() || (Objects.requireNonNull(this.target).isAlive() && !this.mob.getNavigation().isIdle());
     }
 
     @Override
@@ -72,6 +76,7 @@ public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
         this.mob.setAttacking(true);
     }
 
+    @Override
     public void stop() {
         this.target = null;
         this.seenTargetTicks = 0;
@@ -80,10 +85,12 @@ public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
         this.mob.setAttacking(false);
     }
 
+    @Override
     public boolean shouldRunEveryTick() {
         return true;
     }
 
+    @Override
     public void tick() {
         double d = this.mob.distanceTo(this.target);
         boolean bl = this.mob.getVisibilityCache().canSee(this.target);
@@ -105,7 +112,7 @@ public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
 
             float f = (float) Math.sqrt(d) / this.range;
             float g = MathHelper.clamp(f, 0.1F, 1.0F);
-            this.owner.am$throwItem(this.target, g);
+            this.owner.am$throwItem(Objects.requireNonNull(this.target), g);
             this.updateCountdownTicks = MathHelper.floor(f * (this.maxInterval - this.minInterval) + this.minInterval);
         } else if (this.updateCountdownTicks < 0) {
             this.updateCountdownTicks = MathHelper.floor(

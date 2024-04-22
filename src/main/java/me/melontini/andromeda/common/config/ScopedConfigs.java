@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Objects;
 
 @CustomLog
 public class ScopedConfigs {
@@ -116,7 +117,7 @@ public class ScopedConfigs {
         private final Map<Module<?>, Module.BaseConfig> configs = new Reference2ObjectOpenHashMap<>();
 
         public <T extends Module.BaseConfig> T get(Module<T> module) {
-            return (T) configs.get(module);
+            return Objects.requireNonNull((T) configs.get(module));
         }
 
         public void addConfig(Module<?> module, Module.BaseConfig config) {

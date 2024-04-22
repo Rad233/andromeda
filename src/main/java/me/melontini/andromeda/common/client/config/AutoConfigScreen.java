@@ -1,5 +1,7 @@
 package me.melontini.andromeda.common.client.config;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import lombok.CustomLog;
 import me.melontini.andromeda.base.AndromedaConfig;
 import me.melontini.andromeda.base.Module;
@@ -92,10 +94,12 @@ public class AutoConfigScreen {
         return builder.build();
     }
 
+    private static final Splitter SPLITTER = Splitter.on("-");
+
     public static Screen get(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(TextUtil.translatable("config.andromeda.title", CommonValues.version().split("-")[0]))
+                .setTitle(TextUtil.translatable("config.andromeda.title", Iterables.get(SPLITTER.split(CommonValues.version()), 0)))
                 .setSavingRunnable(AutoConfigScreen::powerSave)
                 .setDefaultBackgroundTexture(Identifier.tryParse("minecraft:textures/block/amethyst_block.png"));
 
@@ -234,7 +238,7 @@ public class AutoConfigScreen {
 
     private static void appendEnvInfo(AbstractConfigListEntry<?> e, Environment env) {
         if (e instanceof TooltipListEntry<?> t) {
-            Text text = TextUtil.translatable("andromeda.config.tooltip.environment." + env.toString().toLowerCase()).formatted(Formatting.YELLOW);
+            Text text = TextUtil.translatable("andromeda.config.tooltip.environment." + env.toString().toLowerCase(Locale.ROOT)).formatted(Formatting.YELLOW);
             appendText(t, text);
         }
     }
@@ -242,7 +246,7 @@ public class AutoConfigScreen {
     private static void appendEnvInfo(AbstractConfigListEntry<?> e, Field f) {
         if (e instanceof TooltipListEntry<?> t && f.isAnnotationPresent(SpecialEnvironment.class)) {
             SpecialEnvironment env = f.getAnnotation(SpecialEnvironment.class);
-            Text text = TextUtil.translatable("andromeda.config.tooltip.environment." + env.value().toString().toLowerCase()).formatted(Formatting.YELLOW);
+            Text text = TextUtil.translatable("andromeda.config.tooltip.environment." + env.value().toString().toLowerCase(Locale.ROOT)).formatted(Formatting.YELLOW);
             appendText(t, text);
         }
     }

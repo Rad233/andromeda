@@ -1,36 +1,91 @@
 package me.melontini.andromeda.common;//common between modules, not environments.
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import me.melontini.andromeda.base.AndromedaConfig;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.common.config.DataConfigs;
+import me.melontini.andromeda.common.registries.AndromedaItemGroup;
 import me.melontini.andromeda.common.registries.Common;
 import me.melontini.andromeda.common.util.ServerHelper;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.dark_matter.api.base.util.Support;
 import me.melontini.dark_matter.api.data.loading.ServerReloadersEvent;
+import me.melontini.dark_matter.api.item_group.ItemGroupBuilder;
 import me.melontini.dark_matter.api.minecraft.util.TextUtil;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
+import static me.melontini.andromeda.common.registries.Common.id;
 import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public class Andromeda {
 
     public static final Identifier VERIFY_MODULES = new Identifier(MODID, "verify_modules");
+    @Nullable
     private static Andromeda INSTANCE;
+
+    public final ItemGroup group = ItemGroupBuilder.create(id("group"))
+            .entries(entries -> {
+                Map<Module<?>, List<ItemStack>> stackMap = new LinkedHashMap<>();
+                AndromedaItemGroup.Acceptor acceptor = (module, stack) -> {
+                    if (!stack.isEmpty()) {
+                        stackMap.computeIfAbsent(module, module1 -> new ArrayList<>()).add(stack);
+                    }
+                };
+                AndromedaItemGroup.ACCEPTORS.forEach(consumer -> consumer.accept(acceptor));
+
+                Map<Module<?>, List<ItemStack>> small = new LinkedHashMap<>();
+                Map<Module<?>, List<ItemStack>> big = new LinkedHashMap<>();
+
+                if (stackMap.isEmpty()) {
+                    entries.add(Items.BARRIER);
+                    return;
+                }
+
+                stackMap.forEach((module, itemStacks) -> {
+                    if (itemStacks.size() > 2) {
+                        big.put(module, itemStacks);
+                    } else if (!itemStacks.isEmpty()) {
+                        small.put(module, itemStacks);
+                    }
+                });
+
+                if (small.isEmpty() && big.isEmpty()) {
+                    entries.add(Items.BARRIER);
+                    return;
+                }
+
+                List<ItemStack> stacks = new ArrayList<>();
+                small.forEach((m, itemStacks) -> {
+                    ItemStack sign = new ItemStack(Items.SPRUCE_SIGN);
+                    sign.setCustomName(TextUtil.translatable("config.andromeda.%s".formatted(m.meta().dotted())));
+                    stacks.add(sign);
+                    stacks.addAll(itemStacks);
+                    stacks.add(ItemStack.EMPTY);
+                });
+                entries.appendStacks(stacks);
+
+                big.forEach((m, itemStacks) -> {
+                    ItemStack sign = new ItemStack(Items.SPRUCE_SIGN);
+                    sign.setCustomName(TextUtil.translatable("config.andromeda.%s".formatted(m.meta().dotted())));
+                    itemStacks.add(0, sign);
+                    entries.appendStacks(itemStacks);
+                });
+            })
+            .displayName(TextUtil.translatable("itemGroup.andromeda.items")).optional().orElseThrow();
 
     public static void init() {
         INSTANCE = new Andromeda();
@@ -63,7 +118,7 @@ public class Andromeda {
 
                 Set<String> modules = manager.loaded().stream()
                         .map(Module::meta).filter(m -> m.environment().isBoth())
-                        .map(Module.Metadata::id).collect(Collectors.toSet());
+                        .map(Module.Metadata::id).collect(ImmutableSet.toImmutableSet());
                 if (!understood) {
                     if (!modules.isEmpty())
                         handler.disconnect(TextUtil.translatable("andromeda.disconnected.module_mismatch",

@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -171,7 +172,7 @@ public class DataConfigs extends JsonDataLoader {
             }
         }
 
-        var data = configs.get(id);
+        var data = Objects.requireNonNull(configs).get(id);
         if (data != null) {
             var forModule = data.get(m);
             if (forModule != null) {

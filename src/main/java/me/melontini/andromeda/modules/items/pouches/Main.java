@@ -30,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -123,7 +124,7 @@ public class Main {
         }
     }
 
-    private static Field traverse(Class<?> cls) {
+    private static @Nullable Field traverse(Class<?> cls) {
         for (Field f : cls.getDeclaredFields()) {
             if (f.getType() == ViewerCountManager.class) {
                 return f;

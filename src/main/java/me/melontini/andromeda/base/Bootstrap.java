@@ -1,5 +1,6 @@
 package me.melontini.andromeda.base;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.CustomLog;
 import me.melontini.andromeda.base.events.Bus;
 import me.melontini.andromeda.base.events.InitEvent;
@@ -8,7 +9,7 @@ import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.client.AndromedaClient;
 import me.melontini.andromeda.util.*;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
-import me.melontini.andromeda.util.mixin.AndromedaMixins;
+import me.melontini.andromeda.util.mixins.AndromedaMixins;
 import me.melontini.dark_matter.api.base.util.Context;
 import me.melontini.dark_matter.api.base.util.EntrypointRunner;
 import me.melontini.dark_matter.api.base.util.Support;
@@ -222,10 +223,20 @@ public class Bootstrap {
         PRE_INIT, INIT, DISCOVERY, SETUP,
         PRE_LAUNCH, MAIN, DEFAULT;
 
+        private static final Map<Status, Status> PROGRESS = ImmutableMap.<Status, Status>builder()
+                .put(PRE_INIT, INIT)
+                .put(INIT, DISCOVERY)
+                .put(DISCOVERY, SETUP)
+                .put(SETUP, PRE_LAUNCH)
+                .put(PRE_LAUNCH, MAIN)
+                .put(MAIN, DEFAULT)
+                .build();
         private static Status CURRENT = PRE_INIT;
 
         public static void update() {
-            Status.CURRENT = values()[CURRENT.ordinal() + 1];
+            var progress = PROGRESS.get(Status.CURRENT);
+            if (progress == null) throw new IllegalStateException();
+            Status.CURRENT = progress;
             LOGGER.debug("Status updated to {}", Status.CURRENT);
         }
 

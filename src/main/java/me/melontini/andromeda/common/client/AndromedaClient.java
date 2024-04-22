@@ -7,8 +7,8 @@ import me.melontini.andromeda.base.AndromedaConfig;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.events.BlockadesEvent;
 import me.melontini.andromeda.base.util.Promise;
+import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.client.config.FeatureBlockade;
-import me.melontini.andromeda.common.registries.AndromedaItemGroup;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.dark_matter.api.item_group.ItemGroupAnimaton;
@@ -64,7 +64,7 @@ public class AndromedaClient {
         BlockadesEvent.BUS.invoker().explain(blockade);
 
         ResourceManagerHelper.registerBuiltinResourcePack(id("dark"), CommonValues.mod(), ResourcePackActivationType.NORMAL);
-        ItemGroupAnimaton.setIconAnimation(AndromedaItemGroup.GROUP, (group, context, itemX, itemY, selected, isTopRow) -> {
+        ItemGroupAnimaton.setIconAnimation(Andromeda.get().group, (group, context, itemX, itemY, selected, isTopRow) -> {
             try {
                 if (!animate) return;
                 drawTexture(context.getMatrices(), itemX + 8, itemY + 8, stack -> {
