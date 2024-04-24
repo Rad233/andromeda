@@ -17,8 +17,7 @@ public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
 
     private final ItemThrowerMob<T> owner;
     private final MobEntity mob;
-    @Nullable
-    private LivingEntity target;
+    @Nullable private LivingEntity target;
 
     private final double mobSpeed;
     private final int minInterval;

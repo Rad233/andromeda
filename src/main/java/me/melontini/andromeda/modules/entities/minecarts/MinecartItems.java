@@ -92,9 +92,7 @@ public class MinecartItems {
         });
     }
 
-    @Nullable
-    @Unique
-    private static Identifier andromeda$getEntityId(MobSpawnerBlockEntity mobSpawnerBlockEntity) {
+    @Nullable @Unique private static Identifier andromeda$getEntityId(MobSpawnerBlockEntity mobSpawnerBlockEntity) {
         String identifier = mobSpawnerBlockEntity.getLogic().spawnEntry.getNbt().getString("id");
 
         try {

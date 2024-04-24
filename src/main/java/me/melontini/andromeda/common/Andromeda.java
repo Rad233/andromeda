@@ -34,8 +34,7 @@ import static me.melontini.andromeda.util.CommonValues.MODID;
 public class Andromeda {
 
     public static final Identifier VERIFY_MODULES = new Identifier(MODID, "verify_modules");
-    @Nullable
-    private static Andromeda INSTANCE;
+    @Nullable private static Andromeda INSTANCE;
 
     public final ItemGroup group = ItemGroupBuilder.create(id("group"))
             .entries(entries -> {

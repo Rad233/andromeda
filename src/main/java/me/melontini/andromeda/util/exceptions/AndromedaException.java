@@ -107,8 +107,7 @@ public class AndromedaException extends RuntimeException {
         }
 
         private final List<String> message = new ArrayList<>();
-        @Nullable
-        private Throwable cause;
+        @Nullable private Throwable cause;
         private boolean report = true;
 
         private final JsonObject statuses = new JsonObject();

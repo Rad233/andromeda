@@ -20,8 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SlimeEntity.class)
 abstract class SlimeEntityMixin extends MobEntity {
-    @Unique
-    private static final Slimes am$slimes = ModuleManager.quick(Slimes.class);
+    @Unique private static final Slimes am$slimes = ModuleManager.quick(Slimes.class);
 
     @Shadow public abstract int getSize();
 

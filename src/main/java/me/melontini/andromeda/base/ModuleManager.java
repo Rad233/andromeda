@@ -39,8 +39,7 @@ public class ModuleManager {
 
     public static final List<String> CATEGORIES = List.of("world", "blocks", "entities", "items", "bugfixes", "mechanics", "gui", "misc");
 
-    @Nullable
-    private static ModuleManager INSTANCE;
+    @Nullable private static ModuleManager INSTANCE;
 
     private final Map<Class<?>, PromiseImpl<?>> discoveredModules;
     private final Map<String, PromiseImpl<?>> discoveredModuleNames;

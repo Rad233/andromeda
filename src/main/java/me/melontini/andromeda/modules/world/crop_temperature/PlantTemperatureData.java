@@ -91,8 +91,7 @@ public record PlantTemperatureData(List<Block> blocks, float min, float max, flo
 
     public static class Reloader extends JsonDataLoader {
 
-        @Nullable
-        private IdentityHashMap<Block, PlantTemperatureData> map;
+        @Nullable private IdentityHashMap<Block, PlantTemperatureData> map;
         private final PlantTemperature module;
 
         protected Reloader(PlantTemperature module) {

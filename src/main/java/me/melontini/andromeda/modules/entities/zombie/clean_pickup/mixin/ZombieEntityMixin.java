@@ -33,8 +33,7 @@ abstract class ZombieEntityMixin extends HostileEntity {
         return original;
     }
 
-    @Unique
-    private boolean handleThrowableItems(ThrowableItems m, World world, ItemStack stack) {
+    @Unique private boolean handleThrowableItems(ThrowableItems m, World world, ItemStack stack) {
         return m.config().canZombiesThrowItems && world.getServer().dm$getReloader(RELOADER).hasBehaviors(stack.getItem());
     }
 }

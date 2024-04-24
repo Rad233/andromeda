@@ -85,8 +85,7 @@ public class CustomTraderManager {
         traderLlamaEntity.attachLeash(wanderingTrader, true);
     }
 
-    @Nullable
-    private BlockPos getNearbySpawnPos(WorldView world, BlockPos pos, int range) {
+    @Nullable private BlockPos getNearbySpawnPos(WorldView world, BlockPos pos, int range) {
         BlockPos blockPos = null;
 
         for (int i = 0; i < 10; ++i) {

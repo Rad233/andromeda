@@ -27,13 +27,11 @@ import static me.melontini.dark_matter.api.base.util.Exceptions.supply;
 
 @Mixin(FurnaceMinecartEntity.class)
 abstract class FurnaceMinecartIntakeMixin extends AbstractMinecartEntity {
-    @Unique
-    private static final BetterFurnaceMinecart am$bfm = ModuleManager.quick(BetterFurnaceMinecart.class);
+    @Unique private static final BetterFurnaceMinecart am$bfm = ModuleManager.quick(BetterFurnaceMinecart.class);
 
     //stfu IDEA.
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @Unique
-    private static final Optional<Field> fb$pauseFuel = Support.fallback("fabrication", () -> Reflect.findField(FurnaceMinecartEntity.class, "fabrication$pauseFuel"), Optional::empty);
+    @Unique private static final Optional<Field> fb$pauseFuel = Support.fallback("fabrication", () -> Reflect.findField(FurnaceMinecartEntity.class, "fabrication$pauseFuel"), Optional::empty);
 
 
     @Shadow public int fuel;

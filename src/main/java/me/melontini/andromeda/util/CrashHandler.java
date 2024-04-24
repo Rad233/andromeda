@@ -128,8 +128,7 @@ public class CrashHandler {
     }
 
     private static class Flag {
-        @Nullable
-        private Boolean report = null;
+        @Nullable private Boolean report = null;
 
         private void mark(boolean report) {
             if (this.report == null || this.report) this.report = report;

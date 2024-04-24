@@ -111,8 +111,7 @@ public class IncubatorBlock extends BlockWithEntity implements InventoryProvider
         return VoxelShapes.union(BASE_SHAPE, GLASS_SHAPE);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new IncubatorBlockEntity(pos, state);
     }

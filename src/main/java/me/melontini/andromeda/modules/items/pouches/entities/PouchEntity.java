@@ -172,8 +172,7 @@ public class PouchEntity extends ThrownItemEntity {
         });
 
         private final int syncId;
-        @Nullable
-        private final Identifier lootId;
+        @Nullable private final Identifier lootId;
         private final Keeper<PouchItem> defaultItem;
 
         Type(int syncId, @Nullable Identifier lootId, Keeper<PouchItem> defaultItem) {
