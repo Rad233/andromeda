@@ -37,7 +37,7 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: |
-          ./gradlew build publishToMavenLocal
+          ./gradlew build spotbugs publishToMavenLocal
       - name: get version #https://stackoverflow.com/questions/71089787/how-to-get-version-name-from-android-gradle-file-in-github-actions
         id: get_version
         run: |
@@ -48,6 +48,14 @@ jobs:
         with:
           name: Artifacts
           path: ~/.m2/repository/me/melontini/andromeda/${{ steps.get_version.outputs.version_plain }}
+
+      - name: set up reviewdog
+        uses: reviewdog/action-setup@v1
+      - name: upload spotbugs sarif report
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cat ./build/reports/spotbugs/main/spotbugs.sarif | reviewdog -name="spotbugs" -f=sarif -reporter=github-check -level=warning
 
   client_test:
     needs: build
