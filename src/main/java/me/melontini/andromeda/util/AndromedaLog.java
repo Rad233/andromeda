@@ -9,7 +9,6 @@ import java.util.List;
 
 public class AndromedaLog {
 
-    private static final boolean prefix = (!Utilities.isDev() && CommonValues.platform() != CommonValues.Platform.CONNECTOR);
     private static final Splitter SPLITTER = Splitter.on(".");
 
     public static @NotNull PrependingLogger factory() {
@@ -20,6 +19,7 @@ public class AndromedaLog {
         caller = "Andromeda/" + caller;
         if (cls.getName().startsWith("net.minecraft.")) caller += "@Mixin";
 
+        boolean prefix = (!Utilities.isDev() && CommonValues.platform() != CommonValues.Platform.CONNECTOR);
         return PrependingLogger.get(caller, logger -> prefix ? "(" + logger.getName() + ") " : "");
     }
 }

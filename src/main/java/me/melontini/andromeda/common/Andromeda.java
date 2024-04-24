@@ -2,13 +2,13 @@ package me.melontini.andromeda.common;//common between modules, not environments
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import lombok.Getter;
 import me.melontini.andromeda.base.AndromedaConfig;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.common.config.DataConfigs;
 import me.melontini.andromeda.common.registries.AndromedaItemGroup;
 import me.melontini.andromeda.common.registries.Common;
-import me.melontini.andromeda.common.util.ServerHelper;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.dark_matter.api.base.util.Support;
@@ -22,6 +22,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +45,7 @@ public class Andromeda {
                         stackMap.computeIfAbsent(module, module1 -> new ArrayList<>()).add(stack);
                     }
                 };
-                AndromedaItemGroup.ACCEPTORS.forEach(consumer -> consumer.accept(acceptor));
+                AndromedaItemGroup.getAcceptors().forEach(consumer -> consumer.accept(acceptor));
 
                 Map<Module<?>, List<ItemStack>> small = new LinkedHashMap<>();
                 Map<Module<?>, List<ItemStack>> big = new LinkedHashMap<>();
@@ -86,17 +87,21 @@ public class Andromeda {
             })
             .displayName(TextUtil.translatable("itemGroup.andromeda.items")).optional().orElseThrow();
 
+    @Getter
+    private @Nullable MinecraftServer currentServer;
+
     public static void init() {
-        INSTANCE = new Andromeda();
-        INSTANCE.onInitialize(ModuleManager.get());
-        Support.share("andromeda:main", INSTANCE);
+        var instance = new Andromeda();
+        instance.onInitialize(ModuleManager.get());
+        Support.share("andromeda:main", instance);
+        INSTANCE = instance;
     }
 
     private void onInitialize(ModuleManager manager) {
         Common.bootstrap();
 
-        ServerLifecycleEvents.SERVER_STARTING.register(ServerHelper::setContext);
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> ServerHelper.setContext(null));
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> this.currentServer = server);
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.currentServer = null);
 
         ServerReloadersEvent.EVENT.register(context -> context.register(new DataConfigs()));
 

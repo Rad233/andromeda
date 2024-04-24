@@ -12,7 +12,7 @@ import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.util.Experiments;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.common.registries.Common;
-import me.melontini.andromeda.common.util.JsonDataLoader;
+import me.melontini.andromeda.common.util.IdentifiedJsonDataLoader;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.data.loading.ReloaderType;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 import static me.melontini.andromeda.util.CommonValues.MODID;
 
-public class DataConfigs extends JsonDataLoader {
+public class DataConfigs extends IdentifiedJsonDataLoader {
 
     private static final Identifier DEFAULT = new Identifier(MODID, "default");
     public static final ReloaderType<DataConfigs> RELOADER = ReloaderType.create(Common.id("scoped_config"));
@@ -46,7 +46,7 @@ public class DataConfigs extends JsonDataLoader {
     public static DataConfigs get(MinecraftServer server) {
         try {
             return server.dm$getReloader(RELOADER);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             throw AndromedaException.builder().cause(e).report(false)
                     .translatable("scoped_configs.no_reloader")
                     .build();
@@ -123,7 +123,7 @@ public class DataConfigs extends JsonDataLoader {
         var task = CompletableFuture.allOf(ModuleManager.get().loaded().stream().filter(module -> !module.config().scope.isGlobal())
                 .map(m -> switch (m.config().scope) {
                     case WORLD -> CompletableFuture.runAsync(() -> {
-                        if (world.getRegistryKey().equals(World.OVERWORLD))
+                        if (World.OVERWORLD.equals(world.getRegistryKey()))
                             ScopedConfigs.prepareForWorld(world, m, ScopedConfigs.getPath(world, m));
                     }, Util.getMainWorkerExecutor());
                     case DIMENSION ->
@@ -141,7 +141,7 @@ public class DataConfigs extends JsonDataLoader {
         var task = CompletableFuture.allOf(ModuleManager.get().loaded().stream().filter(module -> !module.config().scope.isGlobal())
                 .map(m -> switch (m.config().scope) {
                     case WORLD -> CompletableFuture.runAsync(() -> {
-                        ServerWorld world = server.getWorld(World.OVERWORLD);
+                        ServerWorld world = server.getOverworld();
                         ScopedConfigs.prepareForWorld(world, m, ScopedConfigs.getPath(world, m));
                     }, Util.getMainWorkerExecutor());
                     case DIMENSION -> CompletableFuture.runAsync(() -> {

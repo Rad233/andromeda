@@ -7,7 +7,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.common.registries.Common;
-import me.melontini.andromeda.common.util.JsonDataLoader;
+import me.melontini.andromeda.common.util.IdentifiedJsonDataLoader;
 import me.melontini.commander.api.command.Command;
 import me.melontini.commander.api.expression.Arithmetica;
 import me.melontini.dark_matter.api.data.codecs.ExtraCodecs;
@@ -50,7 +50,7 @@ public record EggProcessingData(Item item, WeightedList<Entry> entity, Arithmeti
         ServerReloadersEvent.EVENT.register(context -> context.register(new Reloader()));
     }
 
-    public static class Reloader extends JsonDataLoader {
+    public static class Reloader extends IdentifiedJsonDataLoader {
 
         private IdentityHashMap<Item, EggProcessingData> map = new IdentityHashMap<>();
 

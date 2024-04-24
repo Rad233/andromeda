@@ -104,9 +104,9 @@ abstract class ItemEntityMixin extends Entity {
                             ItemEntity entity = new ItemEntity(world, andromeda$itemEntity.getX(), andromeda$itemEntity.getY(), andromeda$itemEntity.getZ(), newStack);
                             world.spawnEntity(entity);
 
-                            PacketByteBuf buf = PacketByteBufs.create();
-                            buf.writeVarInt(andromeda$itemEntity.getId());
-                            buf.writeItemStack(targetStack);
+                            PacketByteBuf buf = PacketByteBufs.create()
+                                    .writeVarInt(andromeda$itemEntity.getId())
+                                    .writeItemStack(targetStack);
                             for (ServerPlayerEntity serverPlayerEntity : PlayerLookup.tracking(this)) {
                                 ServerPlayNetworking.send(serverPlayerEntity, Main.NOTIFY_CLIENT, buf);
                             }

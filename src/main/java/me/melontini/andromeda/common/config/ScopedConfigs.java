@@ -32,7 +32,7 @@ public class ScopedConfigs {
         if (world instanceof ServerWorld sw) {
             return switch (module.config().scope) {
                 case GLOBAL -> module.config();
-                case WORLD -> getConfigs(sw.getServer().getWorld(World.OVERWORLD)).get(module);
+                case WORLD -> getConfigs(sw.getServer().getOverworld()).get(module);
                 case DIMENSION -> getConfigs(sw).get(module);
             };
         }

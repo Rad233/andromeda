@@ -14,9 +14,11 @@ public class FeatureBlockade {
 
     private final IdentityHashMap<Module<?>, Map<String, Tuple<Set<Text>, BooleanSupplier>>> blockades = new IdentityHashMap<>();
 
-    public static FeatureBlockade get() {
+    public static synchronized FeatureBlockade get() {
         return INSTANCE;
     }
+
+    private FeatureBlockade() {}
 
     public FeatureBlockade explain(Module<?> module, String feature, BooleanSupplier predicate, String key) {
         blockades.computeIfAbsent(module, m -> new HashMap<>()).computeIfAbsent(feature, f -> Tuple.of(new HashSet<>(), predicate)).left().add(TextUtil.translatable(key));

@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
-import me.melontini.andromeda.common.util.JsonDataLoader;
+import me.melontini.andromeda.common.util.IdentifiedJsonDataLoader;
 import me.melontini.andromeda.modules.mechanics.throwable_items.ItemBehavior;
 import me.melontini.commander.api.expression.Arithmetica;
 import me.melontini.dark_matter.api.base.util.Utilities;
@@ -19,7 +19,7 @@ import java.util.*;
 
 import static me.melontini.andromeda.common.registries.Common.id;
 
-public class ItemBehaviorManager extends JsonDataLoader {
+public class ItemBehaviorManager extends IdentifiedJsonDataLoader {
 
     public static final ReloaderType<ItemBehaviorManager> RELOADER = ReloaderType.create(id("item_throw_behaviors"));
 

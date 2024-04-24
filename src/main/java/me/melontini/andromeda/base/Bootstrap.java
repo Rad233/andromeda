@@ -114,6 +114,8 @@ public class Bootstrap {
 
     public static void onPreLaunch() {
         try {
+            EarlyLanguage.load();
+
             Status.update();
             LOGGER.info(EarlyLanguage.translate("andromeda.bootstrap.loading", CommonValues.version(), CommonValues.platform(), CommonValues.platform().version()));
 
@@ -199,7 +201,7 @@ public class Bootstrap {
     }
 
     public static ClassPath getModuleClassPath() {
-        return AndromedaMixins.getClassPath();
+        return AndromedaMixins.CLASS_PATH;
     }
 
     public static boolean testModVersion(Module<?> m, String modId, String predicate) {
@@ -240,7 +242,7 @@ public class Bootstrap {
             LOGGER.debug("Status updated to {}", Status.CURRENT);
         }
 
-        public static Status get() {
+        public static synchronized Status get() {
             return CURRENT;
         }
     }

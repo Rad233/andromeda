@@ -5,12 +5,17 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class AndromedaItemGroup {
 
-    public static final List<Consumer<Acceptor>> ACCEPTORS = new ArrayList<>();
+    private static final List<Consumer<Acceptor>> ACCEPTORS = new ArrayList<>();
+
+    public static List<Consumer<Acceptor>> getAcceptors() {
+        return Collections.unmodifiableList(ACCEPTORS);
+    }
 
     public static void accept(Consumer<Acceptor> consumer) {
         ACCEPTORS.add(consumer);

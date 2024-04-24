@@ -87,7 +87,8 @@ public class GitTracker {
                 if (!PRESERVE_KEYS.contains(s)) jsonResponse.remove(s);
             }
 
-            if (!Files.exists(lastResponse)) Files.createDirectories(lastResponse.getParent());
+            var parent = lastResponse.getParent();
+            if (parent != null && !Files.exists(parent)) Files.createDirectories(parent);
             Files.writeString(lastResponse, jsonResponse.toString());
         } catch (Exception e) {
             LOGGER.warn("Couldn't update git info", e);

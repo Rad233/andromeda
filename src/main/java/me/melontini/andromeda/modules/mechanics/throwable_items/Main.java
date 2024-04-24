@@ -42,7 +42,7 @@ public class Main implements ServerReloadersEvent {
 
     public static final Keeper<EntityType<FlyingItemEntity>> FLYING_ITEM = Keeper.create();
 
-    public static RegistryKey<DamageType> BRICKED = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("bricked"));
+    public static final RegistryKey<DamageType> BRICKED = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("bricked"));
 
     public static final Identifier FLYING_STACK_LANDED = new Identifier(MODID, "flying_stack_landed");
     public static final Identifier ITEMS_WITH_BEHAVIORS = new Identifier(MODID, "items_with_behaviors");
@@ -91,9 +91,8 @@ public class Main implements ServerReloadersEvent {
     }
 
     private static PacketByteBuf sendItemsS2CPacket(ItemBehaviorManager manger) {
-        var packet = PacketByteBufs.create();
         var items = manger.itemsWithBehaviors();
-        packet.writeVarInt(items.size());
+        var packet = PacketByteBufs.create().writeVarInt(items.size());
         for (Item item : items) {
             packet.writeIdentifier(CommonRegistries.items().getId(item));
         }

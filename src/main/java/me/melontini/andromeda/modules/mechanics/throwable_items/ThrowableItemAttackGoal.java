@@ -9,8 +9,8 @@ import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
-import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
 import static me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager.RELOADER;
 
 public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
@@ -49,7 +49,7 @@ public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
 
     @Override
     public boolean canStart() {
-        if (mob.world.getServer().dm$getReloader(RELOADER).hasBehaviors(this.mob.getMainHandStack().getItem())) {
+        if (requireNonNull(mob.world.getServer()).dm$getReloader(RELOADER).hasBehaviors(this.mob.getMainHandStack().getItem())) {
             LivingEntity livingEntity = this.mob.getTarget();
             if (livingEntity != null && livingEntity.isAlive() && this.owner.am$cooldown() <= 0) {
                 double d = this.mob.distanceTo(livingEntity);
@@ -65,7 +65,7 @@ public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
 
     @Override
     public boolean shouldContinue() {
-        return this.canStart() || (Objects.requireNonNull(this.target).isAlive() && !this.mob.getNavigation().isIdle());
+        return this.canStart() || (requireNonNull(this.target).isAlive() && !this.mob.getNavigation().isIdle());
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ThrowableItemAttackGoal<T extends MobEntity> extends Goal {
 
             float f = (float) Math.sqrt(d) / this.range;
             float g = MathHelper.clamp(f, 0.1F, 1.0F);
-            this.owner.am$throwItem(Objects.requireNonNull(this.target), g);
+            this.owner.am$throwItem(requireNonNull(this.target), g);
             this.updateCountdownTicks = MathHelper.floor(f * (this.maxInterval - this.minInterval) + this.minInterval);
         } else if (this.updateCountdownTicks < 0) {
             this.updateCountdownTicks = MathHelper.floor(

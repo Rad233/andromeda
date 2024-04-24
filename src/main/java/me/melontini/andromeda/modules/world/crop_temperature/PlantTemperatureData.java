@@ -8,7 +8,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.common.registries.Common;
-import me.melontini.andromeda.common.util.JsonDataLoader;
+import me.melontini.andromeda.common.util.IdentifiedJsonDataLoader;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.dark_matter.api.base.util.Mapper;
 import me.melontini.dark_matter.api.base.util.MathUtil;
@@ -78,8 +78,8 @@ public record PlantTemperatureData(List<Block> blocks, float min, float max, flo
             }
         });
 
-        if (!override.isEmpty()) module.logger().warn("Missing crop temperatures: " + override);
-        if (!blocks.isEmpty()) module.logger().warn("Possible missing crop temperatures: " + blocks);
+        if (!override.isEmpty()) module.logger().warn("Missing crop temperatures: " + override.stream().map(block -> CommonRegistries.blocks().getId(block)).toList());
+        if (!blocks.isEmpty()) module.logger().warn("Possible missing crop temperatures: " + blocks.stream().map(block -> CommonRegistries.blocks().getId(block)).toList());
     }
 
     private static boolean methodInHierarchyUntil(Class<?> cls, String name, Class<?> stopClass) {
@@ -89,7 +89,7 @@ public record PlantTemperatureData(List<Block> blocks, float min, float max, flo
         return !stopClass.equals(cls.getSuperclass()) && methodInHierarchyUntil(cls.getSuperclass(), name, stopClass);
     }
 
-    public static class Reloader extends JsonDataLoader {
+    public static class Reloader extends IdentifiedJsonDataLoader {
 
         @Nullable private IdentityHashMap<Block, PlantTemperatureData> map;
         private final PlantTemperature module;

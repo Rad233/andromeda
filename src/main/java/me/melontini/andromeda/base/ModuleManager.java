@@ -6,6 +6,7 @@ import me.melontini.andromeda.base.events.ConfigEvent;
 import me.melontini.andromeda.base.util.Experiments;
 import me.melontini.andromeda.base.util.Promise;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
+import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.andromeda.util.EarlyLanguage;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
@@ -39,7 +40,7 @@ public class ModuleManager {
 
     public static final List<String> CATEGORIES = List.of("world", "blocks", "entities", "items", "bugfixes", "mechanics", "gui", "misc");
 
-    @Nullable private static ModuleManager INSTANCE;
+    @Nullable static ModuleManager INSTANCE;
 
     private final Map<Class<?>, PromiseImpl<?>> discoveredModules;
     private final Map<String, PromiseImpl<?>> discoveredModuleNames;
@@ -50,7 +51,6 @@ public class ModuleManager {
     private final MixinProcessor mixinProcessor;
 
     ModuleManager(List<Module.Zygote> zygotes) {
-        if (INSTANCE != null) throw new IllegalStateException("ModuleManager already initialized!");
         INSTANCE = this;
         this.mixinProcessor = new MixinProcessor(this);
 
@@ -127,19 +127,15 @@ public class ModuleManager {
     private void setUpConfigs(Collection<? extends Module<?>> modules) {
         modules.forEach(m -> {
             var manager = makeManager(m);
-            manager.onLoad((config1, path) -> {
+            manager.onLoad((config, path) -> {
                 if (AndromedaConfig.get().sideOnlyMode) {
-                    switch (m.meta().environment()) {
-                        case BOTH -> config1.enabled = false;
-                        case CLIENT -> {
-                            if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT)
-                                config1.enabled = false;
-                        }
-                        case SERVER -> {
-                            if (FabricLoader.getInstance().getEnvironmentType() != EnvType.SERVER)
-                                config1.enabled = false;
-                        }
+                    var env = m.meta().environment();
+                    if (CommonValues.environment() == EnvType.CLIENT) {
+                        if (env.isServer()) config.enabled = false;
+                    } else {
+                        if (env.isClient()) config.enabled = false;
                     }
+                    if (env.isBoth()) config.enabled = false;
                 }
             });
             manager.exceptionHandler((e, stage, path) -> LOGGER.error("Failed to %s config for module: %s".formatted(stage.toString().toLowerCase(Locale.ROOT), m.meta().id()), e));
