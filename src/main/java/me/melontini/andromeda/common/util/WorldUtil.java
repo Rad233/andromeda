@@ -1,6 +1,5 @@
 package me.melontini.andromeda.common.util;
 
-import lombok.NonNull;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.data.nbt.NbtBuilder;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -23,6 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +38,7 @@ public class WorldUtil {
         crudeSetVelocity(entity, new Vec3d(x, y, z));
     }
 
-    public static void crudeSetVelocity(@NonNull Entity entity, Vec3d velocity) {
+    public static void crudeSetVelocity(Entity entity, Vec3d velocity) {
         if (!entity.world.isClient) {
             entity.setVelocity(velocity);
             for (ServerPlayerEntity player : PlayerLookup.tracking(entity)) {
@@ -49,14 +49,16 @@ public class WorldUtil {
         }
     }
 
-    public static List<ItemStack> prepareLoot(@NonNull World world, @NonNull Identifier lootId) {
+    public static List<ItemStack> prepareLoot(@NotNull World world, Identifier lootId) {
+        MakeSure.notNulls(world, lootId);
         return ((ServerWorld) world).getServer()
                 .getLootManager()
                 .getLootTable(lootId)
                 .generateLoot(new LootContextParameterSet.Builder(((ServerWorld) world)).build(LootContextTypes.EMPTY));
     }
 
-    public static void trySpawnFallingBeeNest(@NonNull World world, @NonNull BlockPos pos, @NonNull BlockState state, @NonNull BeehiveBlockEntity beehiveBlockEntity) {
+    public static void trySpawnFallingBeeNest(@NotNull World world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull BeehiveBlockEntity beehiveBlockEntity) {
+        MakeSure.notNulls(world, pos, state, beehiveBlockEntity);
         FallingBlockEntity fallingBlock = new FallingBlockEntity(
                 world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5,
                 state.contains(Properties.WATERLOGGED) ? state.with(Properties.WATERLOGGED, Boolean.FALSE) : state);
@@ -72,7 +74,7 @@ public class WorldUtil {
         world.spawnEntity(fallingBlock);
     }
 
-    public static boolean isClear(@NonNull World world, BlockPos pos) {
+    public static boolean isClear(World world, BlockPos pos) {
         if (!world.getBlockState(pos).isAir()) {
             return false;
         }
@@ -84,7 +86,8 @@ public class WorldUtil {
         return true;
     }
 
-    public static Optional<BlockPos> pickRandomSpot(@NonNull World world, @NonNull BlockPos blockPos, int range, @NonNull Random random) {
+    public static Optional<BlockPos> pickRandomSpot(World world, BlockPos blockPos, int range, Random random) {
+        MakeSure.notNulls(world, blockPos, random);
         MakeSure.isTrue(range > 0, "range can't be negative or zero!");
         double j = (range * range * range) * 0.75;
 

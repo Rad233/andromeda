@@ -11,6 +11,7 @@ import me.melontini.andromeda.modules.entities.minecarts.items.NoteBlockMinecart
 import me.melontini.andromeda.modules.entities.minecarts.items.SpawnerMinecartItem;
 import me.melontini.andromeda.modules.items.minecart_block_picking.MinecartBlockPicking;
 import me.melontini.andromeda.modules.items.minecart_block_picking.PickUpBehaviorHandler;
+import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.data.nbt.NbtBuilder;
 import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -56,7 +57,7 @@ public class MinecartItems {
         ModuleManager.get().getModule(MinecartBlockPicking.class).ifPresent(m -> {
             SPAWNER_MINECART.ifPresent(item -> PickUpBehaviorHandler.registerPickUpBehavior(Blocks.SPAWNER, (state, world, pos) -> {
                 if (m.config().spawnerPicking) {
-                    MobSpawnerBlockEntity mobSpawnerBlockEntity = (MobSpawnerBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos), () -> "Block has no block entity. %s".formatted(pos));
+                    MobSpawnerBlockEntity mobSpawnerBlockEntity = (MobSpawnerBlockEntity) MakeSure.notNull(world.getBlockEntity(pos), "Block has no block entity. %s".formatted(pos));
                     ItemStack spawnerMinecart = new ItemStack(item, 1);
                     spawnerMinecart.setNbt(NbtBuilder.create().putString("Entity", String.valueOf(andromeda$getEntityId(mobSpawnerBlockEntity))).build());
                     return spawnerMinecart;
@@ -76,7 +77,7 @@ public class MinecartItems {
             }));
 
             JUKEBOX_MINECART.ifPresent(item -> PickUpBehaviorHandler.registerPickUpBehavior(Blocks.JUKEBOX, (state, world, pos) -> {
-                JukeboxBlockEntity jukeboxBlockEntity = (JukeboxBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos), () -> "Block has no block entity. %s".formatted(pos));
+                JukeboxBlockEntity jukeboxBlockEntity = (JukeboxBlockEntity) MakeSure.notNull(world.getBlockEntity(pos), "Block has no block entity. %s".formatted(pos));
 
                 ItemStack record = jukeboxBlockEntity.getStack(0);
                 ItemStack jukeboxMinecart = new ItemStack(item);

@@ -8,6 +8,7 @@ import me.melontini.commander.api.event.EventContext;
 import me.melontini.commander.api.event.EventKey;
 import me.melontini.commander.api.event.EventType;
 import me.melontini.commander.api.expression.Arithmetica;
+import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.base.util.MathUtil;
 import me.melontini.dark_matter.api.data.nbt.NbtUtil;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
@@ -155,7 +156,7 @@ public class IncubatorBlockEntity extends BlockEntity implements SidedInventory 
     }
 
     private void update(BlockState state) {
-        Objects.requireNonNull(world).updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+        MakeSure.notNull(world).updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
         markDirty();
     }
 
@@ -269,7 +270,7 @@ public class IncubatorBlockEntity extends BlockEntity implements SidedInventory 
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return dir != Objects.requireNonNull(world).getBlockState(this.pos).get(IncubatorBlock.FACING) &&
+        return dir != MakeSure.notNull(world).getBlockState(this.pos).get(IncubatorBlock.FACING) &&
                 requireNonNull(Andromeda.get().getCurrentServer())
                         .dm$getReloader(EggProcessingData.RELOADER).get(stack.getItem()) != null;
     }

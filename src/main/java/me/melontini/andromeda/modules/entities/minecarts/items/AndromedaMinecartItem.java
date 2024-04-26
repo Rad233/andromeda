@@ -1,6 +1,7 @@
 package me.melontini.andromeda.modules.entities.minecarts.items;
 
 import me.melontini.andromeda.common.registries.Keeper;
+import me.melontini.dark_matter.api.base.util.MakeSure;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
@@ -19,8 +20,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
-
-import java.util.Objects;
 
 public class AndromedaMinecartItem<T extends AbstractMinecartEntity> extends Item {
 
@@ -52,7 +51,7 @@ public class AndromedaMinecartItem<T extends AbstractMinecartEntity> extends Ite
                     d = 0.5;
                 }
 
-                T minecart = Objects.requireNonNull(this.keeper.orThrow().create(world));
+                T minecart = MakeSure.notNull(this.keeper.orThrow().create(world));
                 minecart.setPosition((double) blockPos.getX() + 0.5, (double) blockPos.getY() + 0.0625 + d, (double) blockPos.getZ() + 0.5);
 
                 onCreate(itemStack, minecart);
@@ -102,7 +101,7 @@ public class AndromedaMinecartItem<T extends AbstractMinecartEntity> extends Ite
             double e = Math.floor(pointer.getY()) + direction.getOffsetY();
             double f = pointer.getZ() + direction.getOffsetZ() * 1.125;
 
-            T minecart = Objects.requireNonNull(AndromedaMinecartItem.this.keeper.orThrow().create(world));
+            T minecart = MakeSure.notNull(AndromedaMinecartItem.this.keeper.orThrow().create(world));
             minecart.setPosition(d, e + g, f);
 
             onCreate(stack, minecart);

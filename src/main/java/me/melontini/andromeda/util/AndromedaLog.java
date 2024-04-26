@@ -3,6 +3,7 @@ package me.melontini.andromeda.util;
 import com.google.common.base.Splitter;
 import me.melontini.dark_matter.api.base.util.PrependingLogger;
 import me.melontini.dark_matter.api.base.util.Utilities;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class AndromedaLog {
 
     private static final Splitter SPLITTER = Splitter.on(".");
 
-    public static PrependingLogger factory() {
+    public static @NotNull PrependingLogger factory() {
         Class<?> cls = Utilities.getCallerClass(2).orElseThrow();
         List<String> split = SPLITTER.splitToList(cls.getName());
 

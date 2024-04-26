@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.IdentityHashMap;
@@ -49,7 +48,7 @@ public class PlaceBehaviorHandler {
         registerPlaceBehavior(Items.FURNACE_MINECART, (stack, world, d, e, f, g, pos) -> {
             FurnaceMinecartEntity furnaceMinecart = (FurnaceMinecartEntity) AbstractMinecartEntity.create(world, d, e + g, f, AbstractMinecartEntity.Type.FURNACE);
 
-            furnaceMinecart.fuel = MathHelper.clamp(NbtUtil.getInt(stack.getNbt(), "Fuel", 0), 0, ModuleManager.get().getModule(BetterFurnaceMinecart.class).map(m -> m.config().maxFuel).orElse(32000));
+            furnaceMinecart.fuel = NbtUtil.getInt(stack.getNbt(), "Fuel", 0, ModuleManager.get().getModule(BetterFurnaceMinecart.class).map(m -> m.config().maxFuel).orElse(32000));
             furnaceMinecart.pushX = furnaceMinecart.getX() - pos.getX();
             furnaceMinecart.pushZ = furnaceMinecart.getZ() - pos.getZ();
             if (stack.hasCustomName()) furnaceMinecart.setCustomName(stack.getName());

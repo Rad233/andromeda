@@ -1,5 +1,6 @@
 package me.melontini.andromeda.modules.entities.boats.client;
 
+import me.melontini.dark_matter.api.base.util.MakeSure;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
@@ -14,7 +15,6 @@ import net.minecraft.util.math.random.Random;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import static me.melontini.andromeda.util.CommonValues.MODID;
@@ -34,7 +34,7 @@ public class ClientSoundHolder {
             UUID id = buf.readUuid();
             ItemStack stack = buf.readItemStack();
             client.execute(() -> {
-                Entity entity = Objects.requireNonNull(client.world, "client.world").getEntityLookup().get(id);
+                Entity entity = MakeSure.notNull(client.world, "client.world").getEntityLookup().get(id);
                 if (stack.getItem() instanceof MusicDiscItem disc) {
                     var discName = disc.getDescription();
                     soundInstanceMap.computeIfAbsent(id, k -> {

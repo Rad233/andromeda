@@ -20,6 +20,7 @@ import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -105,7 +106,7 @@ public class Main {
         }
     }
 
-    public static Advancement.Builder createAdvBuilder(Identifier id, Ingredient... ingredients) {
+    public static @NotNull Advancement.Builder createAdvBuilder(Identifier id, Ingredient... ingredients) {
         MakeSure.notEmpty(ingredients);// shouldn't really happen
         var builder = Advancement.Builder.createUntelemetered();
         builder.parent(Identifier.tryParse("minecraft:recipes/root"));

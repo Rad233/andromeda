@@ -91,7 +91,8 @@ public abstract class Module<T extends Module.BaseConfig> {
 
             List<Object> passed = new ArrayList<>(ctx.getParameterCount());
             for (Class<?> parameterType : ctx.getParameterTypes()) {
-                passed.add(Objects.requireNonNull(args.get(parameterType)));
+                var value = MakeSure.notNull(args.get(parameterType));
+                passed.add(value);
             }
             AndromedaException.run(() -> this.objectMap.put(cls, ctx.newInstance(passed.toArray(Object[]::new))), b -> b.literal("Failed to construct module class!").add("class", cls.getName()));
         }
