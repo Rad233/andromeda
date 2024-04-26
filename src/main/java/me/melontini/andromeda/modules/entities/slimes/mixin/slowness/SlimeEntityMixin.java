@@ -37,6 +37,6 @@ abstract class SlimeEntityMixin extends MobEntity {
 
         StatusEffectInstance effectInstance = new StatusEffectInstance(StatusEffects.SLOWNESS, 20 * this.getSize(), 1, true, false, false);
         target.addStatusEffect(effectInstance);
-        ((ServerWorld) world).spawnParticles(getParticles(), target.getX(), target.getY(), target.getZ(), 5, 0.2, 0.7, 0.2, 0.4);
+        if (world.getTime() % 3 == 0) ((ServerWorld) world).spawnParticles(getParticles(), target.getX(), target.getY(), target.getZ(), 5, 0.2, 0.7, 0.2, 0);
     }
 }
