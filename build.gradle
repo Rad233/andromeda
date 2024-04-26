@@ -253,6 +253,8 @@ publishMods {
         repository = "constellation-mc/andromeda"
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
         commitish = providers.environmentVariable("GITHUB_SHA").getOrElse("${project.minecraft_version}-fabric")
+
+        type = STABLE
     }
 
     dryRun = local
