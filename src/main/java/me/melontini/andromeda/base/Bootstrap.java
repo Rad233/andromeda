@@ -148,7 +148,7 @@ public class Bootstrap {
 
             ModuleManager m;
             try {
-                m = new ModuleManager(sorted);
+                ModuleManager.INSTANCE = (m = new ModuleManager(sorted));
             } catch (Throwable t) {//Manager constructor does a lot of heavy-lifting, so we want to catch any errors.
                 throw AndromedaException.builder()
                         .cause(t).literal("Failed to initialize ModuleManager!!!")

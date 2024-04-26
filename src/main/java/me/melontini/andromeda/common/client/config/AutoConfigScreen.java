@@ -175,7 +175,7 @@ public class AutoConfigScreen {
                 addDrawableChild(screen, lab);
             }
         });
-        return builder.build();
+        return screen;
     }
 
     @NotNull private static TexturedButtonWidget getWikiButton(MinecraftClient client, Screen screen) {
@@ -206,7 +206,7 @@ public class AutoConfigScreen {
     }
 
     private static boolean checkOptionManager(AbstractConfigListEntry<?> e, Module<?> module, Field field) {
-        var opt = FeatureBlockade.get().explain(module, field.getName());
+        var opt = FeatureBlockade.get().explain(ModuleManager.get(), module, field.getName());
         if (opt.isEmpty()) return true;
 
         e.setEditable(false);

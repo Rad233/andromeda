@@ -51,7 +51,6 @@ public class ModuleManager {
     private final MixinProcessor mixinProcessor;
 
     ModuleManager(List<Module.Zygote> zygotes) {
-        INSTANCE = this;
         this.mixinProcessor = new MixinProcessor(this);
 
         this.discoveredModules = Utilities.supply(() -> {
@@ -141,7 +140,7 @@ public class ModuleManager {
             manager.exceptionHandler((e, stage, path) -> LOGGER.error("Failed to %s config for module: %s".formatted(stage.toString().toLowerCase(Locale.ROOT), m.meta().id()), e));
 
             Bus<ConfigEvent<?>> e = m.getOrCreateBus("config_event", null);
-            if (e != null) e.invoker().accept(Utilities.cast(manager));
+            if (e != null) e.invoker().accept(this, Utilities.cast(manager));
 
             m.manager = Utilities.cast(manager);
         });
@@ -161,7 +160,7 @@ public class ModuleManager {
      * @param m the module class.
      * @return the config class.
      */
-    public Class<? extends Module.BaseConfig> getConfigClass(Class<?> m) {
+    public static Class<? extends Module.BaseConfig> getConfigClass(Class<?> m) {
         if (m.getGenericSuperclass() instanceof ParameterizedType pt) {
             for (Type ta : pt.getActualTypeArguments()) {
                 if (ta instanceof Class<?> cls && Module.BaseConfig.class.isAssignableFrom(cls)) {
@@ -301,11 +300,11 @@ public class ModuleManager {
      * @return The module manager.
      */
     public static ModuleManager get() {
-        return MakeSure.notNull(INSTANCE, "ModuleManager requested too early!");
+        return Objects.requireNonNull(INSTANCE, "ModuleManager requested too early!");
     }
 
     void print() {
-        Map<String, Set<Module<?>>> categories = Utilities.supply(new LinkedHashMap<>(), map -> get().loaded().forEach(m ->
+        Map<String, Set<Module<?>>> categories = Utilities.supply(new LinkedHashMap<>(), map -> loaded().forEach(m ->
                 map.computeIfAbsent(m.meta().category(), s -> new LinkedHashSet<>()).add(m)));
 
         StringBuilder builder = new StringBuilder();

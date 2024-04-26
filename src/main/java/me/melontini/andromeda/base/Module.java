@@ -86,7 +86,7 @@ public abstract class Module<T extends Module.BaseConfig> {
         } else {
             Map<Class<?>, Object> args = Map.of(
                     this.getClass(), this,
-                    ModuleManager.get().getConfigClass(this.getClass()), this.config()
+                    ModuleManager.getConfigClass(this.getClass()), this.config()
             );
 
             List<Object> passed = new ArrayList<>(ctx.getParameterCount());

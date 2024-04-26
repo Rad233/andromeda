@@ -63,7 +63,7 @@ public class DataConfigs extends IdentifiedJsonDataLoader {
         Map<Identifier, Map<Module<?>, Set<CompletableFuture<Data>>>> configs = new Object2ObjectOpenHashMap<>();
         Maps.transformValues(data, JsonElement::getAsJsonObject).forEach((id, object) -> {
             var m = ModuleManager.get().getModule(id.getPath()).orElseThrow(() -> new IllegalStateException("Invalid module path '%s'! The module must be enabled!".formatted(id.getPath())));
-            var cls = ModuleManager.get().getConfigClass(m.getClass());
+            var cls = ModuleManager.getConfigClass(m.getClass());
 
             if (m.config().scope.isWorld()) {
                 if (!object.has(DEFAULT.toString()) || object.size() > 1)

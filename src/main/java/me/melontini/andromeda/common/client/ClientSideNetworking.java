@@ -10,9 +10,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class ClientSideNetworking {
 
-    public static void register() {
+    public static void register(ModuleManager manager) {
         ClientLoginNetworking.registerGlobalReceiver(Andromeda.VERIFY_MODULES, (client, handler, buf, listenerAdder) -> {
-            String[] modules = ModuleManager.get().loaded().stream().map(Module::meta)
+            String[] modules = manager.loaded().stream().map(Module::meta)
                     .filter(m -> m.environment().isBoth()).map(Module.Metadata::id).toArray(String[]::new);
             var pbf = PacketByteBufs.create().writeVarInt(modules.length);
             for (String module : modules) {
