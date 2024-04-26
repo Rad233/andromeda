@@ -1,6 +1,5 @@
 package me.melontini.andromeda.modules.items.minecart_block_picking;
 
-import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.data.nbt.NbtBuilder;
 import me.melontini.dark_matter.api.data.nbt.NbtUtil;
 import net.minecraft.block.Block;
@@ -17,6 +16,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.IdentityHashMap;
+import java.util.Objects;
 import java.util.Optional;
 
 public class PickUpBehaviorHandler {
@@ -33,7 +33,7 @@ public class PickUpBehaviorHandler {
 
     public static void init() {
         registerPickUpBehavior(Blocks.CHEST, (state, world, pos) -> {
-            ChestBlockEntity chestBlockEntity = (ChestBlockEntity) MakeSure.notNull(world.getBlockEntity(pos), "Block has no block entity. %s".formatted(pos));
+            ChestBlockEntity chestBlockEntity = (ChestBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos), () -> "Block has no block entity. %s".formatted(pos));
             ItemStack chestMinecart = new ItemStack(Items.CHEST_MINECART, 1);
 
             chestMinecart.setNbt(NbtUtil.writeInventoryToNbt(new NbtCompound(), chestBlockEntity));
@@ -44,7 +44,7 @@ public class PickUpBehaviorHandler {
         registerPickUpBehavior(Blocks.TNT, (state, world, pos) -> new ItemStack(Items.TNT_MINECART, 1));
 
         registerPickUpBehavior(Blocks.FURNACE, (state, world, pos) -> {
-            AbstractFurnaceBlockEntity furnaceBlock = (AbstractFurnaceBlockEntity) MakeSure.notNull(world.getBlockEntity(pos), "Block has no block entity. %s".formatted(pos));
+            AbstractFurnaceBlockEntity furnaceBlock = (AbstractFurnaceBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos), () -> "Block has no block entity. %s".formatted(pos));
             ItemStack furnaceMinecart = new ItemStack(Items.FURNACE_MINECART, 1);
             //2.25
             furnaceMinecart.setNbt(NbtBuilder.create().putInt("Fuel", (int) (furnaceBlock.burnTime * 2.25)).build());
@@ -52,7 +52,7 @@ public class PickUpBehaviorHandler {
         });
 
         registerPickUpBehavior(Blocks.HOPPER, (state, world, pos) -> {
-            HopperBlockEntity hopperBlockEntity = (HopperBlockEntity) MakeSure.notNull(world.getBlockEntity(pos), "Block has no block entity. %s".formatted(pos));
+            HopperBlockEntity hopperBlockEntity = (HopperBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos), () -> "Block has no block entity. %s".formatted(pos));
             ItemStack hopperMinecart = new ItemStack(Items.HOPPER_MINECART, 1);
 
             hopperMinecart.setNbt(NbtUtil.writeInventoryToNbt(new NbtCompound(), hopperBlockEntity));

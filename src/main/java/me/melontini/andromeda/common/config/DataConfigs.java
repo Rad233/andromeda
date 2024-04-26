@@ -14,7 +14,6 @@ import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.common.registries.Common;
 import me.melontini.andromeda.common.util.IdentifiedJsonDataLoader;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
-import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.data.loading.ReloaderType;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.MinecraftServer;
@@ -118,7 +117,7 @@ public class DataConfigs extends IdentifiedJsonDataLoader {
 
     public void apply(ServerWorld world) {
         if (!Experiments.get().scopedConfigs) return;
-        MakeSure.notNull(configs);
+        Objects.requireNonNull(configs);
 
         var task = CompletableFuture.allOf(ModuleManager.get().loaded().stream().filter(module -> !module.config().scope.isGlobal())
                 .map(m -> switch (m.config().scope) {
@@ -136,7 +135,7 @@ public class DataConfigs extends IdentifiedJsonDataLoader {
 
     public void apply(MinecraftServer server) {
         if (!Experiments.get().scopedConfigs) return;
-        MakeSure.notNull(configs);
+        Objects.requireNonNull(configs);
 
         var task = CompletableFuture.allOf(ModuleManager.get().loaded().stream().filter(module -> !module.config().scope.isGlobal())
                 .map(m -> switch (m.config().scope) {

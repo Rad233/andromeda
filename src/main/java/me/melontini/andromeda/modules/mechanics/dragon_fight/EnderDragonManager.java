@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.common.registries.Keeper;
-import me.melontini.dark_matter.api.base.util.MakeSure;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -20,10 +19,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
 @Getter
@@ -78,7 +74,7 @@ public class EnderDragonManager {
         if (!module.config().scaleHealthByMaxPlayers) return;
         for (EnderDragonEntity dragon : dragons) {
             EntityAttributeInstance inst = dragon.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
-            MakeSure.notNull(inst, "Ender Dragon has no attributes?").setBaseValue(Math.floor(Math.sqrt(500 * maxPlayers) * 10));
+            Objects.requireNonNull(inst, "Ender Dragon has no attributes?").setBaseValue(Math.floor(Math.sqrt(500 * maxPlayers) * 10));
         }
     }
 

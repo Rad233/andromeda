@@ -31,7 +31,6 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -154,7 +153,7 @@ public class PouchEntity extends ThrownItemEntity {
         FLOWER(2, new Identifier(MODID, "pouches/flowers"), Main.FLOWER_POUCH),
         CUSTOM(3, null, Main.SPECIAL_POUCH) {
             @Override
-            public @NotNull Identifier getLootId(ItemStack stack) {
+            public Identifier getLootId(ItemStack stack) {
                 NbtCompound nbt = stack.getNbt();
                 if (nbt != null && nbt.contains("CustomLootId")) {
                     return new Identifier(nbt.getString("CustomLootId"));
@@ -181,7 +180,7 @@ public class PouchEntity extends ThrownItemEntity {
             this.defaultItem = defaultItem;
         }
 
-        public @NotNull Identifier getLootId(ItemStack stack) {
+        public Identifier getLootId(ItemStack stack) {
             return Objects.requireNonNull(lootId);
         }
 

@@ -2,7 +2,6 @@ package me.melontini.andromeda.modules.blocks.incubator.client;
 
 import me.melontini.andromeda.modules.blocks.incubator.IncubatorBlock;
 import me.melontini.andromeda.modules.blocks.incubator.IncubatorBlockEntity;
-import me.melontini.dark_matter.api.base.util.MakeSure;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -13,6 +12,8 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
+
+import java.util.Objects;
 
 public class IncubatorBlockRenderer implements BlockEntityRenderer<IncubatorBlockEntity> {
 
@@ -28,7 +29,7 @@ public class IncubatorBlockRenderer implements BlockEntityRenderer<IncubatorBloc
     private void renderItem(IncubatorBlockEntity entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
         matrices.translate(0.5, 0.7, 0.5);
-        World world = MakeSure.notNull(entity.getWorld());
+        World world = Objects.requireNonNull(entity.getWorld());
         BlockState state = world.getBlockState(entity.getPos());
         if (state.getBlock() instanceof IncubatorBlock) {
             switch (state.get(IncubatorBlock.FACING)) {

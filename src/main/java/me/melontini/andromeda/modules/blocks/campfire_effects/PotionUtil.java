@@ -10,13 +10,12 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 
 import static java.util.Objects.requireNonNull;
 
 public class PotionUtil {
 
-    public static @NotNull StatusEffect getStatusEffect(World world, Identifier id) {
+    public static StatusEffect getStatusEffect(World world, Identifier id) {
         StatusEffect effect = CommonRegistries.statusEffects().get(id);
         if (effect == null) {
             CampfireEffects m = ModuleManager.quick(CampfireEffects.class);

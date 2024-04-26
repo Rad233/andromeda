@@ -2,7 +2,6 @@ package me.melontini.andromeda.modules.entities.boats.items;
 
 import me.melontini.andromeda.common.registries.Keeper;
 import me.melontini.andromeda.common.util.MiscUtil;
-import me.melontini.dark_matter.api.base.util.MakeSure;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import net.minecraft.entity.Entity;
@@ -23,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public class AndromedaBoatItem<T extends BoatEntity> extends Item {
@@ -59,7 +59,7 @@ public class AndromedaBoatItem<T extends BoatEntity> extends Item {
             }
 
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                T furnace = MakeSure.notNull(this.keeper.orThrow().create(world));
+                T furnace = Objects.requireNonNull(this.keeper.orThrow().create(world));
                 furnace.setPosition(hitResult.getPos().x, hitResult.getPos().y, hitResult.getPos().z);
 
                 furnace.setVariant(this.type);
@@ -111,7 +111,7 @@ public class AndromedaBoatItem<T extends BoatEntity> extends Item {
                 h = 0.0;
             }
 
-            T boatEntity = MakeSure.notNull(AndromedaBoatItem.this.keeper.orThrow().create(world));
+            T boatEntity = Objects.requireNonNull(AndromedaBoatItem.this.keeper.orThrow().create(world));
             boatEntity.setPosition(e, f + h, g);
 
             boatEntity.setVariant(AndromedaBoatItem.this.type);
