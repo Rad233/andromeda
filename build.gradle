@@ -249,6 +249,16 @@ publishMods {
         optional("modmenu")
         embeds("dark-matter")
     }
+    curseforge {
+        projectId = "639198"
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add("${project.minecraft_version}")
+
+        requires("fabric-api")
+        optional("cloth-config")
+        optional("modmenu")
+        embeds("dark-matter")
+    }
     github {
         repository = "constellation-mc/andromeda"
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
