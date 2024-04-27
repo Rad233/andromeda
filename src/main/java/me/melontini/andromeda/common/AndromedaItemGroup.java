@@ -1,6 +1,7 @@
-package me.melontini.andromeda.common.registries;
+package me.melontini.andromeda.common;
 
 import me.melontini.andromeda.base.Module;
+import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.dark_matter.api.item_group.ItemGroupBuilder;
 import me.melontini.dark_matter.api.minecraft.util.TextUtil;
 import net.minecraft.item.ItemConvertible;
@@ -12,7 +13,7 @@ import net.minecraft.registry.RegistryKey;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static me.melontini.andromeda.common.registries.Common.id;
+import static me.melontini.andromeda.common.Andromeda.id;
 
 public class AndromedaItemGroup {
 

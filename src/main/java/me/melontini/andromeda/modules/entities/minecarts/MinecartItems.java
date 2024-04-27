@@ -1,9 +1,9 @@
 package me.melontini.andromeda.modules.entities.minecarts;
 
 import me.melontini.andromeda.base.ModuleManager;
+import me.melontini.andromeda.common.AndromedaItemGroup;
 import me.melontini.andromeda.common.conflicts.CommonRegistries;
-import me.melontini.andromeda.common.registries.AndromedaItemGroup;
-import me.melontini.andromeda.common.registries.Keeper;
+import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.andromeda.modules.entities.minecarts.entities.AnvilMinecartEntity;
 import me.melontini.andromeda.modules.entities.minecarts.items.AndromedaMinecartItem;
 import me.melontini.andromeda.modules.entities.minecarts.items.JukeboxMinecartItem;
@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.List;
 import java.util.Objects;
 
-import static me.melontini.andromeda.common.registries.Common.id;
+import static me.melontini.andromeda.common.Andromeda.id;
 
 public class MinecartItems {
 

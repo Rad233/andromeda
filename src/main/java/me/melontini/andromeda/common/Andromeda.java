@@ -9,8 +9,7 @@ import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.common.config.DataConfigs;
 import me.melontini.andromeda.common.conflicts.CommonRegistries;
-import me.melontini.andromeda.common.registries.AndromedaItemGroup;
-import me.melontini.andromeda.common.registries.Keeper;
+import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.dark_matter.api.base.util.Support;
@@ -34,7 +33,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static me.melontini.andromeda.common.registries.Common.id;
 import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public class Andromeda {
@@ -52,6 +50,10 @@ public class Andromeda {
         instance.onInitialize(ModuleManager.get());
         Support.share("andromeda:main", instance);
         INSTANCE = instance;
+    }
+
+    public static Identifier id(String path) {
+        return new Identifier(MODID, path);
     }
 
     private void onInitialize(ModuleManager manager) {
