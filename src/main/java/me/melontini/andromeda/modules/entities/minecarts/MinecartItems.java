@@ -15,7 +15,6 @@ import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.data.nbt.NbtBuilder;
 import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NoteBlock;
 import net.minecraft.block.entity.JukeboxBlockEntity;
@@ -51,8 +50,7 @@ public class MinecartItems {
         JUKEBOX_MINECART.init(RegistryUtil.register(config.isJukeboxMinecartOn, CommonRegistries.items(), id("jukebox_minecart"), () -> new JukeboxMinecartItem(new FabricItemSettings().maxCount(1))));
 
         var l = List.of(SPAWNER_MINECART, ANVIL_MINECART, NOTE_BLOCK_MINECART, JUKEBOX_MINECART);
-        AndromedaItemGroup.accept(acceptor -> acceptor.keepers(module, List.copyOf(l)));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> l.stream().filter(Keeper::isPresent).map(Keeper::get).forEach(entries::add));
+        AndromedaItemGroup.accept(acceptor -> acceptor.keepers(module, ItemGroups.TOOLS, List.copyOf(l)));
 
         ModuleManager.get().getModule(MinecartBlockPicking.class).ifPresent(m -> {
             SPAWNER_MINECART.ifPresent(item -> PickUpBehaviorHandler.registerPickUpBehavior(Blocks.SPAWNER, (state, world, pos) -> {

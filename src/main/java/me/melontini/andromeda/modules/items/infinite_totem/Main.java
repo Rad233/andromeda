@@ -5,7 +5,6 @@ import me.melontini.andromeda.common.registries.AndromedaItemGroup;
 import me.melontini.andromeda.common.registries.Keeper;
 import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -26,10 +25,9 @@ public class Main {
 
     Main(InfiniteTotem module) {
         INFINITE_TOTEM.init(RegistryUtil.register(CommonRegistries.items(), id("infinite_totem"), () -> new Item(new FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> entries.add(INFINITE_TOTEM.orThrow()));
 
         KNOCKOFF_TOTEM_PARTICLE.init(RegistryUtil.register(CommonRegistries.particleTypes(), id("knockoff_totem_particles"), FabricParticleTypes::simple));
 
-        AndromedaItemGroup.accept(acceptor -> acceptor.keeper(module, INFINITE_TOTEM));
+        AndromedaItemGroup.accept(acceptor -> acceptor.keeper(module, ItemGroups.COMBAT, INFINITE_TOTEM));
     }
 }

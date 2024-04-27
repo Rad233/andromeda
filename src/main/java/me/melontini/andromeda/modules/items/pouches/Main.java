@@ -9,7 +9,6 @@ import me.melontini.dark_matter.api.base.util.Exceptions;
 import me.melontini.dark_matter.api.minecraft.util.ItemStackUtil;
 import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -91,8 +90,7 @@ public class Main {
         Trades.register();
 
         List<Keeper<PouchItem>> l = List.of(SEED_POUCH, FLOWER_POUCH, SAPLING_POUCH, SPECIAL_POUCH);
-        AndromedaItemGroup.accept(acceptor -> acceptor.keepers(module, new ArrayList<>(l)));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> l.stream().filter(Keeper::isPresent).map(Keeper::get).forEach(entries::add));
+        AndromedaItemGroup.accept(acceptor -> acceptor.keepers(module, ItemGroups.TOOLS, new ArrayList<>(l)));
 
         var behavior = new ProjectileDispenserBehavior() {
             @Override

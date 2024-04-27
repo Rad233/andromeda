@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.sound.BlockSoundGroup;
 
 import java.util.Set;
@@ -26,7 +27,7 @@ public class Main {
         INCUBATOR.init(RegistryUtil.register(CommonRegistries.items(), id("incubator"), () -> new BlockItem(INCUBATOR_BLOCK.orThrow(), new FabricItemSettings())));
         INCUBATOR_BLOCK_ENTITY.init(RegistryUtil.register(CommonRegistries.blockEntityTypes(), id("incubator"), () -> new BlockEntityType<>(IncubatorBlockEntity::new, Set.of(INCUBATOR_BLOCK.orThrow()), null)));
 
-        AndromedaItemGroup.accept(acceptor -> acceptor.keeper(module, INCUBATOR));
+        AndromedaItemGroup.accept(acceptor -> acceptor.keeper(module, ItemGroups.FUNCTIONAL, INCUBATOR));
 
         EggProcessingData.init();
     }
