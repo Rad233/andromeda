@@ -1,10 +1,17 @@
 ### What's New:
 
 
-[`mechanics/trading_goat_horn`]:
+[`items/infinite_totem`]:
 
-* Fixed client-side crash.
+* Fixed a memory leak.
+* The beacon is now required to follow this pattern:
 
-[`general`]:
+```
+    B
+   NNN
+  DDDDD
+ NNNNNNN
+DDDDDDDDD
+```
 
-* Updated Commander and Fabric Loader.
+Where N is netherite and D is diamond.

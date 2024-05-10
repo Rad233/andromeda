@@ -1,15 +1,13 @@
 package me.melontini.andromeda.modules.items.infinite_totem.mixin;
 
-import me.melontini.andromeda.common.util.BlockUtil;
 import me.melontini.andromeda.common.util.WorldUtil;
+import me.melontini.andromeda.modules.items.infinite_totem.BeaconUtil;
 import me.melontini.andromeda.modules.items.infinite_totem.InfiniteTotem;
 import me.melontini.andromeda.modules.items.infinite_totem.Main;
 import me.melontini.dark_matter.api.base.util.tuple.Tuple;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -32,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
 import java.util.Optional;
 
 @Mixin(ItemEntity.class)
@@ -46,11 +43,10 @@ abstract class ItemEntityMixin extends Entity {
 
     @Shadow public abstract ItemStack getStack();
 
-    @Unique private static final Tuple<BeaconBlockEntity, Integer> ANDROMEDA$NULL_BEACON = Tuple.of(null, 0);
-    @Unique private final List<Block> beaconBlocks = List.of(Blocks.DIAMOND_BLOCK, Blocks.NETHERITE_BLOCK);
+    @Unique private static final Tuple<BeaconBlockEntity, Boolean> ANDROMEDA$NULL_BEACON = Tuple.of(null, false);
     @Unique private int andromeda$ascensionTicks;
     @Unique private ItemEntity andromeda$itemEntity;
-    @Unique private Tuple<BeaconBlockEntity, Integer> andromeda$beacon = ANDROMEDA$NULL_BEACON;
+    @Unique private Tuple<BeaconBlockEntity, Boolean> andromeda$beacon = ANDROMEDA$NULL_BEACON;
 
 
     public ItemEntityMixin(EntityType<?> type, World world) {
@@ -70,7 +66,7 @@ abstract class ItemEntityMixin extends Entity {
             }
         }
 
-        if (andromeda$beacon.left() != null && andromeda$beacon.right() >= 4) {
+        if (andromeda$beacon.left() != null && andromeda$beacon.right()) {
             if (andromeda$itemEntity == null) {
                 if (andromeda$ascensionTicks > 0) --andromeda$ascensionTicks;
 
@@ -133,15 +129,14 @@ abstract class ItemEntityMixin extends Entity {
         }
     }
 
-    @Unique
-    private static ItemEntityMixin toMixin(ItemEntity entity) {
+    @Unique private static ItemEntityMixin toMixin(ItemEntity entity) {
         return ((ItemEntityMixin) (Object) entity);
     }
 
     @Unique private boolean andromeda$beaconCheck() {
         BlockEntity entity = world.getBlockEntity(new BlockPos((int) getX(), world.getTopY(Heightmap.Type.WORLD_SURFACE, getBlockPos().getX(), getBlockPos().getZ()) - 1, (int) getZ()));
         if (entity instanceof BeaconBlockEntity beaconBlock) {
-            this.andromeda$beacon = Tuple.of(beaconBlock, BlockUtil.getLevelFromBlocks(world, beaconBlock.getPos(), beaconBlocks));
+            this.andromeda$beacon = Tuple.of(beaconBlock, BeaconUtil.matchesPattern(world, beaconBlock.getPos()));
             return true;
         } else {
             this.andromeda$beacon = ANDROMEDA$NULL_BEACON;
