@@ -2,11 +2,11 @@ package me.melontini.andromeda.modules.blocks.campfire_effects;
 
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.common.config.ScopedConfigs;
-import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.common.util.ServerHelper;
 import me.melontini.dark_matter.api.minecraft.util.TextUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 public class PotionUtil {
 
     public static @NotNull StatusEffect getStatusEffect(World world, Identifier id) {
-        StatusEffect effect = CommonRegistries.statusEffects().get(id);
+        StatusEffect effect = Registries.STATUS_EFFECT.get(id);
         if (effect == null) {
             CampfireEffects m = ModuleManager.quick(CampfireEffects.class);
 
@@ -28,7 +28,7 @@ public class PotionUtil {
 
             world.am$get(m).effectList = m.defaultConfig().effectList;
             world.am$save(m);
-            return CommonRegistries.statusEffects().getOrEmpty(Identifier.tryParse("minecraft:regeneration")).orElseThrow();
+            return Registries.STATUS_EFFECT.getOrEmpty(Identifier.tryParse("minecraft:regeneration")).orElseThrow();
         }
         return effect;
     }

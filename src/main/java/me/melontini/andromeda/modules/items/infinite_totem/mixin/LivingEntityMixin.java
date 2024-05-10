@@ -3,7 +3,6 @@ package me.melontini.andromeda.modules.items.infinite_totem.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
-import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.modules.items.infinite_totem.Main;
 import me.melontini.dark_matter.api.minecraft.util.PlayerUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -15,6 +14,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -51,7 +51,7 @@ abstract class LivingEntityMixin extends Entity {
                 PacketByteBuf buf = PacketByteBufs.create()
                         .writeUuid(this.getUuid())
                         .writeItemStack(new ItemStack(Main.INFINITE_TOTEM.orThrow()));
-                buf.writeRegistryValue(CommonRegistries.particleTypes(), Main.KNOCKOFF_TOTEM_PARTICLE.orThrow());
+                buf.writeRegistryValue(Registries.PARTICLE_TYPE, Main.KNOCKOFF_TOTEM_PARTICLE.orThrow());
 
                 for (PlayerEntity player : PlayerUtil.findPlayersInRange(world, getBlockPos(), 120)) {
                     ServerPlayNetworking.send((ServerPlayerEntity) player, Main.USED_CUSTOM_TOTEM, buf);

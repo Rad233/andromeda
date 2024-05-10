@@ -8,7 +8,6 @@ import me.melontini.andromeda.base.AndromedaConfig;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.common.config.DataConfigs;
-import me.melontini.andromeda.common.conflicts.CommonRegistries;
 import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
@@ -22,6 +21,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
@@ -59,7 +59,7 @@ public class Andromeda {
     private void onInitialize(ModuleManager manager) {
         ResourceConditions.register(id("items_registered"), object -> JsonHelper.getArray(object, "values")
                 .asList().stream().filter(JsonElement::isJsonPrimitive)
-                .allMatch(e -> CommonRegistries.items().containsId(Identifier.tryParse(e.getAsString()))));
+                .allMatch(e -> Registries.ITEM.containsId(Identifier.tryParse(e.getAsString()))));
 
         AndromedaItemGroup.Acceptor acceptor = (module, main, stack) -> {
             if (!stack.isEmpty()) ItemGroupEvents.modifyEntriesEvent(main).register(entries -> entries.add(stack));
