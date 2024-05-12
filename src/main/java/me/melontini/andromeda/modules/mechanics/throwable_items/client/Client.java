@@ -26,15 +26,15 @@ import java.util.Set;
 
 import static me.melontini.dark_matter.api.base.util.MathUtil.threadRandom;
 
-public class Client {
+public final class Client {
 
-    private static final Set<Item> showTooltip = new HashSet<>();
+    private final Set<Item> showTooltip = new HashSet<>();
 
-    public static boolean hasTooltip(Item item) {
+    public boolean hasTooltip(Item item) {
         return showTooltip.contains(item);
     }
 
-    Client(ThrowableItems module) {
+    Client(ThrowableItems.ClientConfig config) {
         Main.FLYING_ITEM.ifPresent(e -> EntityRendererRegistry.register(e, FlyingItemEntityRenderer::new));
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> showTooltip.clear());
@@ -49,7 +49,7 @@ public class Client {
         });
 
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-            if (module.config().tooltip && hasTooltip(stack.getItem())) {
+            if (config.tooltip && hasTooltip(stack.getItem())) {
                 lines.add(TextUtil.translatable("tooltip.andromeda.throwable_item").formatted(Formatting.GRAY));
             }
         });

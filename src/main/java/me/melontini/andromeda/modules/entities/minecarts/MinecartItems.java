@@ -54,7 +54,7 @@ public class MinecartItems {
 
         ModuleManager.get().getModule(MinecartBlockPicking.class).ifPresent(m -> {
             SPAWNER_MINECART.ifPresent(item -> PickUpBehaviorHandler.registerPickUpBehavior(Blocks.SPAWNER, (state, world, pos) -> {
-                if (m.config().spawnerPicking) {
+                if (world.am$get(MinecartBlockPicking.CONFIG).spawnerPicking) {
                     MobSpawnerBlockEntity mobSpawnerBlockEntity = (MobSpawnerBlockEntity) MakeSure.notNull(world.getBlockEntity(pos), "Block has no block entity. %s".formatted(pos));
                     ItemStack spawnerMinecart = new ItemStack(item, 1);
                     spawnerMinecart.setNbt(NbtBuilder.create().putString("Entity", String.valueOf(andromeda$getEntityId(mobSpawnerBlockEntity))).build());

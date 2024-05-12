@@ -1,5 +1,7 @@
 package me.melontini.andromeda.modules.items.infinite_totem.mixin;
 
+import com.google.common.base.Suppliers;
+import me.melontini.andromeda.common.util.LootContextUtil;
 import me.melontini.andromeda.common.util.WorldUtil;
 import me.melontini.andromeda.modules.items.infinite_totem.BeaconUtil;
 import me.melontini.andromeda.modules.items.infinite_totem.InfiniteTotem;
@@ -56,8 +58,10 @@ abstract class ItemEntityMixin extends Entity {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;tick()V", shift = At.Shift.BEFORE), method = "tick")
     private void andromeda$tick(CallbackInfo ci) {
         if (this.world.isClient()) return;
-        if (!world.am$get(InfiniteTotem.class).enableAscension) return;
         if (!this.getStack().isOf(Items.TOTEM_OF_UNDYING)) return;
+        var c = world.am$get(InfiniteTotem.CONFIG);
+        var supplier = Suppliers.memoize(LootContextUtil.fishing(world, getPos(), getStack()));
+        if (!c.available.asBoolean(supplier) || !c.enableAscension.asBoolean(supplier)) return;
 
         if (age % 35 == 0 && andromeda$ascensionTicks == 0) {
             if (!andromeda$beaconCheck()) {
