@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import me.melontini.andromeda.common.util.Keeper;
+import me.melontini.andromeda.common.util.LootContextUtil;
 import me.melontini.dark_matter.api.base.util.MathUtil;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.entity.EntityType;
@@ -13,6 +14,7 @@ import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.passive.TraderLlamaEntity;
 import net.minecraft.entity.passive.WanderingTraderEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -47,8 +49,8 @@ public class CustomTraderManager {
         if (this.cooldown > 0) this.cooldown--;
     }
 
-    public void trySpawn(ServerWorld world, ServerWorldProperties properties, PlayerEntity player) {
-        if (cooldown != 0 || player == null) return;
+    public void trySpawn(ServerWorld world, ServerWorldProperties properties, ItemStack stackInHand, PlayerEntity player) {
+        if (cooldown > 0 || player == null) return;
         BlockPos blockPos = player.getBlockPos();
 
         PointOfInterestStorage pointOfInterestStorage = world.getPointOfInterestStorage();
@@ -61,14 +63,15 @@ public class CustomTraderManager {
 
         WanderingTraderEntity wanderingTraderEntity = EntityType.WANDERING_TRADER.spawn(world, blockPos3, SpawnReason.EVENT);
         if (wanderingTraderEntity == null) return;
+        var tCooldown = world.am$get(GoatHorn.CONFIG).cooldown.asInt(LootContextUtil.fishing(world, player.getPos(), stackInHand, player));
 
-        cooldown = 48000;
+        cooldown = tCooldown;
         for (int j = 0; j < 2; ++j) {
             spawnLlama(world, wanderingTraderEntity);
         }
 
         properties.setWanderingTraderId(wanderingTraderEntity.getUuid());
-        wanderingTraderEntity.setDespawnDelay(48000);
+        wanderingTraderEntity.setDespawnDelay(tCooldown);
         wanderingTraderEntity.setWanderTarget(blockPos2);
         wanderingTraderEntity.setPositionTarget(blockPos2, 16);
     }

@@ -351,7 +351,10 @@
   "tooltip.andromeda.throwable_item": "This item can be thrown.",
 
   "config.andromeda.mechanics.trading_goat_horn": "Wandering Trader Horn",
-  "config.andromeda.mechanics.trading_goat_horn.@Tooltip": "Every 2 days you can blow the \"sing\" horn to summon a wandering trader. \nPlease note, wandering traders will still spawn naturally. \nYou can disable the \"doTraderSpawning\" gamerule if you don't want them to",
+  "config.andromeda.mechanics.trading_goat_horn.@Tooltip": "By default, every 2 days you can blow the \"sing\" horn to summon a wandering trader. \nPlease note, wandering traders will still spawn naturally. \nYou can disable the \"doTraderSpawning\" gamerule if you don't want them to",
+  "config.andromeda.mechanics.trading_goat_horn.option.cooldown": "Cooldown",
+  "config.andromeda.mechanics.trading_goat_horn.option.cooldown.@Tooltip": "(in ticks)",
+  "config.andromeda.mechanics.trading_goat_horn.option.instrumentId": "Instrument Identifier",
 
   "config.andromeda.category.gui": "GUI",
 
