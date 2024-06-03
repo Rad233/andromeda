@@ -311,6 +311,9 @@
   "item.andromeda.sapling_pouch": "Sapling Pouch",
   "item.andromeda.special_pouch": "Special Pouch",
 
+  "config.andromeda.items.lava_disintegrator": "Lava Disintegrator",
+  "config.andromeda.items.lava_disintegrator.@Tooltip": "Allows you to destroy non-fireproof items by right-clicking a lava bucket.",
+
   "config.andromeda.category.bugfixes": "Bugfixes",
 
   "config.andromeda.bugfixes.advancement_shadow": "Frame-Independent Advancement Shadow",
