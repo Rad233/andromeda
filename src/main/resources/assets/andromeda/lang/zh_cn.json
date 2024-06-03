@@ -9,9 +9,9 @@
     "config.andromeda.option.available": "特性开关",
     "config.andromeda.option.available.@Tooltip": "这个选项决定是否对应特性在游戏中被启用。\n在使用分化配置和数据包配置时比较有用。\n如果安装了命令官模组，这一字段将变成表达式。",
 
-    "config.andromeda.state.main": "主状态",
-    "config.andromeda.state.game": "游戏中状态",
-    "config.andromeda.state.client": "客户端状态",
+    "config.andromeda.state.main": "主体",
+    "config.andromeda.state.game": "游戏内",
+    "config.andromeda.state.client": "客户端",
     "andromeda.disconnected.module_mismatch": "群星模组配置不同步！\n请禁用%s\n启用%s\n以加入此服务器！",
 
     "andromeda.config.option_manager.reason.andromeda.module_conflict": "启用了冲突的特性！",
@@ -368,12 +368,12 @@
     "config.andromeda.gui.item_frame_tooltips.@Tooltip": "在游戏内为物品展示框添加物品提示",
     "tooltip.andromeda.frameitem": "展示框中的物品",
 
-    "config.andromeda.gui.smooth_tooltips": "[实验性] 工具提示缓入",
-    "config.andromeda.gui.smooth_tooltips.@Tooltip": "工具提示将以缓入的形式进场，向光标靠拢。\n可能在兼容性上存在疏漏，暂时标记为实验性。",
-    "config.andromeda.gui.smooth_tooltips.option.clampX": "水平移速系数",
+    "config.andromeda.gui.smooth_tooltips": "[实验性] 平滑工具提示",
+    "config.andromeda.gui.smooth_tooltips.@Tooltip": "工具提示将缓入进场，并丝滑地跟随光标。\n可能在兼容性上存在疏漏，暂时标记为实验性。",
+    "config.andromeda.gui.smooth_tooltips.option.clampX": "水平限位系数",
     "config.andromeda.gui.smooth_tooltips.option.clampY": "垂直限位系数",
     "config.andromeda.gui.smooth_tooltips.option.deltaX": "水平移速系数",
-    "config.andromeda.gui.smooth_tooltips.option.deltaY": "垂直限位系数",
+    "config.andromeda.gui.smooth_tooltips.option.deltaY": "垂直移速系数",
     
     "config.andromeda.category.misc": "杂项",
     "config.andromeda.misc.damage_backport": "/damage指令复刻",
