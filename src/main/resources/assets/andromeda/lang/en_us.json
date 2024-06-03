@@ -279,6 +279,8 @@
 
   "config.andromeda.items.magnet": "Magnet",
   "config.andromeda.items.magnet.@Tooltip": "A special magnet which attracts selected items. \nCan be upgraded using Heart of the Sea.",
+  "config.andromeda.items.magnet.option.rangeMultiplier": "Range Multiplier",
+  "config.andromeda.items.magnet.option.rangeMultiplier.@Tooltip": "Magnet's level is multiplied by this value to get its range.",
   "item.andromeda.magnet": "Magnet",
   "tooltip.andromeda.magnet.level": "Level %s/5",
 

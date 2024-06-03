@@ -1,6 +1,8 @@
 package me.melontini.andromeda.modules.items.magnet.items;
 
 import com.google.common.collect.ImmutableSet;
+import me.melontini.andromeda.common.util.LootContextUtil;
+import me.melontini.andromeda.modules.items.magnet.Magnet;
 import me.melontini.dark_matter.api.base.util.MathUtil;
 import me.melontini.dark_matter.api.base.util.Support;
 import me.melontini.dark_matter.api.glitter.ScreenParticleHelper;
@@ -132,7 +134,7 @@ public class MagnetItem extends Item {
 
             Set<Item> magnetables = magnetable(stack);
             int level = getLevel(stack);
-            world.getEntitiesByClass(ItemEntity.class, new Box(entity.getBlockPos()).expand(level * 5), ie -> magnetables.contains(ie.getDataTracker().get(ItemEntity.STACK).getItem()))
+            world.getEntitiesByClass(ItemEntity.class, new Box(entity.getBlockPos()).expand(level * world.am$get(Magnet.CONFIG).rangeMultiplier.asDouble(LootContextUtil.fishing(world, entity.getPos(), stack, entity))), ie -> magnetables.contains(ie.getDataTracker().get(ItemEntity.STACK).getItem()))
                     .forEach(ie -> {
                         Vec3d vel = ie.getPos().relativize(entity.getPos()).normalize().multiply(0.05f * level);
                         ie.addVelocity(vel.x, vel.y, vel.z);
