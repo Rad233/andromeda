@@ -1,5 +1,10 @@
 ### What's New:
 
+[`blocks/loot_barrels`]:
+
+* New Module!
+* Adds random barrels with loot to caves!
+
 [`items/lava_disintegrator`]:
 
 * New Module!
