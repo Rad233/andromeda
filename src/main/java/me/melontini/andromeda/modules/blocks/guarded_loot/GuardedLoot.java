@@ -9,7 +9,6 @@ import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.common.util.TranslationKeyProvider;
 import me.melontini.andromeda.util.commander.number.DoubleIntermediary;
 
-import java.util.List;
 import java.util.Optional;
 
 @ModuleInfo(name = "guarded_loot", category = "blocks")
@@ -19,7 +18,7 @@ public final class GuardedLoot extends Module {
 
     GuardedLoot() {
         this.defineConfig(ConfigState.GAME, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> initClass(Main.class));
     }
 
     @ToString

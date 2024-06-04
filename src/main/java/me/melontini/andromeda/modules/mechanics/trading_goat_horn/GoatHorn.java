@@ -9,7 +9,6 @@ import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.util.commander.number.LongIntermediary;
 import net.minecraft.util.Identifier;
 
-import java.util.List;
 
 @ModuleInfo(name = "trading_goat_horn", category = "mechanics", environment = Environment.SERVER)
 public final class GoatHorn extends Module {
@@ -18,7 +17,7 @@ public final class GoatHorn extends Module {
 
     GoatHorn() {
         this.defineConfig(ConfigState.GAME, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> CustomTraderManager::init);
     }
 
     public static class Config extends GameConfig {

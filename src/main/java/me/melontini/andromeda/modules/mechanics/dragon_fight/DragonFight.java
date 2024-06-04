@@ -9,7 +9,6 @@ import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
 
-import java.util.List;
 
 @Unscoped
 @ModuleInfo(name = "dragon_fight", category = "mechanics", environment = Environment.SERVER)
@@ -19,7 +18,7 @@ public final class DragonFight extends Module {
 
     DragonFight() {
         this.defineConfig(ConfigState.MAIN, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> EnderDragonManager::init);
     }
 
     @ToString

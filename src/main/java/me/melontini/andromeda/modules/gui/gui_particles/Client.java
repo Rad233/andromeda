@@ -1,6 +1,5 @@
-package me.melontini.andromeda.modules.gui.gui_particles.client;
+package me.melontini.andromeda.modules.gui.gui_particles;
 
-import me.melontini.andromeda.modules.gui.gui_particles.GuiParticles;
 import me.melontini.dark_matter.api.base.util.MathUtil;
 import me.melontini.dark_matter.api.glitter.ScreenParticleHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;

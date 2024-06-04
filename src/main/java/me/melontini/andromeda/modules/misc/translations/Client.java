@@ -1,12 +1,13 @@
-package me.melontini.andromeda.modules.misc.translations.client;
+package me.melontini.andromeda.modules.misc.translations;
 
 import com.google.common.collect.Sets;
-import me.melontini.andromeda.modules.misc.translations.Translations;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.andromeda.util.EarlyLanguage;
 import me.melontini.andromeda.util.GitTracker;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,6 +22,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 
+@Environment(EnvType.CLIENT)
 public final class Client {
 
     private static final String URL = GitTracker.RAW_URL + "/" + GitTracker.OWNER + "/" + GitTracker.REPO + "/" + GitTracker.getDefaultBranch() + "/src/main/resources/assets/andromeda/lang/";
@@ -28,7 +30,7 @@ public final class Client {
 
     private static String languageCode = "en_us";
 
-    Client(Translations module) {
+    static void init(Translations module) {
         if (shouldUpdate()) {
             Set<String> languages = Sets.newHashSet("en_us");
             Client.getSelectedLanguage(module).ifPresent(languages::add);
@@ -39,7 +41,7 @@ public final class Client {
         }
     }
 
-    public boolean shouldUpdate() {
+    public static boolean shouldUpdate() {
         if (Debug.Keys.DISABLE_NETWORK_FEATURES.isPresent()) return false;
         if (Files.exists(Translations.EN_US)) {
             try {

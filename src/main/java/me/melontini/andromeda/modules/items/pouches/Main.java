@@ -4,6 +4,7 @@ import me.melontini.andromeda.common.AndromedaItemGroup;
 import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.andromeda.modules.items.pouches.entities.PouchEntity;
 import me.melontini.andromeda.modules.items.pouches.items.PouchItem;
+import me.melontini.andromeda.util.Debug;
 import me.melontini.dark_matter.api.base.util.Exceptions;
 import me.melontini.dark_matter.api.minecraft.util.ItemStackUtil;
 import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
@@ -130,7 +131,7 @@ public final class Main {
         return null;
     }
 
-    public static void testBlocks(Pouches module) {
+    static void testBlocks(Pouches module) {
         for (BlockEntityType<?> type : Registries.BLOCK_ENTITY_TYPE) {
             var o = type.blocks.stream().findAny();
             if (o.isPresent()) {
@@ -142,6 +143,15 @@ public final class Main {
             } else {
                 module.logger().warn("{} has no blocks?", Registries.BLOCK_ENTITY_TYPE.getId(type));
             }
+        }
+
+        if (Debug.Keys.PRINT_DEBUG_MESSAGES.isPresent()) {
+            StringBuilder b = new StringBuilder();
+            b.append("Viewable block entities:");
+            Main.VIEWABLE_VIEW.forEach((blockEntityType, field) -> {
+                b.append('\n').append(Registries.BLOCK_ENTITY_TYPE.getId(blockEntityType)).append(": ").append(field.getName());
+            });
+            module.logger().info(b);
         }
     }
 }

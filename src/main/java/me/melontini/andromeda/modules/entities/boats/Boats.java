@@ -9,10 +9,10 @@ import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.SpecialEnvironment;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
+import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.modules.entities.boats.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-import java.util.List;
 
 @Unscoped
 @ModuleInfo(name = "boats", category = "entities")
@@ -22,8 +22,11 @@ public final class Boats extends Module {
 
     Boats() {
         this.defineConfig(ConfigState.MAIN, MAIN_CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
-        InitEvent.client(this).listen(() -> List.of(Client.class));
+        InitEvent.main(this).listen(() -> () -> {
+            BoatItems.init(this, Andromeda.ROOT_HANDLER.get(MAIN_CONFIG));
+            BoatEntities.init(Andromeda.ROOT_HANDLER.get(MAIN_CONFIG));
+        });
+        InitEvent.client(this).listen(() -> initClass(Client.class));
     }
 
     @ToString

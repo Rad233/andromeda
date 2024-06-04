@@ -9,7 +9,6 @@ import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.util.commander.number.DoubleIntermediary;
 
-import java.util.List;
 
 @Unscoped
 @ModuleInfo(name = "magnet", category = "items")
@@ -19,7 +18,7 @@ public final class Magnet extends Module {
 
     Magnet() {
         this.defineConfig(ConfigState.GAME, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> () -> MagnetItem.init(this));
     }
 
     @ToString

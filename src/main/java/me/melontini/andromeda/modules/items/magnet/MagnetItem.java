@@ -1,14 +1,17 @@
-package me.melontini.andromeda.modules.items.magnet.items;
+package me.melontini.andromeda.modules.items.magnet;
 
 import com.google.common.collect.ImmutableSet;
+import me.melontini.andromeda.common.AndromedaItemGroup;
+import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.andromeda.common.util.LootContextUtil;
-import me.melontini.andromeda.modules.items.magnet.Magnet;
 import me.melontini.dark_matter.api.base.util.MathUtil;
 import me.melontini.dark_matter.api.base.util.Support;
 import me.melontini.dark_matter.api.glitter.ScreenParticleHelper;
+import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
 import me.melontini.dark_matter.api.minecraft.util.TextUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.BundleTooltipData;
 import net.minecraft.client.item.TooltipContext;
@@ -19,6 +22,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -48,8 +52,11 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static me.melontini.andromeda.common.Andromeda.id;
+
 public class MagnetItem extends Item {
 
+    public static final Keeper<MagnetItem> MAGNET = Keeper.create();
     private static final BiConsumer<ItemStack, PlayerEntity> ITEM_PARTICLES = Support.support(EnvType.CLIENT, () -> MagnetItem::itemParticles, () -> (stack, player) -> {});
     private static final Consumer<PlayerEntity> UPGRADE_PARTICLES = Support.support(EnvType.CLIENT, () -> MagnetItem::upgradeParticles, () -> stack -> {});
 
@@ -217,5 +224,11 @@ public class MagnetItem extends Item {
 
     private void playInsertSound(Entity entity) {
         entity.playSound(SoundEvents.ITEM_BUNDLE_INSERT, 0.8F, 0.8F + entity.getWorld().getRandom().nextFloat() * 0.4F);
+    }
+
+    static void init(Magnet module) {
+        MagnetItem.MAGNET.init(RegistryUtil.register(Registries.ITEM, id("magnet"), () -> new MagnetItem(new FabricItemSettings().maxCount(1))));
+
+        AndromedaItemGroup.accept(a -> a.keeper(module, ItemGroups.TOOLS, MagnetItem.MAGNET));
     }
 }

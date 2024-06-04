@@ -10,7 +10,6 @@ import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.util.commander.bool.BooleanIntermediary;
 import me.melontini.andromeda.util.commander.number.DoubleIntermediary;
 
-import java.util.List;
 
 @ModuleInfo(name = "ghast_tweaks", category = "entities", environment = Environment.SERVER)
 public final class GhastTweaks extends Module {
@@ -19,7 +18,7 @@ public final class GhastTweaks extends Module {
 
     GhastTweaks() {
         this.defineConfig(ConfigState.GAME, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> initClass(Main.class));
     }
 
     @ToString

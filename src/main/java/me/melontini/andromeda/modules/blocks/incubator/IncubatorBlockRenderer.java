@@ -1,19 +1,23 @@
-package me.melontini.andromeda.modules.blocks.incubator.client;
+package me.melontini.andromeda.modules.blocks.incubator;
 
-import me.melontini.andromeda.modules.blocks.incubator.IncubatorBlock;
-import me.melontini.andromeda.modules.blocks.incubator.IncubatorBlockEntity;
 import me.melontini.dark_matter.api.base.util.MakeSure;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 
+@Environment(EnvType.CLIENT)
 public class IncubatorBlockRenderer implements BlockEntityRenderer<IncubatorBlockEntity> {
 
     public IncubatorBlockRenderer(BlockEntityRendererFactory.Context context) {
@@ -52,5 +56,10 @@ public class IncubatorBlockRenderer implements BlockEntityRenderer<IncubatorBloc
         matrices.translate(0.5, 1.4, 0.5);
         MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(Blocks.HORN_CORAL_FAN.getDefaultState(/*very comfy*/), matrices, vertexConsumers, light, overlay);
         matrices.pop();
+    }
+
+    public static void onClient() {
+        IncubatorBlock.INCUBATOR_BLOCK.ifPresent(b -> BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), b));
+        IncubatorBlock.INCUBATOR_BLOCK_ENTITY.ifPresent(b -> BlockEntityRendererFactories.register(b, IncubatorBlockRenderer::new));
     }
 }

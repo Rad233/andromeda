@@ -8,7 +8,6 @@ import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 
-import java.util.List;
 
 @ModuleInfo(name = "minecart_block_picking", category = "items", environment = Environment.SERVER)
 public final class MinecartBlockPicking extends Module {
@@ -17,7 +16,10 @@ public final class MinecartBlockPicking extends Module {
 
     MinecartBlockPicking() {
         this.defineConfig(ConfigState.GAME, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> () -> {
+            PlaceBehaviorHandler.init();
+            PickUpBehaviorHandler.init();
+        });
     }
 
     @ToString

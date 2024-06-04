@@ -20,7 +20,7 @@ public final class AdvancementGeneration extends Module {
 
     AdvancementGeneration() {
         this.defineConfig(ConfigState.MAIN, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> initClass(Main.class));
     }
 
     @ToString

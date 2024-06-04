@@ -9,7 +9,6 @@ import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.util.commander.bool.BooleanIntermediary;
 
-import java.util.List;
 
 @ModuleInfo(name = "crop_temperature", category = "world", environment = Environment.SERVER)
 public final class PlantTemperature extends Module {
@@ -18,7 +17,7 @@ public final class PlantTemperature extends Module {
 
     PlantTemperature() {
         this.defineConfig(ConfigState.GAME, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> () -> PlantTemperatureData.init(this));
     }
 
     @ToString

@@ -7,7 +7,6 @@ import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 
-import java.util.List;
 
 @ModuleInfo(name = "vehicle_unentrapment", category = "entities", environment = Environment.SERVER)
 public final class VehicleUnentrapment extends Module {
@@ -16,6 +15,6 @@ public final class VehicleUnentrapment extends Module {
 
     VehicleUnentrapment() {
         this.defineConfig(ConfigState.GAME, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> initClass(Main.class));
     }
 }

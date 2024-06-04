@@ -10,7 +10,6 @@ import me.melontini.andromeda.modules.mechanics.throwable_items.client.Client;
 import me.melontini.andromeda.util.commander.CommanderSupport;
 import me.melontini.andromeda.util.commander.number.DoubleIntermediary;
 
-import java.util.List;
 
 @ModuleInfo(name = "throwable_items", category = "mechanics")
 public final class ThrowableItems extends Module {
@@ -21,8 +20,8 @@ public final class ThrowableItems extends Module {
     ThrowableItems() {
         this.defineConfig(ConfigState.GAME, CONFIG);
         this.defineConfig(ConfigState.CLIENT, CLIENT_CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
-        InitEvent.client(this).listen(() -> List.of(Client.class));
+        InitEvent.main(this).listen(() -> initClass(Main.class));
+        InitEvent.client(this).listen(() -> initClass(Client.class));
 
         CommanderSupport.require(this);
     }

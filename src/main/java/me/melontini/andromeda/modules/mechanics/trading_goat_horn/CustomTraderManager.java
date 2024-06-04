@@ -7,7 +7,10 @@ import lombok.NonNull;
 import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.andromeda.common.util.LootContextUtil;
 import me.melontini.dark_matter.api.base.util.MathUtil;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.SpawnRestriction;
@@ -18,16 +21,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.SpawnHelper;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.*;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import net.minecraft.world.poi.PointOfInterestTypes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+
+import static me.melontini.andromeda.common.Andromeda.id;
 
 @SuppressWarnings("UnstableApiUsage")
 public class CustomTraderManager {
@@ -111,5 +113,20 @@ public class CustomTraderManager {
         }
 
         return true;
+    }
+
+    static void init() {
+        CustomTraderManager.ATTACHMENT.init(AttachmentRegistry.<CustomTraderManager>builder()
+                .initializer(() -> new CustomTraderManager(0))
+                .persistent(CustomTraderManager.CODEC)
+                .buildAndRegister(id("trader_state_manager")));
+
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            if (World.OVERWORLD.equals(world.getRegistryKey())) world.getAttachedOrCreate(CustomTraderManager.ATTACHMENT.get());
+        });
+
+        ServerTickEvents.END_WORLD_TICK.register(world -> {
+            if (World.OVERWORLD.equals(world.getRegistryKey())) world.getAttachedOrCreate(CustomTraderManager.ATTACHMENT.get()).tick();
+        });
     }
 }

@@ -4,16 +4,13 @@ import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
-import me.melontini.andromeda.modules.misc.unknown.client.Client;
-
-import java.util.List;
 
 @Unscoped
 @ModuleInfo(name = "unknown", category = "misc")
 public final class Unknown extends Module {
 
     Unknown() {
-        InitEvent.main(this).listen(() -> List.of(Main.class));
-        InitEvent.client(this).listen(() -> List.of(Client.class));
+        InitEvent.main(this).listen(() -> RoseOfTheValley::init);
+        InitEvent.client(this).listen(() -> RoseOfTheValley::onClient);
     }
 }

@@ -1,4 +1,4 @@
-package me.melontini.andromeda.modules.gui.item_frame_tooltips.client;
+package me.melontini.andromeda.modules.gui.item_frame_tooltips;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;

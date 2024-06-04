@@ -9,7 +9,6 @@ import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.common.util.TranslationKeyProvider;
 
-import java.util.List;
 import java.util.Optional;
 
 @ModuleInfo(name = "tiny_storage", category = "misc", environment = Environment.SERVER)
@@ -20,7 +19,7 @@ public final class TinyStorage extends Module {
 
     TinyStorage() {
         this.defineConfig(ConfigState.MAIN, CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
+        InitEvent.main(this).listen(() -> Main::init);
     }
 
     @ToString

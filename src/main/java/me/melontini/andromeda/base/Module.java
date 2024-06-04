@@ -71,29 +71,31 @@ public abstract class Module {
     }
 
     @SneakyThrows
-    final void initClass(Class<?> cls) {
-        MakeSure.isTrue(cls.getDeclaredConstructors().length == 1);
-        var ctx = Reflect.setAccessible(cls.getDeclaredConstructors()[0]);
+    protected final Runnable initClass(Class<?> cls) {
+        return () -> {
+            MakeSure.isTrue(cls.getDeclaredConstructors().length == 1);
+            var ctx = Reflect.setAccessible(cls.getDeclaredConstructors()[0]);
 
-        if (ctx.getParameterCount() == 0) {
-            AndromedaException.run(() -> this.objectMap.put(cls, ctx.newInstance()), b -> b.literal("Failed to construct module class!").add("class", cls.getName()));
-        } else {
-            Map<Class<?>, Object> args = new HashMap<>(Map.of(
-                    this.getClass(), this,
-                    BootstrapConfig.class, ModuleManager.get().getConfig(this)
-            ));
-            args.putAll(ConstructorParametersEvent.BUS.invoker().getAdditionalParameters(this));
+            if (ctx.getParameterCount() == 0) {
+                AndromedaException.run(() -> this.objectMap.put(cls, ctx.newInstance()), b -> b.literal("Failed to construct module class!").add("class", cls.getName()));
+            } else {
+                Map<Class<?>, Object> args = new HashMap<>(Map.of(
+                        this.getClass(), this,
+                        BootstrapConfig.class, ModuleManager.get().getConfig(this)
+                ));
+                args.putAll(ConstructorParametersEvent.BUS.invoker().getAdditionalParameters(this));
 
-            List<Object> passed = new ArrayList<>(ctx.getParameterCount());
-            for (Class<?> parameterType : ctx.getParameterTypes()) {
-                var value = Objects.requireNonNull(args.get(parameterType), cls.getName());
-                passed.add(value);
+                List<Object> passed = new ArrayList<>(ctx.getParameterCount());
+                for (Class<?> parameterType : ctx.getParameterTypes()) {
+                    var value = Objects.requireNonNull(args.get(parameterType), cls.getName());
+                    passed.add(value);
+                }
+                AndromedaException.run(() -> this.objectMap.put(cls, ctx.newInstance(passed.toArray(Object[]::new))), b -> b.literal("Failed to construct module class!")
+                        .add("parameters", ctx.getParameterTypes())
+                        .add("args", passed)
+                        .add("class", cls.getName()));
             }
-            AndromedaException.run(() -> this.objectMap.put(cls, ctx.newInstance(passed.toArray(Object[]::new))), b -> b.literal("Failed to construct module class!")
-                    .add("parameters", ctx.getParameterTypes())
-                    .add("args", passed)
-                    .add("class", cls.getName()));
-        }
+        };
     }
 
     public record Metadata(String name, String category, Environment environment) {

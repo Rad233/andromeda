@@ -23,7 +23,7 @@ public final class Main {
     public static final Identifier USED_CUSTOM_TOTEM = new Identifier(MODID, "used_custom_totem");
     public static final Identifier NOTIFY_CLIENT = new Identifier(MODID, "notify_client_about_stuff_please");
 
-    Main(InfiniteTotem module) {
+    static void init(InfiniteTotem module) {
         INFINITE_TOTEM.init(RegistryUtil.register(Registries.ITEM, id("infinite_totem"), () -> new Item(new FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))));
 
         KNOCKOFF_TOTEM_PARTICLE.init(RegistryUtil.register(Registries.PARTICLE_TYPE, id("knockoff_totem_particles"), FabricParticleTypes::simple));

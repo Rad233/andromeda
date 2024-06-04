@@ -10,7 +10,6 @@ import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.modules.items.pouches.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-import java.util.List;
 
 @Unscoped
 @ModuleInfo(name = "pouches", category = "items")
@@ -20,11 +19,11 @@ public final class Pouches extends Module {
 
     Pouches() {
         this.defineConfig(ConfigState.MAIN, MAIN_CONFIG);
-        InitEvent.main(this).listen(() -> List.of(Main.class));
-        InitEvent.client(this).listen(() -> List.of(Client.class));
+        InitEvent.main(this).listen((() -> initClass(Main.class)));
+        InitEvent.client(this).listen(() -> initClass(Client.class));
 
-        InitEvent.client(this).listen(() -> List.of(Merged.class));
-        InitEvent.server(this).listen(() -> List.of(Merged.class));
+        InitEvent.client(this).listen(() -> () -> Main.testBlocks(this));
+        InitEvent.server(this).listen(() -> () -> Main.testBlocks(this));
     }
 
     @ToString
