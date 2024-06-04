@@ -1,0 +1,15 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:worldgen/feature",
+      "values": [
+        "andromeda:loot_barrel"
+      ]
+    }
+  ],
+  "type": "andromeda:loot_barrel",
+  "config": {
+    "loot": "minecraft:chests/village/village_toolsmith"
+  }
+}

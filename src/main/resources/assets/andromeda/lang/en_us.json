@@ -108,6 +108,9 @@
   "config.andromeda.blocks.leaf_slowdown": "Leaf Slowdown",
   "config.andromeda.blocks.leaf_slowdown.@Tooltip": "Makes entities slower while standing on leaves. \nThis should discourage players from running above all the fun things",
 
+  "config.andromeda.blocks.loot_barrels": "Loot Barrels",
+  "config.andromeda.blocks.loot_barrels.@Tooltip": "Adds random barrels with loot to caves!",
+
   "config.andromeda.category.entities": "Entities",
 
   "config.andromeda.entities.zombie.clean_pickup": "Zombies Don't Pick up Garbage",
