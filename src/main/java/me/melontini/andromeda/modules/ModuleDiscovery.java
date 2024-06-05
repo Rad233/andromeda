@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @CustomLog
 public final class ModuleDiscovery {
@@ -44,6 +45,6 @@ public final class ModuleDiscovery {
 
         return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new))
                 .handle((unused, throwable) -> futures).join().stream()
-                .map(CompletableFuture::join).filter(Objects::nonNull).toList();
+                .map(CompletableFuture::join).filter(Objects::nonNull).collect(Collectors.toCollection(ArrayList::new));
     }
 }

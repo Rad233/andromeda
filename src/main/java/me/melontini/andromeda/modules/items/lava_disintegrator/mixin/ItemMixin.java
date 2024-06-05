@@ -23,6 +23,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(Item.class)
 abstract class ItemMixin {
 
@@ -45,6 +47,6 @@ abstract class ItemMixin {
         for (int i = 0; i < count; i++) {
             ScreenParticleHelper.addParticle(ParticleTypes.LAVA, x, y, 0.0, 0.0);
         }
-        client.player.playSound(SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.AMBIENT, 0.8f, 0.8F + MathUtil.threadRandom().nextFloat() * 0.4F);
+        Objects.requireNonNull(client.player).playSound(SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.AMBIENT, 0.8f, 0.8F + MathUtil.threadRandom().nextFloat() * 0.4F);
     }
 }
