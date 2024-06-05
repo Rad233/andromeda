@@ -51,6 +51,8 @@
 
     "config.andromeda.category.blocks": "方块",
 
+    "config.andromeda.world.loot_barrels": "意外之喜",
+    "config.andromeda.world.loot_barrels.@Tooltip": "洞穴内将生成奖励随机的木桶！",
     "config.andromeda.blocks.guarded_loot": "宝藏守卫",
     "config.andromeda.blocks.guarded_loot.@Tooltip": "设定距离内有怪物时，阻止玩家打开未生成战利品的箱子。",
     "config.andromeda.blocks.guarded_loot.option.range": "检测距离",
