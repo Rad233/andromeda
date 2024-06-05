@@ -10,6 +10,20 @@
   ],
   "type": "andromeda:loot_barrel",
   "config": {
-    "loot": "minecraft:chests/village/village_toolsmith"
+    "loot": "minecraft:chests/village/village_toolsmith",
+    "decorations": [
+      {
+        "weight": 1,
+        "data": {
+          "Name": "minecraft:lantern"
+        }
+      },
+      {
+        "weight": 3,
+        "data": {
+          "Name": "minecraft:torch"
+        }
+      }
+    ]
   }
 }
