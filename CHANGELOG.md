@@ -1,6 +1,6 @@
 ### What's New:
 
-[`blocks/loot_barrels`]:
+[`world/loot_barrels`]:
 
 * New Module!
 * Adds random barrels with loot to caves!

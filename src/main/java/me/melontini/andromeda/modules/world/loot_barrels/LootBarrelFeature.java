@@ -1,4 +1,4 @@
-package me.melontini.andromeda.modules.blocks.loot_barrels;
+package me.melontini.andromeda.modules.world.loot_barrels;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
