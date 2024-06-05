@@ -3,7 +3,6 @@ package me.melontini.andromeda.modules;
 import lombok.CustomLog;
 import me.melontini.andromeda.base.Bootstrap;
 import me.melontini.andromeda.base.Module;
-import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.dark_matter.api.base.reflect.Reflect;
 import me.melontini.dark_matter.api.base.util.Exceptions;
@@ -17,9 +16,9 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @CustomLog
-public final class ModuleDiscovery implements ModuleManager.ModuleSupplier {
-    @Override
-    public List<Module.Zygote> get() {
+public final class ModuleDiscovery {
+
+    public static List<Module.Zygote> get() {
         Bootstrap.getModuleClassPath().addUrl(ModuleDiscovery.class.getProtectionDomain().getCodeSource().getLocation());
 
         List<CompletableFuture<Module.Zygote>> futures = new ArrayList<>();

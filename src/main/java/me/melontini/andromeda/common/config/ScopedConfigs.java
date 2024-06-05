@@ -45,10 +45,6 @@ public class ScopedConfigs {
         }
     }
 
-    public static ConfigHandler getConfigs(ServerWorld world) {
-        return ((AttachmentGetter)world).andromeda$getConfigs();
-    }
-
     public interface AttachmentGetter {
         ConfigHandler andromeda$getConfigs();
     }

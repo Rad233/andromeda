@@ -7,12 +7,10 @@ import me.melontini.andromeda.base.util.ConfigDefinition;
 import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
-import me.melontini.andromeda.base.util.annotations.Origin;
 import net.minecraft.item.Item;
 
 import java.util.List;
 
-@Origin(mod = "TinyTweaks", author = "HephaestusDev")
 @ModuleInfo(name = "auto_planting", category = "world", environment = Environment.SERVER)
 public final class AutoPlanting extends Module {
 

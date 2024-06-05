@@ -344,8 +344,4 @@ public final class ModuleManager {
             LOGGER.info(EarlyLanguage.translate("andromeda.module_manager.no_modules"));
         }
     }
-
-    public interface ModuleSupplier {
-        List<Module.Zygote> get();
-    }
 }

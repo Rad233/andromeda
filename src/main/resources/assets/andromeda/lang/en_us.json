@@ -30,7 +30,7 @@
   "config.andromeda.category.world": "World",
 
   "config.andromeda.world.auto_planting": "Self Planting Crops",
-  "config.andromeda.world.auto_planting.@Tooltip": "If possible, crops will plant themselves after some time.",
+  "config.andromeda.world.auto_planting.@Tooltip": "If possible, crops will plant themselves after some time.\nBased on TinyTweaks by HephaestusDev.",
   "config.andromeda.world.auto_planting.option.blacklistMode": "Blacklist Mode",
   "config.andromeda.world.auto_planting.option.blacklistMode.@Tooltip": "Should the list below act as blacklist",
   "config.andromeda.world.auto_planting.option.idList": "Item List",

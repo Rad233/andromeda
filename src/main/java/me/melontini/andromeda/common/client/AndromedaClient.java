@@ -6,7 +6,6 @@ import lombok.Getter;
 import me.melontini.andromeda.base.AndromedaConfig;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.events.BlockadesEvent;
-import me.melontini.andromeda.base.events.ConstructorParametersEvent;
 import me.melontini.andromeda.base.util.ConfigHandler;
 import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Promise;
@@ -29,7 +28,10 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static me.melontini.andromeda.common.Andromeda.id;
@@ -43,17 +45,6 @@ public final class AndromedaClient {
 
     private static AndromedaClient INSTANCE;
     private boolean animate = true;
-
-    public static void preClient() {
-        ConstructorParametersEvent.BUS.listen(module -> {
-            var ccd = module.getConfigDefinition(ConfigState.CLIENT);
-            if (ccd != null) return Collections.singletonMap(ccd.supplier().get(), AndromedaClient.HANDLER.get(ccd));
-            return Collections.emptyMap();
-        });
-
-        HANDLER.loadAll();
-        HANDLER.saveAll();
-    }
 
     public static void init() {
         INSTANCE = new AndromedaClient();

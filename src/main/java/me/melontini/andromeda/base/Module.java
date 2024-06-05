@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.melontini.andromeda.base.events.Bus;
-import me.melontini.andromeda.base.events.ConstructorParametersEvent;
 import me.melontini.andromeda.base.util.BootstrapConfig;
 import me.melontini.andromeda.base.util.ConfigDefinition;
 import me.melontini.andromeda.base.util.ConfigState;
@@ -20,6 +19,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -30,6 +30,8 @@ import java.util.function.Supplier;
  */
 @CustomLog @Accessors(fluent = true)
 public abstract class Module {
+
+    static final List<Function<Module, Map<Class<?>, Object>>> ADDITIONAL_PARAMETERS = new ArrayList<>();
 
     private final Metadata info;
     @Getter
@@ -83,7 +85,7 @@ public abstract class Module {
                         this.getClass(), this,
                         BootstrapConfig.class, ModuleManager.get().getConfig(this)
                 ));
-                args.putAll(ConstructorParametersEvent.BUS.invoker().getAdditionalParameters(this));
+                ADDITIONAL_PARAMETERS.forEach(func -> args.putAll(func.apply(this)));
 
                 List<Object> passed = new ArrayList<>(ctx.getParameterCount());
                 for (Class<?> parameterType : ctx.getParameterTypes()) {

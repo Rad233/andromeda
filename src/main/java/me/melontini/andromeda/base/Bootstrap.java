@@ -4,14 +4,15 @@ import com.google.common.collect.ImmutableMap;
 import lombok.CustomLog;
 import me.melontini.andromeda.base.events.Bus;
 import me.melontini.andromeda.base.events.InitEvent;
+import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Experiments;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.client.AndromedaClient;
+import me.melontini.andromeda.modules.ModuleDiscovery;
 import me.melontini.andromeda.util.*;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
 import me.melontini.andromeda.util.mixins.AndromedaMixins;
 import me.melontini.dark_matter.api.base.util.Context;
-import me.melontini.dark_matter.api.base.util.EntrypointRunner;
 import me.melontini.dark_matter.api.base.util.Support;
 import me.melontini.dark_matter.api.base.util.functions.ThrowingRunnable;
 import me.melontini.dark_matter.api.crash_handler.Crashlytics;
@@ -58,7 +59,16 @@ public class Bootstrap {
 
         onMerged();
 
-        run(AndromedaClient::preClient, b -> b.literal("Failed to initialize AndromedaClient!"));
+        Module.ADDITIONAL_PARAMETERS.add(module -> {
+            var ccd = module.getConfigDefinition(ConfigState.CLIENT);
+            if (ccd != null) return Collections.singletonMap(ccd.supplier().get(), AndromedaClient.HANDLER.get(ccd));
+            return Collections.emptyMap();
+        });
+
+        run(() -> {
+            AndromedaClient.HANDLER.loadAll();
+            AndromedaClient.HANDLER.saveAll();
+        }, b -> b.literal("Failed to initialize AndromedaClient!"));
 
         for (Module module : ModuleManager.get().loaded()) {
             if (module.meta().environment().isServer()) continue;
@@ -80,7 +90,10 @@ public class Bootstrap {
     }
 
     private static void onMerged() {
-        run(Andromeda::onMerged, b -> b.literal("Failed to initialize Andromeda!"));
+        run(() -> {
+            Andromeda.GAME_HANDLER.loadAll();
+            Andromeda.GAME_HANDLER.saveAll();
+        }, b -> b.literal("Failed to initialize Andromeda!"));
 
         for (Module module : ModuleManager.get().loaded()) {
             runInit("merged", module);
@@ -109,7 +122,16 @@ public class Bootstrap {
             }
         }
 
-        run(Andromeda::preMain, b -> b.literal("Failed to pre-initialize Andromeda!"));
+        Module.ADDITIONAL_PARAMETERS.add(module -> {
+            var cd = module.getConfigDefinition(ConfigState.MAIN);
+            if (cd != null) return Collections.singletonMap(cd.supplier().get(), Andromeda.ROOT_HANDLER.get(cd));
+            return Collections.emptyMap();
+        });
+
+        run(() -> {
+            Andromeda.ROOT_HANDLER.loadAll();
+            Andromeda.ROOT_HANDLER.saveAll();
+        }, b -> b.literal("Failed to initialize Andromeda!"));
 
         for (Module module : ModuleManager.get().loaded()) {
             runInit("main", module);
@@ -130,16 +152,8 @@ public class Bootstrap {
 
             Status.update();
 
-            List<Module.Zygote> list = new ArrayList<>(40);
-            run(() -> {
-                //This should probably be removed.
-                ServiceLoader.load(Module.class).stream().map(p -> Module.Zygote.spawn(p.type(), p::get)).forEach(list::add);
-                EntrypointRunner.run("andromeda:modules", ModuleManager.ModuleSupplier.class, s -> list.addAll(s.get()));
-            }, (b) -> b.literal("Failed during module discovery!"));
-
-            if (list.isEmpty()) {
-                LOGGER.error(EarlyLanguage.translate("andromeda.bootstrap.no_modules"));
-            }
+            List<Module.Zygote> list = ModuleDiscovery.get();
+            if (list.isEmpty()) LOGGER.error(EarlyLanguage.translate("andromeda.bootstrap.no_modules"));
 
             list.removeIf(m -> CommonValues.environment() == EnvType.SERVER && !m.meta().environment().allows(EnvType.SERVER));
 

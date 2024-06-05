@@ -276,7 +276,6 @@ public class NewAutoConfigScreen {
             setModuleTooltip(e, module);
             appendEnvInfo(e, module.meta().environment());
         }
-        appendOrigin(e, module);
         appendDeprecationInfo(e, module);
         return wrapTooltip(e);
     }
