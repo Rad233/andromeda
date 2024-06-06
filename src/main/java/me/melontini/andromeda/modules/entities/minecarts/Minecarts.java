@@ -26,7 +26,7 @@ public final class Minecarts extends Module {
             MinecartItems.init(this, Andromeda.ROOT_HANDLER.get(MAIN_CONFIG));
             MinecartEntities.init(Andromeda.ROOT_HANDLER.get(MAIN_CONFIG));
         });
-        InitEvent.client(this).listen(() -> initClass(Client.class));
+        InitEvent.client(this).listen(() -> Client::init);
     }
 
     @ToString

@@ -15,6 +15,6 @@ public final class VehicleUnentrapment extends Module {
 
     VehicleUnentrapment() {
         this.defineConfig(ConfigState.GAME, CONFIG);
-        InitEvent.main(this).listen(() -> initClass(Main.class));
+        InitEvent.main(this).listen(() -> Main::init);
     }
 }

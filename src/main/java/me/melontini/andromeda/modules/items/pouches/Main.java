@@ -71,7 +71,7 @@ public final class Main {
         if (!itemStack.isEmpty()) ItemStackUtil.spawnVelocity(pos, itemStack, world, -0.2, 0.2, 0.1, 0.2, -0.2, 0.2);
     }
 
-    Main(Pouches module, Pouches.Config config) {
+    static void init(Pouches module, Pouches.Config config) {
         SEED_POUCH.init(RegistryUtil.register(config.seedPouch, Registries.ITEM, id("seed_pouch"),
                         () -> new PouchItem(PouchEntity.Type.SEED, new FabricItemSettings().maxCount(16))));
 

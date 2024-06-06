@@ -26,7 +26,7 @@ public final class Boats extends Module {
             BoatItems.init(this, Andromeda.ROOT_HANDLER.get(MAIN_CONFIG));
             BoatEntities.init(Andromeda.ROOT_HANDLER.get(MAIN_CONFIG));
         });
-        InitEvent.client(this).listen(() -> initClass(Client.class));
+        InitEvent.client(this).listen(() -> Client::init);
     }
 
     @ToString

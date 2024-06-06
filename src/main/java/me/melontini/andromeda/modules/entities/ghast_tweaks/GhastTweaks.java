@@ -18,7 +18,7 @@ public final class GhastTweaks extends Module {
 
     GhastTweaks() {
         this.defineConfig(ConfigState.GAME, CONFIG);
-        InitEvent.main(this).listen(() -> initClass(Main.class));
+        InitEvent.main(this).listen(() -> Main::init);
     }
 
     @ToString

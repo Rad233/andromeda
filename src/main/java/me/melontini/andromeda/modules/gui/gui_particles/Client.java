@@ -8,7 +8,7 @@ import net.minecraft.particle.ParticleTypes;
 
 public class Client {
 
-    Client(GuiParticles.Config config) {
+    static void init(GuiParticles.Config config) {
         ScreenEvents.BEFORE_INIT.register((client, screen1, scaledWidth, scaledHeight) -> {
             if (screen1 instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen && config.furnaceScreenParticles) {
                 ScreenEvents.afterTick(abstractFurnaceScreen).register(screen -> {

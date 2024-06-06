@@ -7,6 +7,7 @@ import me.melontini.andromeda.base.util.ConfigDefinition;
 import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
+import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.modules.items.pouches.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
@@ -19,8 +20,8 @@ public final class Pouches extends Module {
 
     Pouches() {
         this.defineConfig(ConfigState.MAIN, MAIN_CONFIG);
-        InitEvent.main(this).listen((() -> initClass(Main.class)));
-        InitEvent.client(this).listen(() -> initClass(Client.class));
+        InitEvent.main(this).listen((() -> () -> Main.init(this, Andromeda.ROOT_HANDLER.get(MAIN_CONFIG))));
+        InitEvent.client(this).listen(() -> Client::init);
 
         InitEvent.client(this).listen(() -> () -> Main.testBlocks(this));
         InitEvent.server(this).listen(() -> () -> Main.testBlocks(this));

@@ -7,6 +7,7 @@ import me.melontini.andromeda.base.util.ConfigDefinition;
 import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
+import me.melontini.andromeda.common.client.AndromedaClient;
 
 
 @ModuleInfo(name = "gui_particles", category = "gui", environment = Environment.CLIENT)
@@ -16,7 +17,7 @@ public final class GuiParticles extends Module {
 
     GuiParticles() {
         this.defineConfig(ConfigState.CLIENT, CONFIG);
-        InitEvent.client(this).listen(() -> initClass(Client.class));
+        InitEvent.client(this).listen(() -> () -> Client.init(AndromedaClient.HANDLER.get(CONFIG)));
     }
 
     @ToString

@@ -15,7 +15,7 @@ import static me.melontini.andromeda.base.Bootstrap.testModVersion;
 public final class ItemFrameTooltips extends Module {
 
     ItemFrameTooltips() {
-        InitEvent.client(this).listen(() -> initClass(Client.class));
+        InitEvent.client(this).listen(() -> Client::new);
         ToBooleanFunction<ModuleManager> iceberg = (manager) -> testModVersion(this, "minecraft", ">=1.20") && testModVersion(this, "iceberg", "<1.1.13");
 
         ConfigEvent.bootstrap(this).listen((moduleManager, config) -> {

@@ -7,6 +7,7 @@ import me.melontini.andromeda.base.util.ConfigDefinition;
 import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
+import me.melontini.andromeda.common.Andromeda;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public final class AdvancementGeneration extends Module {
 
     AdvancementGeneration() {
         this.defineConfig(ConfigState.MAIN, CONFIG);
-        InitEvent.main(this).listen(() -> initClass(Main.class));
+        InitEvent.main(this).listen(() -> () -> Main.init(this, Andromeda.ROOT_HANDLER.get(CONFIG)));
     }
 
     @ToString
