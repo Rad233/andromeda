@@ -102,6 +102,10 @@ public final class Andromeda {
                 .asList().stream().filter(JsonElement::isJsonPrimitive)
                 .allMatch(e -> Registries.ITEM.containsId(Identifier.tryParse(e.getAsString()))));
 
+        ResourceConditions.register(id("modules_loaded"), object -> JsonHelper.getArray(object, "values")
+                .asList().stream().filter(JsonElement::isJsonPrimitive)
+                .allMatch(e -> ModuleManager.get().getModule(e.getAsString()).isPresent()));
+
         AndromedaItemGroup.Acceptor acceptor = (module, main, stack) -> {
             if (!stack.isEmpty()) ItemGroupEvents.modifyEntriesEvent(main).register(entries -> entries.add(stack));
         };
