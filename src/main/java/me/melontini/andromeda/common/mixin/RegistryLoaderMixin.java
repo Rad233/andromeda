@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.function.Consumer;
 
 @Mixin(RegistryLoader.class)
-public class RegistryLoaderMixin {
+abstract class RegistryLoaderMixin {
 
     @WrapOperation(method = "load(Lnet/minecraft/registry/RegistryOps$RegistryInfoGetter;Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/registry/RegistryKey;Lnet/minecraft/registry/MutableRegistry;Lcom/mojang/serialization/Decoder;Ljava/util/Map;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Decoder;parse(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;", remap = false))
     private static DataResult<?> andromeda$cancelDecode(Decoder<?> instance, DynamicOps<?> ops, Object input, Operation<DataResult<?>> original, @Local Identifier identifier, @Local JsonElement json) {
