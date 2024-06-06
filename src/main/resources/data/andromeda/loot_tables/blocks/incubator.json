@@ -1,4 +1,12 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "andromeda:modules_loaded",
+      "values": [
+        "blocks/incubator"
+      ]
+    }
+  ],
   "type": "minecraft:block",
   "pools": [
     {
