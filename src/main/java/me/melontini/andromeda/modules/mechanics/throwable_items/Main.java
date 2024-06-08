@@ -37,7 +37,6 @@ import net.minecraft.world.World;
 
 import static me.melontini.andromeda.common.Andromeda.id;
 import static me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager.RELOADER;
-import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public final class Main {
 

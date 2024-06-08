@@ -11,7 +11,6 @@ import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.util.ConfigHandler;
 import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Experiments;
-import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.util.IdentifiedJsonDataLoader;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
@@ -30,7 +29,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public final class DataConfigs extends IdentifiedJsonDataLoader {
 

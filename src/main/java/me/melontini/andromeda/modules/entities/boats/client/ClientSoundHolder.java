@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public class ClientSoundHolder {
 

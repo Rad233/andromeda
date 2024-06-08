@@ -8,7 +8,6 @@ import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.SpecialEnvironment;
-import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.modules.entities.minecarts.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;

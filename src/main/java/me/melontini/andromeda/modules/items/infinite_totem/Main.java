@@ -14,7 +14,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 
 import static me.melontini.andromeda.common.Andromeda.id;
-import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public final class Main {
 

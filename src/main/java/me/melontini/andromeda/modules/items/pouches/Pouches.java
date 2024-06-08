@@ -6,7 +6,6 @@ import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.ConfigDefinition;
 import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
-import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.modules.items.pouches.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;

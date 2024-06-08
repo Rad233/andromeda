@@ -30,7 +30,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public class TNTBoatEntity extends BoatEntityWithBlock {
     public static final Identifier EXPLODE_BOAT_ON_SERVER = Andromeda.id("explode_boat_on_server");

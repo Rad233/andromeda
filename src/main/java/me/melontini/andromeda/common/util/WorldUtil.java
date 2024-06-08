@@ -28,7 +28,6 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Optional;
 
-import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public class WorldUtil {
     public static final Identifier BEE_LOOT_ID = Andromeda.id("bee_nest/bee_nest_broken");

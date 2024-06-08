@@ -16,7 +16,6 @@ import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.World;
 
 import java.util.Collections;
-import java.util.function.Supplier;
 
 @CustomLog
 public class ScopedConfigs {

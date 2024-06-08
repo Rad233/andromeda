@@ -17,7 +17,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
 
-import static me.melontini.andromeda.util.CommonValues.MODID;
 
 @CustomLog
 @Environment(EnvType.CLIENT)

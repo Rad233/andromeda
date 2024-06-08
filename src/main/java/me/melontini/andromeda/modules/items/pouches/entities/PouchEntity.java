@@ -37,7 +37,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public class PouchEntity extends ThrownItemEntity {
 
