@@ -127,7 +127,8 @@ public final class Andromeda {
                 if (!understood) {
                     if (!modules.isEmpty())
                         handler.disconnect(TextUtil.translatable("andromeda.disconnected.module_mismatch",
-                                Arrays.toString(new String[0]), Arrays.toString(modules.toArray())));
+                                Arrays.toString(new String[0]), Arrays.toString(modules.toArray()))
+                                .append(TextUtil.literal("\nOr install Andromeda if you haven't already!")));
                     return;
                 }
 
@@ -143,7 +144,8 @@ public final class Andromeda {
 
                     if (!disable.isEmpty() || !enable.isEmpty()) {
                         handler.disconnect(TextUtil.translatable("andromeda.disconnected.module_mismatch",
-                                Arrays.toString(disable.toArray()), Arrays.toString(enable.toArray())));
+                                Arrays.toString(disable.toArray()), Arrays.toString(enable.toArray()))
+                                .append(TextUtil.literal("\nOr install Andromeda if you haven't already!")));
                     }
                 }));
             });
