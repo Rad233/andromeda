@@ -10,6 +10,10 @@
 * New Module!
 * Allows you to destroy non-fireproof items by right-clicking a lava bucket.
 
+[`blocks/better_fletching_table`]:
+
+* Made `divergenceModifier` configurable.
+
 [`items/magnet`]:
 
 * Made `rangeMultiplier` configurable.
@@ -25,3 +29,5 @@
 [`general`]:
 
 * Fixed a crash related to invalid/empty config files.
+* Scoped/data pack configs are now on by default.
+  * Configs are now `DIMENSION` only and do not save by default.
