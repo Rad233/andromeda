@@ -102,13 +102,14 @@ public final class ModuleManager {
         })));
         Map<Module, BootstrapConfig> bootstrapConfigs = new IdentityHashMap<>(Maps.transformValues(configs, CompletableFuture::join));
         this.configGetter = bootstrapConfigs::get;
+
+        if (Debug.Keys.ENABLE_ALL_MODULES.isPresent()) bootstrapConfigs.values().forEach(c -> c.enabled = true);
+
         bootstrapConfigs.forEach((module, config) -> {
             Bus<ConfigEvent> bus = module.getOrCreateBus("bootstrap_config_event", null);
             if (bus == null) return;
             bus.invoker().accept(this, config);
         });
-
-        if (Debug.Keys.ENABLE_ALL_MODULES.isPresent()) bootstrapConfigs.values().forEach(c -> c.enabled = true);
 
         sorted.forEach(this::saveBootstrap);
 

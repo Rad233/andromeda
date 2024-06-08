@@ -8,6 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
 @CustomLog
 public class Experiments {
@@ -31,5 +32,6 @@ public class Experiments {
     public static final class Config {
         public List<String> persistentScopedConfigs = new ArrayList<>();
         public boolean showAvailableOption = false;
+        public boolean hideSidedModulesInSideOnly = ThreadLocalRandom.current().nextBoolean();
     }
 }

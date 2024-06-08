@@ -151,6 +151,8 @@ public class NewAutoConfigScreen {
         boolean commander = FabricLoader.getInstance().isModLoaded("commander");
 
         ModuleManager.get().all().stream().map(Promise::get).forEach(module -> {
+            if (AndromedaConfig.get().sideOnlyMode && Experiments.get().hideSidedModulesInSideOnly && (module.meta().environment().isServer() || module.meta().environment().isBoth())) return;
+
             var category = builder.getOrCreateCategory(TextUtil.translatable("config.andromeda.category.%s".formatted(module.meta().category())));
 
             String moduleText = "config.andromeda.%s".formatted(module.meta().dotted());
