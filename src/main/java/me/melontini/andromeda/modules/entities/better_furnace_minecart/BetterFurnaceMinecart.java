@@ -8,7 +8,6 @@ import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
 
-@Unscoped
 @ModuleInfo(name = "better_furnace_minecart", category = "entities", environment = Environment.SERVER)
 public final class BetterFurnaceMinecart extends Module {
 

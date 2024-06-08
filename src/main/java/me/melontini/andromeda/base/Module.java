@@ -14,8 +14,9 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -26,8 +27,6 @@ import java.util.function.Supplier;
  */
 @CustomLog @Accessors(fluent = true)
 public abstract class Module {
-
-    static final List<Function<Module, Map<Class<?>, Object>>> ADDITIONAL_PARAMETERS = new ArrayList<>();
 
     private final Metadata info;
     @Getter

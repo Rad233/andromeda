@@ -138,7 +138,7 @@ public class NewAutoConfigScreen {
                 .setParentScreen(parent)
                 .setTitle(TextUtil.translatable("config.andromeda.title", Iterables.get(SPLITTER.split(CommonValues.version()), 0)))
                 .setSavingRunnable(() -> powerSave(saveQueue))
-                .setDefaultBackgroundTexture(Identifier.tryParse("minecraft:textures/block/amethyst_block.png"));
+                .setDefaultBackgroundTexture(Identifier.of("minecraft", "textures/block/amethyst_block.png"));
 
         Field field = Exceptions.supply(() -> MultiElementListEntry.class.getDeclaredField("entries"));
         field.setAccessible(true);
@@ -240,7 +240,7 @@ public class NewAutoConfigScreen {
                 .setParentScreen(parent)
                 .setTitle(TextUtil.translatable("config.andromeda.lab.title"))
                 .setSavingRunnable(Experiments::save)
-                .setDefaultBackgroundTexture(Identifier.tryParse("minecraft:textures/block/amethyst_block.png"));
+                .setDefaultBackgroundTexture(Identifier.of("minecraft", "textures/block/amethyst_block.png"));
 
         ConfigCategory main = builder.getOrCreateCategory(TextUtil.translatable("config.andromeda.category.main"));
         Field field = Exceptions.supply(() -> MultiElementListEntry.class.getDeclaredField("entries"));

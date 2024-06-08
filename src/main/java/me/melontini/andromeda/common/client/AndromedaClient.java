@@ -42,6 +42,8 @@ import static me.melontini.andromeda.common.Andromeda.id;
 public final class AndromedaClient {
 
     public static final ConfigHandler HANDLER = new ConfigHandler(FabricLoader.getInstance().getConfigDir(), ConfigState.CLIENT, ModuleManager.get().all().stream().map(Promise::get).toList());
+    private static final Identifier BACKGROUND_TEXTURE = Andromeda.id("textures/gui/background.png");
+    private static final Identifier GALAXY_TEXTURE = Andromeda.id("textures/gui/galaxy.png");
 
     private static AndromedaClient INSTANCE;
     private boolean animate = true;
@@ -72,9 +74,9 @@ public final class AndromedaClient {
             try {
                 if (!animate) return;
                 drawTexture(context.getMatrices(), itemX + 8, itemY + 8, stack -> {
-                }, new Identifier("andromeda:textures/gui/background.png"));
+                }, BACKGROUND_TEXTURE);
                 drawTexture(context.getMatrices(), itemX + 8, itemY + 8, stack -> stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(Util.getMeasuringTimeMs() * 0.05f)),
-                        new Identifier("andromeda:textures/gui/galaxy.png"));
+                        GALAXY_TEXTURE);
             } catch (Throwable t) {
                 animate = false;
             }

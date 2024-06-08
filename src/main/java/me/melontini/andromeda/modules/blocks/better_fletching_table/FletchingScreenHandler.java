@@ -111,7 +111,7 @@ public class FletchingScreenHandler extends ForgingScreenHandler {
         Set<Item> tightable = Sets.newHashSet(Items.BOW, Items.CROSSBOW);
 
         if (Bootstrap.isModLoaded(module, "additionaladditions")) {
-            Registries.ITEM.getOrEmpty(Identifier.tryParse("additionaladditions:crossbow_with_spyglass"))
+            Registries.ITEM.getOrEmpty(Identifier.of("additionaladditions", "crossbow_with_spyglass"))
                     .ifPresent(item -> {
                         tightable.add(item);
                         FletchingScreenHandler.addRecipe(stack -> {

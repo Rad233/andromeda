@@ -1,6 +1,7 @@
 package me.melontini.andromeda.modules.blocks.better_fletching_table;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import me.melontini.andromeda.common.Andromeda;
 import me.melontini.dark_matter.api.minecraft.util.TextUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +20,7 @@ import static me.melontini.andromeda.util.CommonValues.MODID;
 @Environment(EnvType.CLIENT)
 public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
 
-    private static final Identifier TEXTURE = new Identifier(MODID, "textures/gui/fletching.png");
+    private static final Identifier TEXTURE = Andromeda.id("textures/gui/fletching.png");
 
     public FletchingScreen(FletchingScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title, TEXTURE);

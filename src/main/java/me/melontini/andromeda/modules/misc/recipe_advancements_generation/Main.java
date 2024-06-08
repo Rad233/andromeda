@@ -109,7 +109,7 @@ public final class Main {
     public static @NotNull Advancement.Builder createAdvBuilder(AdvancementGeneration.Config config, Identifier id, Ingredient... ingredients) {
         MakeSure.notEmpty(ingredients);// shouldn't really happen
         var builder = Advancement.Builder.createUntelemetered();
-        builder.parent(Identifier.tryParse("minecraft:recipes/root"));
+        builder.parent(Identifier.of("minecraft", "recipes/root"));
 
         List<String> names = new ArrayList<>();
         Set<JsonElement> elements = new HashSet<>();

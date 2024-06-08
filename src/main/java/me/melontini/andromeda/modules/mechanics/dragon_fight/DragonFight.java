@@ -10,7 +10,6 @@ import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
 
 
-@Unscoped
 @ModuleInfo(name = "dragon_fight", category = "mechanics", environment = Environment.SERVER)
 public final class DragonFight extends Module {
 

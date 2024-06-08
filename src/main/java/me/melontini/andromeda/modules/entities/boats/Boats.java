@@ -14,7 +14,6 @@ import me.melontini.andromeda.modules.entities.boats.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 
-@Unscoped
 @ModuleInfo(name = "boats", category = "entities")
 public final class Boats extends Module {
 

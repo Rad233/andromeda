@@ -1,5 +1,6 @@
 package me.melontini.andromeda.modules.items.lockpick;
 
+import me.melontini.andromeda.common.Andromeda;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -14,7 +15,7 @@ import static me.melontini.andromeda.util.CommonValues.MODID;
 @Environment(EnvType.CLIENT)
 public class MerchantInventoryScreen extends HandledScreen<MerchantInventoryScreenHandler> {
 
-    private static final Identifier TEXTURE = new Identifier(MODID, "textures/gui/merchant_inventory.png");
+    private static final Identifier TEXTURE = Andromeda.id("textures/gui/merchant_inventory.png");
 
     public MerchantInventoryScreen(MerchantInventoryScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);

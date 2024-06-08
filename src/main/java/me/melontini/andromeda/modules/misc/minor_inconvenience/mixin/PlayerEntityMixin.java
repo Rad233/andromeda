@@ -1,5 +1,6 @@
 package me.melontini.andromeda.modules.misc.minor_inconvenience.mixin;
 
+import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.util.LootContextUtil;
 import me.melontini.andromeda.modules.misc.minor_inconvenience.MinorInconvenience;
 import net.minecraft.entity.EntityType;
@@ -23,7 +24,7 @@ import static me.melontini.andromeda.common.Andromeda.id;
 @Mixin(PlayerEntity.class)
 abstract class PlayerEntityMixin extends LivingEntity {
 
-    @Unique private static final RegistryKey<DamageType> AGONY = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("agony"));
+    @Unique private static final RegistryKey<DamageType> AGONY = Andromeda.key(RegistryKeys.DAMAGE_TYPE, "agony");
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);

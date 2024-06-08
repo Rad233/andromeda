@@ -21,11 +21,6 @@ import java.util.function.Supplier;
 @CustomLog
 public class ScopedConfigs {
 
-    public static Supplier<Module.BaseConfig> get(ServerWorld world, Module module) {
-        var cd = module.getConfigDefinition(ConfigState.GAME);
-        return () -> ((AttachmentGetter)world).andromeda$getConfigs().get(cd);
-    }
-
     public interface WorldExtension {
         default Module.BaseConfig am$get(String module) {
             return am$get(ModuleManager.get().getModule(module).orElseThrow(() -> new IllegalStateException("Module %s not found".formatted(module))).getConfigDefinition(ConfigState.GAME));
@@ -52,8 +47,6 @@ public class ScopedConfigs {
 
         ServerReloadersEvent.EVENT.register(context -> context.register(new DataConfigs()));
 
-        //ServerLifecycleEvents.SERVER_STARTING.register(server -> DataConfigs.get(server).apply((AttachmentGetter) server));
-
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             var keep = Experiments.get().persistentScopedConfigs.stream().map(s -> ModuleManager.get().getModule(s).orElseThrow()).toList();
             server.getWorlds().forEach(world -> manager.cleanConfigs(server.session.getWorldDirectory(world.getRegistryKey()).resolve("world_config/andromeda"), keep));
@@ -62,10 +55,10 @@ public class ScopedConfigs {
         });
 
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
-            if (success) {
-                var dc = DataConfigs.get(server);
-                for (ServerWorld world : server.getWorlds()) dc.apply((AttachmentGetter) world, world.getRegistryKey().getValue());
-            }
+            if (!success) return;
+
+            var dc = DataConfigs.get(server);
+            for (ServerWorld world : server.getWorlds()) dc.apply((AttachmentGetter) world, world.getRegistryKey().getValue());
         });
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {

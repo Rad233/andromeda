@@ -1,5 +1,6 @@
 package me.melontini.andromeda.modules.mechanics.throwable_items;
 
+import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.DefaultBehaviors;
 import me.melontini.andromeda.modules.mechanics.throwable_items.data.ItemBehaviorManager;
@@ -42,11 +43,11 @@ public final class Main {
 
     public static final Keeper<EntityType<FlyingItemEntity>> FLYING_ITEM = Keeper.create();
 
-    public static final RegistryKey<DamageType> BRICKED = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("bricked"));
+    public static final RegistryKey<DamageType> BRICKED = Andromeda.key(RegistryKeys.DAMAGE_TYPE, "bricked");
 
-    public static final Identifier FLYING_STACK_LANDED = new Identifier(MODID, "flying_stack_landed");
-    public static final Identifier ITEMS_WITH_BEHAVIORS = new Identifier(MODID, "items_with_behaviors");
-    public static final Identifier COLORED_FLYING_STACK_LANDED = new Identifier(MODID, "colored_flying_stack_landed");
+    public static final Identifier FLYING_STACK_LANDED = Andromeda.id("flying_stack_landed");
+    public static final Identifier ITEMS_WITH_BEHAVIORS = Andromeda.id("items_with_behaviors");
+    public static final Identifier COLORED_FLYING_STACK_LANDED = Andromeda.id("colored_flying_stack_landed");
 
     public static final ProjectileDispenserBehavior BEHAVIOR = new ProjectileDispenserBehavior() {
         @Override

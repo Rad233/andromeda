@@ -14,7 +14,6 @@ import me.melontini.andromeda.modules.entities.minecarts.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 
-@Unscoped
 @ModuleInfo(name = "minecarts", category = "entities")
 public final class Minecarts extends Module {
 

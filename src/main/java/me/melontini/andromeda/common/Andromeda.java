@@ -40,6 +40,8 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
@@ -54,7 +56,7 @@ import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public final class Andromeda {
 
-    public static final Identifier VERIFY_MODULES = new Identifier(MODID, "verify_modules");
+    public static final Identifier VERIFY_MODULES = Andromeda.id("verify_modules");
     @Nullable private static Andromeda INSTANCE;
 
     public static final Keeper<ItemGroup> GROUP = Keeper.create();
@@ -97,10 +99,14 @@ public final class Andromeda {
         return new Identifier(MODID, path);
     }
 
+    public static <T> RegistryKey<T> key(RegistryKey<? extends Registry<T>> registry, String path) {
+        return RegistryKey.of(registry, id(path));
+    }
+
     private void onInitialize(ModuleManager manager) {
         ResourceConditions.register(id("items_registered"), object -> JsonHelper.getArray(object, "values")
                 .asList().stream().filter(JsonElement::isJsonPrimitive)
-                .allMatch(e -> Registries.ITEM.containsId(Identifier.tryParse(e.getAsString()))));
+                .allMatch(e -> Registries.ITEM.containsId(new Identifier(e.getAsString()))));
 
         ResourceConditions.register(id("modules_loaded"), object -> JsonHelper.getArray(object, "values")
                 .asList().stream().filter(JsonElement::isJsonPrimitive)

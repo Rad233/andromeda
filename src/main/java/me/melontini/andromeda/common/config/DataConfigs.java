@@ -34,7 +34,7 @@ import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public final class DataConfigs extends IdentifiedJsonDataLoader {
 
-    public static final Identifier DEFAULT = new Identifier(MODID, "default");
+    public static final Identifier DEFAULT = Andromeda.id("default");
     public static final ReloaderType<DataConfigs> RELOADER = ReloaderType.create(Andromeda.id("scoped_config"));
 
     public DataConfigs() {
@@ -62,7 +62,7 @@ public final class DataConfigs extends IdentifiedJsonDataLoader {
             var cls = m.getConfigDefinition(ConfigState.GAME).supplier().get();
 
             object.entrySet().forEach(entry -> {
-                var map = configs.computeIfAbsent(Identifier.tryParse(entry.getKey()), string -> new Reference2ObjectOpenHashMap<>());
+                var map = configs.computeIfAbsent(new Identifier(entry.getKey()), string -> new Reference2ObjectOpenHashMap<>());
                 map.computeIfAbsent(m, module -> new ReferenceLinkedOpenHashSet<>()).add(makeFuture(m, cls, entry.getValue()));
             });
         });
@@ -89,7 +89,7 @@ public final class DataConfigs extends IdentifiedJsonDataLoader {
 
                 for (String field : element.getAsJsonObject().keySet()) {
                     try {
-                        config.add(assertScoped(cls.getField(field)));
+                        config.add(cls.getField(field));
                     } catch (NoSuchFieldException e1) {
                         throw new RuntimeException("Failed to load config data for module '%s'".formatted(m.meta().id()), e1);
                     }
@@ -99,12 +99,6 @@ public final class DataConfigs extends IdentifiedJsonDataLoader {
                 throw new RuntimeException("Failed to load config data for module '%s'".formatted(m.meta().id()), e);
             }
         }, Util.getMainWorkerExecutor());
-    }
-
-    private static Field assertScoped(Field field) {
-        if (field.isAnnotationPresent(Unscoped.class))
-            throw new IllegalStateException("Attempted to modify an unscoped field '%s'!".formatted(field.getName()));
-        return field;
     }
 
     public record Data(Set<Field> cFields, Module.BaseConfig config) {

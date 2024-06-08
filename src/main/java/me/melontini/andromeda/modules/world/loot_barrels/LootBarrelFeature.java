@@ -64,7 +64,7 @@ public class LootBarrelFeature extends Feature<LootBarrelFeature.LootBarrelConfi
     public static void init() {
         Registry.register(Registries.FEATURE, Andromeda.id("loot_barrel"), new LootBarrelFeature());
 
-        RegistryKey<PlacedFeature> key = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Andromeda.id("loot_barrel"));
+        RegistryKey<PlacedFeature> key = Andromeda.key(RegistryKeys.PLACED_FEATURE, "loot_barrel");
         BiomeModifications.addFeature(context -> context.canGenerateIn(DimensionOptions.OVERWORLD), GenerationStep.Feature.UNDERGROUND_STRUCTURES, key);
     }
 }

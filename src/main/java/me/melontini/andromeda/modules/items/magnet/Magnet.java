@@ -10,7 +10,6 @@ import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.util.commander.number.DoubleIntermediary;
 
 
-@Unscoped
 @ModuleInfo(name = "magnet", category = "items")
 public final class Magnet extends Module {
 

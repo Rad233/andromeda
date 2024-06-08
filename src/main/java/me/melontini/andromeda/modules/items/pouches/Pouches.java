@@ -12,7 +12,6 @@ import me.melontini.andromeda.modules.items.pouches.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 
-@Unscoped
 @ModuleInfo(name = "pouches", category = "items")
 public final class Pouches extends Module {
 

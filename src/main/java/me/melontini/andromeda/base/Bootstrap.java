@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import lombok.CustomLog;
 import me.melontini.andromeda.base.events.Bus;
 import me.melontini.andromeda.base.events.InitEvent;
-import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Experiments;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.client.AndromedaClient;
@@ -58,12 +57,6 @@ public class Bootstrap {
         Status.update();
 
         onMerged();
-
-        Module.ADDITIONAL_PARAMETERS.add(module -> {
-            var ccd = module.getConfigDefinition(ConfigState.CLIENT);
-            if (ccd != null) return Collections.singletonMap(ccd.supplier().get(), AndromedaClient.HANDLER.get(ccd));
-            return Collections.emptyMap();
-        });
 
         run(() -> {
             AndromedaClient.HANDLER.loadAll();
@@ -121,12 +114,6 @@ public class Bootstrap {
                 }
             }
         }
-
-        Module.ADDITIONAL_PARAMETERS.add(module -> {
-            var cd = module.getConfigDefinition(ConfigState.MAIN);
-            if (cd != null) return Collections.singletonMap(cd.supplier().get(), Andromeda.ROOT_HANDLER.get(cd));
-            return Collections.emptyMap();
-        });
 
         run(() -> {
             Andromeda.ROOT_HANDLER.loadAll();

@@ -5,7 +5,6 @@ import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.Unscoped;
 
-@Unscoped
 @ModuleInfo(name = "unknown", category = "misc")
 public final class Unknown extends Module {
 
