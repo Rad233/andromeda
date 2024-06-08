@@ -169,7 +169,7 @@ public class NewAutoConfigScreen {
                 var defaultConfig = handler.getDefault(definition);
 
                 Context context = new Context(false, () -> acceptor.accept(module, new SaveRunnable(definition, () -> handler.save(module))), null, module);
-                if ((Experiments.get().scopedConfigs || commander) && Module.GameConfig.class.isAssignableFrom(definition.supplier().get())) {
+                if ((Experiments.get().showAvailableOption || commander) && Module.GameConfig.class.isAssignableFrom(definition.supplier().get())) {
                     var availableKey = "config.andromeda.option.available";
 
                     var available = avProvider.provider().getEntry(BooleanIntermediary.class,

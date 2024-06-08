@@ -3,9 +3,10 @@ package me.melontini.andromeda.base.util;
 import lombok.CustomLog;
 import me.melontini.dark_matter.api.base.config.ConfigManager;
 import me.melontini.dark_matter.api.base.util.Context;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.fabricmc.loader.api.FabricLoader;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 @CustomLog
@@ -28,8 +29,7 @@ public class Experiments {
     }
 
     public static final class Config {
-
-        @ConfigEntry.Gui.RequiresRestart
-        public boolean scopedConfigs = false;
+        public List<String> persistentScopedConfigs = new ArrayList<>();
+        public boolean showAvailableOption = false;
     }
 }

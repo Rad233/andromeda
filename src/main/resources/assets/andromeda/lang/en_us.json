@@ -435,6 +435,10 @@
   "config.andromeda.button.lab.tooltip": "Try experimental features!",
   "config.andromeda.lab.option.scopedConfigs": "Scoped Configs",
   "config.andromeda.lab.option.scopedConfigs.@Tooltip": "Allows separating module configs on a per-world/dimension basis.\nConfigs can be overridden by data packs and interacted with via KubeJS.\nConsult the wiki for more info!",
+  "config.andromeda.lab.option.persistentScopedConfigs": "Persistent Scoped Configs",
+  "config.andromeda.lab.option.persistentScopedConfigs.@Tooltip": "This option allows you to save scoped module configs to the dimension directories.\nThis makes the option be unaffected by changes to the base config.",
+  "config.andromeda.lab.option.showAvailableOption": "Show 'Available' Option",
+  "config.andromeda.lab.option.showAvailableOption.@Tooltip": "Shows the 'Available' option for modules with 'game' configs.\nThe option is always visible if Commander is installed!",
 
   "commands.andromeda.damage.invulnerable": "Target is invulnerable to the given damage type",
   "commands.andromeda.damage.success": "Applied %s damage to %s",

@@ -12,13 +12,10 @@ import lombok.experimental.Accessors;
 import me.melontini.andromeda.base.events.Bus;
 import me.melontini.andromeda.base.events.ConfigEvent;
 import me.melontini.andromeda.base.util.BootstrapConfig;
-import me.melontini.andromeda.base.util.Experiments;
 import me.melontini.andromeda.base.util.Promise;
-import me.melontini.andromeda.base.util.annotations.Unscoped;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.andromeda.util.EarlyLanguage;
-import me.melontini.andromeda.util.exceptions.AndromedaException;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import me.melontini.dark_matter.api.base.util.Utilities;
 import net.fabricmc.api.EnvType;
@@ -112,7 +109,6 @@ public final class ModuleManager {
         });
 
         if (Debug.Keys.ENABLE_ALL_MODULES.isPresent()) bootstrapConfigs.values().forEach(c -> c.enabled = true);
-        fixScopes(sorted);
 
         sorted.forEach(this::saveBootstrap);
 
@@ -126,32 +122,6 @@ public final class ModuleManager {
         });
 
         cleanConfigs(FabricLoader.getInstance().getConfigDir().resolve("andromeda"), sorted);
-    }
-
-    private void fixScopes(Collection<? extends Module> modules) {
-        modules.forEach(m -> {
-            var config = this.getConfig(m);
-            if (Debug.Keys.FORCE_DIMENSION_SCOPE.isPresent()) config.scope = BootstrapConfig.Scope.DIMENSION;
-
-            if (!Experiments.get().scopedConfigs && !config.scope.isGlobal()) {
-                throw AndromedaException.builder().report(false)
-                        .translatable("module_manager.scoped_configs_disabled", m.meta().id(), config.scope)
-                        .build();
-            }
-
-            if (m.meta().environment().isClient() && !config.scope.isGlobal()) {
-                if (!Debug.Keys.FORCE_DIMENSION_SCOPE.isPresent())
-                    LOGGER.error(EarlyLanguage.translate("andromeda.module_manager.invalid_scope", m.meta().environment(), m.meta().id(), config.scope, BootstrapConfig.Scope.GLOBAL));
-                config.scope = BootstrapConfig.Scope.GLOBAL;
-                return;
-            }
-
-            if (m.getClass().isAnnotationPresent(Unscoped.class) && !config.scope.isGlobal()) {
-                if (!Debug.Keys.FORCE_DIMENSION_SCOPE.isPresent())
-                    LOGGER.error(EarlyLanguage.translate("andromeda.module_manager.invalid_scope", "Unscoped", m.meta().id(), config.scope, BootstrapConfig.Scope.GLOBAL));
-                config.scope = BootstrapConfig.Scope.GLOBAL;
-            }
-        });
     }
 
     static void validateZygote(@NonNull Module.Zygote module) {
@@ -171,6 +141,15 @@ public final class ModuleManager {
                         LOGGER.info(EarlyLanguage.translate("andromeda.module_manager.removed_unlinked_config", FabricLoader.getInstance().getGameDir().relativize(file)));
                     }
                     return super.visitFile(file, attrs);
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    var directory = Files.newDirectoryStream(dir);
+                    boolean empty = !directory.iterator().hasNext();
+                    directory.close();
+                    if (empty) Files.deleteIfExists(dir);
+                    return super.postVisitDirectory(dir, exc);
                 }
             }), "Failed to clean up configs!");
         }

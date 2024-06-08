@@ -8,7 +8,6 @@ import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.ModuleManager;
-import me.melontini.andromeda.base.util.BootstrapConfig;
 import me.melontini.andromeda.base.util.ConfigHandler;
 import me.melontini.andromeda.base.util.ConfigState;
 import me.melontini.andromeda.base.util.Experiments;
@@ -57,31 +56,15 @@ public final class DataConfigs extends IdentifiedJsonDataLoader {
 
     @Override
     protected void apply(Map<Identifier, JsonElement> data, ResourceManager manager, Profiler profiler) {
-        if (!Experiments.get().scopedConfigs) return;
-
         Map<Identifier, Map<Module, Set<CompletableFuture<Data>>>> configs = new Object2ObjectOpenHashMap<>();
         Maps.transformValues(data, JsonElement::getAsJsonObject).forEach((id, object) -> {
             var m = ModuleManager.get().getModule(id.getPath()).orElseThrow(() -> new IllegalStateException("Invalid module path '%s'! The module must be enabled!".formatted(id.getPath())));
             var cls = m.getConfigDefinition(ConfigState.GAME).supplier().get();
-            var bootstrapConfig = ModuleManager.get().getConfig(m);
 
-            if (bootstrapConfig.scope.isWorld()) {
-                if (!object.has(DEFAULT.toString()) || object.size() > 1)
-                    throw new IllegalStateException("'%s' modules only support '%s' as their dimension!".formatted(BootstrapConfig.Scope.WORLD, DEFAULT));
-
-                var map = configs.computeIfAbsent(DEFAULT, identifier -> new Reference2ObjectOpenHashMap<>());
-                map.computeIfAbsent(m, module -> new ReferenceLinkedOpenHashSet<>())
-                        .add(makeFuture(m, cls, object.get(DEFAULT.toString())));
-                return;
-            } else if (bootstrapConfig.scope.isDimension()) {
-                object.entrySet().forEach(entry -> {
-                    var map = configs.computeIfAbsent(Identifier.tryParse(entry.getKey()), string -> new Reference2ObjectOpenHashMap<>());
-                    map.computeIfAbsent(m, module -> new ReferenceLinkedOpenHashSet<>())
-                            .add(makeFuture(m, cls, entry.getValue()));
-                });
-                return;
-            }
-            throw new IllegalStateException("%s has an invalid scope!".formatted(m.meta().id()));
+            object.entrySet().forEach(entry -> {
+                var map = configs.computeIfAbsent(Identifier.tryParse(entry.getKey()), string -> new Reference2ObjectOpenHashMap<>());
+                map.computeIfAbsent(m, module -> new ReferenceLinkedOpenHashSet<>()).add(makeFuture(m, cls, entry.getValue()));
+            });
         });
 
         Map<Identifier, Map<Module, Set<Data>>> parsed = new Object2ObjectOpenHashMap<>();
@@ -128,13 +111,18 @@ public final class DataConfigs extends IdentifiedJsonDataLoader {
     }
 
     public void apply(ScopedConfigs.AttachmentGetter getter, Identifier identifier) {
-        if (!Experiments.get().scopedConfigs) return;
         MakeSure.notNull(configs);
 
         ConfigHandler attachment = getter.andromeda$getConfigs();
         attachment.loadAll();
         attachment.forEach((entry, module) -> applyDataPacks(entry, module, identifier));
-        attachment.saveAll();
+
+        if (Experiments.get().persistentScopedConfigs.isEmpty()) return;
+
+        var manager = ModuleManager.get();
+        for (String id : Experiments.get().persistentScopedConfigs) {
+            attachment.save(manager.getModule(id).orElseThrow(() -> new RuntimeException("No such module %s!".formatted(id))));
+        }
     }
 
     private void apply(Module.BaseConfig config, Data data) {
