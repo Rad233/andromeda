@@ -82,6 +82,7 @@
 
   "config.andromeda.blocks.better_fletching_table": "Useful Fletching Table",
   "config.andromeda.blocks.better_fletching_table.@Tooltip": "Gives the Fletching Table a GUI where you can tighten the string of your bow for improved accuracy.",
+  "config.andromeda.blocks.better_fletching_table.option.divergenceModifier": "Divergence Modifier",
   "gui.andromeda.fletching": "Tighten Bow String",
   "tooltip.andromeda.bow.tight": "Tightened, usages left: %s",
 
