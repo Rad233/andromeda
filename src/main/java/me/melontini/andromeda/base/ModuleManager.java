@@ -11,8 +11,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.melontini.andromeda.base.events.Bus;
 import me.melontini.andromeda.base.events.ConfigEvent;
-import me.melontini.andromeda.base.util.BootstrapConfig;
 import me.melontini.andromeda.base.util.Promise;
+import me.melontini.andromeda.base.util.config.BootstrapConfig;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.andromeda.util.EarlyLanguage;
@@ -45,8 +45,8 @@ public final class ModuleManager {
 
     @Nullable static ModuleManager INSTANCE;
 
-    private final Map<Class<?>, PromiseImpl<?>> discoveredModules;
-    private final Map<String, PromiseImpl<?>> discoveredModuleNames;
+    private final Map<Class<?>, Promise<?>> discoveredModules;
+    private final Map<String, Promise<?>> discoveredModuleNames;
 
     private final Map<Class<?>, Module> modules;
     private final Map<String, Module> moduleNames;
@@ -60,7 +60,7 @@ public final class ModuleManager {
         this.mixinProcessor = new MixinProcessor(this);
 
         this.discoveredModules = Utilities.supply(() -> {
-            var m = zygotes.stream().collect(Collectors.toMap(Module.Zygote::type, PromiseImpl::new, (t, t2) -> t, LinkedHashMap::new));
+            var m = zygotes.stream().collect(Collectors.toMap(Module.Zygote::type, Promise::new, (t, t2) -> t, LinkedHashMap::new));
             return Collections.unmodifiableMap(m);
         });
         this.discoveredModuleNames = Utilities.supply(() -> {

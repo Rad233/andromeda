@@ -1,4 +1,4 @@
-package me.melontini.andromeda.base.util;
+package me.melontini.andromeda.base.util.config;
 
 import me.melontini.andromeda.base.Module;
 

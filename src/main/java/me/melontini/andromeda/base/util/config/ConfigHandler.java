@@ -1,4 +1,4 @@
-package me.melontini.andromeda.base.util;
+package me.melontini.andromeda.base.util.config;
 
 import com.google.common.collect.Maps;
 import com.google.gson.*;

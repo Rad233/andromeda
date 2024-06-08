@@ -2,9 +2,9 @@ package me.melontini.andromeda.common.mixin.configs;
 
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.ModuleManager;
-import me.melontini.andromeda.base.util.ConfigDefinition;
-import me.melontini.andromeda.base.util.ConfigHandler;
-import me.melontini.andromeda.base.util.ConfigState;
+import me.melontini.andromeda.base.util.config.ConfigDefinition;
+import me.melontini.andromeda.base.util.config.ConfigHandler;
+import me.melontini.andromeda.base.util.config.ConfigState;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.config.DataConfigs;
 import me.melontini.andromeda.common.config.ScopedConfigs;
