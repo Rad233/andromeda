@@ -275,7 +275,7 @@
     "config.andromeda.items.lockpick.option.chance": "成功率",
     "config.andromeda.items.lockpick.option.chance.@Tooltip": "例如：3分之1",
     "config.andromeda.items.lockpick.option.breakAfterUse": "用后即毁",
-    "config.andromeda.items.lockpick.option.breakAfterUse.@Tooltip": "成功开锁后销毁开锁器",
+    "config.andromeda.items.lockpick.option.breakAfterUse.@Tooltip": "使用后销毁开锁器",
     "config.andromeda.items.lockpick.option.villagerInventory": "村民物品栏",
     "config.andromeda.items.lockpick.option.villagerInventory.@Tooltip": "能够打开村民的物品栏。",
     "item.andromeda.lockpick": "开锁器",
