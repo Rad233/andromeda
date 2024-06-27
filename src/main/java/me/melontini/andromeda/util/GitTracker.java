@@ -71,9 +71,8 @@ public class GitTracker {
     }
 
     private static void tryUpdateGitInfo(Path lastResponse) {
-        HttpRequest request = HttpRequest.newBuilder()
+        HttpRequest request = HttpRequest.newBuilder().GET()
                 .uri(URI.create(API_URL + "/repos/" + OWNER + "/" + REPO))
-                .GET()
                 .header("Accept", "application/vnd.github+json")
                 .build();
 
