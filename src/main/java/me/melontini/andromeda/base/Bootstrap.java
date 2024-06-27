@@ -162,8 +162,6 @@ public class Bootstrap {
                         .build();
             }
             m.print();
-            //Scan for mixins.
-            m.loaded().forEach(module -> getModuleClassPath().addUrl(module.getClass().getProtectionDomain().getCodeSource().getLocation()));
             run(() -> m.getMixinProcessor().addMixins(), (b) -> b.literal("Failed to inject dynamic mixin configs!").translatable(MixinProcessor.NOTICE));
             Support.share("andromeda:module_manager", m);
 
