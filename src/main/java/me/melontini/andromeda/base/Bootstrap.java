@@ -170,7 +170,10 @@ public class Bootstrap {
         } catch (Throwable t) {
             var e = AndromedaException.builder().cause(t).literal("Failed to bootstrap Andromeda!").build();
             CrashHandler.handleCrash(e, Context.of());
-            e.setAppender(b -> b.append("Statuses: ").append(AndromedaException.GSON.toJson(e.getStatuses())));
+            e.setAppender(b -> {
+                b.append("State: ").append(AndromedaException.toString(CrashHandler.dumpState())).append('\n');
+                b.append("Statuses: ").append(AndromedaException.toString(e.getStatuses()));
+            });
             throw e;
         }
     }

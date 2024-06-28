@@ -19,16 +19,11 @@ import java.util.function.Consumer;
 @CustomLog
 public final class AndromedaException extends RuntimeException {
 
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private final boolean report;
     private final JsonObject statuses;
     private Consumer<StringBuilder> appender;
-
-    @SuppressWarnings("unused")
-    private AndromedaException() {
-        this(false, "Empty ctx called! This must never happen!!!", null, new JsonObject());
-    }
 
     private AndromedaException(boolean report, String message, @Nullable Throwable cause, JsonObject statuses) {
         super(message, cause);

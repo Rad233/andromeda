@@ -124,6 +124,12 @@ public class CrashHandler {
         }
     }
 
+    public static JsonObject dumpState() {
+        JsonObject object = new JsonObject();
+        DEFAULT_KEYS.forEach((s, supplier) -> object.add(s, supplier.get()));
+        return object;
+    }
+
     private static void upload(JsonObject object) {
         MIXPANEL.upload(new Mixpanel.Context("Crash", object)).handle((unused, throwable) -> {
             if (throwable != null)
