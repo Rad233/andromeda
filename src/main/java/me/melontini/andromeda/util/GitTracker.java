@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
 import java.util.Set;
 
 @CustomLog @UtilityClass
@@ -83,9 +82,7 @@ public class GitTracker {
 
             JsonObject jsonResponse = (JsonObject) JsonParser.parseString(response.body());
 
-            for (String s : new HashSet<>(jsonResponse.keySet())) {
-                if (!PRESERVE_KEYS.contains(s)) jsonResponse.remove(s);
-            }
+            Set.copyOf(jsonResponse.keySet()).stream().filter(s -> !PRESERVE_KEYS.contains(s)).forEach(jsonResponse::remove);
 
             var parent = lastResponse.getParent();
             if (parent != null && !Files.exists(parent)) Files.createDirectories(parent);
