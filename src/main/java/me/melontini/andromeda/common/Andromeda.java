@@ -49,15 +49,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import static me.melontini.andromeda.util.CommonValues.MODID;
 
 public final class Andromeda {
 
     public static final Identifier VERIFY_MODULES = Andromeda.id("verify_modules");
-    @Nullable private static Andromeda INSTANCE;
+    private static Supplier<Andromeda> INSTANCE = () -> {
+        throw new NullPointerException("Andromeda not initialized");
+    };
 
     public static final Keeper<ItemGroup> GROUP = Keeper.create();
 
@@ -92,7 +94,7 @@ public final class Andromeda {
         var instance = new Andromeda();
         instance.onInitialize(ModuleManager.get());
         Support.share("andromeda:main", instance);
-        INSTANCE = instance;
+        INSTANCE = () -> instance;
     }
 
     public static Identifier id(String path) {
@@ -165,7 +167,6 @@ public final class Andromeda {
     }
 
     public static Andromeda get() {
-        return Objects.requireNonNull(INSTANCE, "Andromeda not initialized");
+        return INSTANCE.get();
     }
-
 }
