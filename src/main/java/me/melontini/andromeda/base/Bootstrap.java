@@ -26,6 +26,7 @@ import net.fabricmc.loader.api.metadata.version.VersionPredicate;
 import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 import static me.melontini.andromeda.util.exceptions.AndromedaException.run;
@@ -129,7 +130,12 @@ public class Bootstrap {
 
     public static void onPreLaunch() {
         try {
+            InstanceDataHolder.load();
             EarlyLanguage.load();
+            wrapIO(() -> {
+                Files.deleteIfExists(CommonValues.hiddenPath().resolve("git-response.json"));
+                Files.deleteIfExists(CommonValues.hiddenPath().resolve("last_version.txt"));
+            }, "Failed to delete unused files in .andromeda!");
 
             Status.update();
             LOGGER.info(EarlyLanguage.translate("andromeda.bootstrap.loading", CommonValues.version(), CommonValues.platform(), CommonValues.platform().version()));

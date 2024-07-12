@@ -71,17 +71,18 @@ public class CommonValues {
     }
 
     private static boolean checkUpdate() {
-        Path lh = hiddenPath().resolve("last_version.txt");
-        if (Files.exists(lh)) {
-            Version version = Exceptions.supply(() -> Version.parse(Files.readString(lh)));
+        var holder = InstanceDataHolder.get();
+
+        if (holder.hasData("last_version")) {
+            Version version = Exceptions.supply(() -> Version.parse(holder.getData("last_version").getAsString()));
             if (mod().getMetadata().getVersion().compareTo(version) != 0) {
                 if (!FabricLoader.getInstance().isDevelopmentEnvironment())
                     LOGGER.warn("Andromeda version changed! was [{}], now [{}]", version.getFriendlyString(), mod().getMetadata().getVersion().getFriendlyString());
-                Exceptions.run(() -> Files.writeString(lh, mod().getMetadata().getVersion().getFriendlyString()));
+                holder.modifyAndSave(() -> holder.putData("last_version", mod().getMetadata().getVersion().getFriendlyString()));
                 return true;
             }
         } else {
-            Exceptions.run(() -> Files.writeString(lh, mod().getMetadata().getVersion().getFriendlyString()));
+            holder.modifyAndSave(() -> holder.putData("last_version", mod().getMetadata().getVersion().getFriendlyString()));
             return true;
         }
         return false;
