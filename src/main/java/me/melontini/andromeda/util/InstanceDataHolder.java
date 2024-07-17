@@ -1,7 +1,9 @@
 package me.melontini.andromeda.util;
 
 import com.google.gson.*;
+import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
+import me.melontini.andromeda.util.exceptions.AndromedaException;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +14,7 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@CustomLog
 @RequiredArgsConstructor
 public class InstanceDataHolder {
 
@@ -23,7 +26,7 @@ public class InstanceDataHolder {
     private final JsonObject data;
 
     public InstanceDataHolder putData(String key, JsonElement element) {
-        synchronized (this.data) {
+        synchronized (this) {
             this.data.add(key, element);
             return this;
         }
@@ -44,12 +47,14 @@ public class InstanceDataHolder {
     }
 
     public void save() {
-        try (var writer = Files.newBufferedWriter(CommonValues.hiddenPath().resolve("instance_data.json"))) {
-            synchronized (this.data) {
+        synchronized (this) {
+            try (var writer = Files.newBufferedWriter(CommonValues.hiddenPath().resolve("instance_data.json"))) {
                 GSON.toJson(this.data, writer);
+            } catch (IOException e) {
+                throw AndromedaException.builder()
+                        .literal("Failed to save instance data!").report(false)
+                        .cause(e).build();
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save instance data!", e);
         }
     }
 
@@ -74,7 +79,7 @@ public class InstanceDataHolder {
             try (var reader = Files.newBufferedReader(path)) {
                 holder = GSON.fromJson(reader, JsonObject.class).getAsJsonObject();
             } catch (IOException | JsonParseException e) {
-                throw new RuntimeException("Failed to load instance data!", e);
+                LOGGER.error("Failed to load instance data! resetting to default...", e);
             }
         }
 
