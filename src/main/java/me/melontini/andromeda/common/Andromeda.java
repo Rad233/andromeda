@@ -48,9 +48,10 @@ import net.minecraft.util.JsonHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static me.melontini.andromeda.util.CommonValues.MODID;
 
@@ -140,11 +141,9 @@ public final class Andromeda {
                     return;
                 }
 
-                int length = buf.readVarInt();
-                Set<String> clientModules = new HashSet<>();
-                for (int i = 0; i < length; i++) {
-                    clientModules.add(buf.readString());
-                }
+                Set<String> clientModules = IntStream.range(0, buf.readVarInt())
+                        .mapToObj(i -> buf.readString())
+                        .collect(Collectors.toSet());
 
                 synchronizer.waitFor(server.submit(() -> {
                     Set<String> disable = Sets.difference(clientModules, modules);

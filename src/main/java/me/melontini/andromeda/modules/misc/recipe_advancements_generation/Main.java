@@ -1,6 +1,5 @@
 package me.melontini.andromeda.modules.misc.recipe_advancements_generation;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.dark_matter.api.base.util.MakeSure;
@@ -49,36 +48,29 @@ public final class Main {
         Map<Identifier, Advancement.Builder> advancementBuilders = new ConcurrentHashMap<>();
         AtomicInteger count = new AtomicInteger();
 
-        List<CompletableFuture<Void>> futures = new ArrayList<>();
-        List<List<Recipe<?>>> lists = Lists.partition(server.getRecipeManager().values().stream().toList(), 800);
-        for (List<Recipe<?>> list : lists) {
-            futures.add(CompletableFuture.runAsync(() -> {
-                for (Recipe<?> recipe : list) {
-                    if (config.namespaceBlacklist.contains(recipe.getId().getNamespace()))
-                        continue;
-                    if (config.recipeBlacklist.contains(recipe.getId()))
-                        continue;
-                    if (recipe.isIgnoredInRecipeBook() && config.ignoreRecipesHiddenInTheRecipeBook)
-                        continue;
-
-                    var handler = RECIPE_TYPE_HANDLERS.get(recipe.getType());
-                    if (handler != null) {
-                        count.getAndIncrement();
-                        var r = handler.apply(new Context(recipe, recipe.getId()));
-                        if (r != null) advancementBuilders.put(r.id(), r.builder());
-                    } else {
-                        if (!recipe.getIngredients().isEmpty()) {
-                            count.getAndIncrement();
-                            advancementBuilders.put(new Identifier(recipe.getId().getNamespace(), "recipes/gen/generic/" + recipe.getId().toString().replace(":", "_")), createAdvBuilder(config, recipe.getId(), recipe.getIngredients().toArray(Ingredient[]::new)));
-                        }
-                    }
+        List<CompletableFuture<Void>> futures = server.getRecipeManager().values().stream().filter(recipe -> {
+            if (config.namespaceBlacklist.contains(recipe.getId().getNamespace()))
+                return false;
+            if (config.recipeBlacklist.contains(recipe.getId()))
+                return false;
+            if (recipe.isIgnoredInRecipeBook() && config.ignoreRecipesHiddenInTheRecipeBook)
+                return false;
+            return true;
+        }).map(recipe -> CompletableFuture.runAsync(() -> {
+            var handler = RECIPE_TYPE_HANDLERS.get(recipe.getType());
+            if (handler != null) {
+                count.getAndIncrement();
+                var r = handler.apply(new Context(recipe, recipe.getId()));
+                if (r != null) advancementBuilders.put(r.id(), r.builder());
+            } else {
+                if (!recipe.getIngredients().isEmpty()) {
+                    count.getAndIncrement();
+                    advancementBuilders.put(new Identifier(recipe.getId().getNamespace(), "recipes/gen/generic/" + recipe.getId().toString().replace(":", "_")), createAdvBuilder(config, recipe.getId(), recipe.getIngredients().toArray(Ingredient[]::new)));
                 }
-            }, Util.getMainWorkerExecutor()));
-        }
-
+            }
+        }, Util.getMainWorkerExecutor())).toList();
         //and?
         CompletableFuture<Void> future = CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
-
         server.runTasks(future::isDone);
 
         AdvancementManager advancementManager = server.getAdvancementLoader().manager;

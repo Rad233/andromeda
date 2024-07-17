@@ -1,9 +1,9 @@
 package me.melontini.andromeda.util;
 
-import com.google.common.base.Suppliers;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import me.melontini.dark_matter.api.base.util.Exceptions;
+import me.melontini.dark_matter.api.base.util.functions.Memoize;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -24,11 +24,11 @@ public class CommonValues {
 
     public static final String MODID = "andromeda";
 
-    private static final Supplier<ModContainer> MOD_CONTAINER = Suppliers.memoize(() -> FabricLoader.getInstance().getModContainer(MODID).orElseThrow());
-    private static final Supplier<String> MOD_VERSION = Suppliers.memoize(() -> mod().getMetadata().getVersion().getFriendlyString());
-    private static final Supplier<Boolean> MOD_UPDATED = Suppliers.memoize(CommonValues::checkUpdate);
+    private static final Supplier<ModContainer> MOD_CONTAINER = Memoize.supplier(() -> FabricLoader.getInstance().getModContainer(MODID).orElseThrow());
+    private static final Supplier<String> MOD_VERSION = Memoize.supplier(() -> mod().getMetadata().getVersion().getFriendlyString());
+    private static final Supplier<Boolean> MOD_UPDATED = Memoize.supplier(CommonValues::checkUpdate);
 
-    private static final Supplier<Path> HIDDEN_PATH = Suppliers.memoize(() -> {
+    private static final Supplier<Path> HIDDEN_PATH = Memoize.supplier(() -> {
         var path = FabricLoader.getInstance().getGameDir().resolve(".andromeda");
         if (!Files.exists(path)) {
             Exceptions.run(() -> Files.createDirectories(path));
@@ -43,7 +43,7 @@ public class CommonValues {
     });
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("andromeda/mod.json");
 
-    private static final Supplier<Platform> PLATFORM = Suppliers.memoize(CommonValues::resolvePlatform);
+    private static final Supplier<Platform> PLATFORM = Memoize.supplier(CommonValues::resolvePlatform);
     private static final EnvType ENVIRONMENT = FabricLoader.getInstance().getEnvironmentType();
 
     public static ModContainer mod() {
