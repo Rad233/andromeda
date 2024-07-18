@@ -3,6 +3,7 @@ package me.melontini.andromeda.util;
 import com.google.gson.*;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@CustomLog
+@CustomLog @ToString
 @RequiredArgsConstructor
 public class InstanceDataHolder {
 

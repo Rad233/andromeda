@@ -63,10 +63,10 @@ public final class PlantTemperatureData {
 
     public static boolean roll(BlockPos pos, BlockState state, float temp, ServerWorld world) {
         if (isPlant(state.getBlock())) {
-            if (!world.am$get(PlantTemperature.CONFIG).available.asBoolean(LootContextUtil.block(world, Vec3d.ofCenter(pos), state))) return true;
-
             float[] data = world.getServer().dm$getReloader(RELOADER).get(state.getBlock());
             if (data != null) {
+                if (!world.am$get(PlantTemperature.CONFIG).available.asBoolean(LootContextUtil.block(world, Vec3d.ofCenter(pos), state))) return true;
+
                 if ((temp > data[2] && temp <= data[3]) || (temp < data[1] && temp >= data[0])) {
                     return MathUtil.nextInt(0, 1) != 0;
                 } else

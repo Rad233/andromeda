@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.*;
 import lombok.CustomLog;
 import lombok.Getter;
+import lombok.ToString;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.ConfigGsonEvent;
 import me.melontini.dark_matter.api.base.util.Exceptions;
@@ -17,7 +18,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
-@CustomLog
+@CustomLog @ToString
 public final class ConfigHandler {
 
     private final Map<ConfigDefinition<?>, Module.BaseConfig> configs = new IdentityHashMap<>();

@@ -312,18 +312,14 @@ public final class ModuleManager {
 
         StringBuilder builder = new StringBuilder();
         categories.forEach((s, strings) -> {
-            builder.append("\n\t - ").append(s);
-            if (!ModuleManager.CATEGORIES.contains(s)) builder.append("*");
-            builder.append("\n\t  |-- ");
+            builder.append("\n\t - ").append(s).append("\n\t  |-- ");
 
             StringJoiner joiner = new StringJoiner(", ");
-            strings.forEach(m -> joiner.add(m.meta().name().replace('/', '.') +
-                    (!m.getClass().getName().startsWith("me.melontini.andromeda") ? '*' : "")));
+            strings.forEach(m -> joiner.add(m.meta().dotted()));
             builder.append(joiner);
         });
         if (!categories.isEmpty()) {
             LOGGER.info(EarlyLanguage.translate("andromeda.module_manager.loading_modules", loaded().size()) +" {}", builder);
-            LOGGER.info("* - %s".formatted(EarlyLanguage.translate("andromeda.module_manager.custom_modules")));
         } else {
             LOGGER.info(EarlyLanguage.translate("andromeda.module_manager.no_modules"));
         }

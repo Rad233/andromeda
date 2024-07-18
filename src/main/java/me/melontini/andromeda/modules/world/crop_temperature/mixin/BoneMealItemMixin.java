@@ -1,6 +1,5 @@
 package me.melontini.andromeda.modules.world.crop_temperature.mixin;
 
-import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.common.util.LootContextUtil;
 import me.melontini.andromeda.modules.world.crop_temperature.PlantTemperature;
 import me.melontini.andromeda.modules.world.crop_temperature.PlantTemperatureData;
@@ -29,7 +28,6 @@ abstract class BoneMealItemMixin {
         BlockState state = world.getBlockState(pos);
         if (world.am$get(PlantTemperature.CONFIG).affectBoneMeal.asBoolean(LootContextUtil.block(world, Vec3d.ofCenter(pos), state))) {
             if (!PlantTemperatureData.roll(pos, state, world.getBiome(pos).value().getTemperature(), (ServerWorld) world)) {
-                ModuleManager.quick(PlantTemperature.class).logger().info(state.getBlock());
                 cir.setReturnValue(ActionResult.FAIL);
             }
         }
