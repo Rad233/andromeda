@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.datafixers.util.Either;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
@@ -37,26 +36,32 @@ import java.util.function.Function;
 
 public final class PlantTemperatureData {
 
-    public static final Codec<Pair<List<Block>, float[]>> OLD_CODEC = RecordCodecBuilder.create(data -> data.group(
-            ExtraCodecs.list(Registries.BLOCK.getCodec()).fieldOf("identifier").forGetter(Pair::getFirst),
-            Codec.FLOAT.fieldOf("min").forGetter(o -> o.getSecond()[1]),
-            Codec.FLOAT.fieldOf("max").forGetter(o -> o.getSecond()[2]),
-            Codec.FLOAT.fieldOf("aMin").forGetter(o -> o.getSecond()[0]),
-            Codec.FLOAT.fieldOf("aMax").forGetter(o -> o.getSecond()[3])
-    ).apply(data, (blocks, f1, f2, f3, f4) -> new Pair<>(blocks, new float[]{f1, f2, f3, f4})));
+    private static final Codec<OldHolder> OLD_CODEC = RecordCodecBuilder.create(data -> data.group(
+            ExtraCodecs.optional("replace", Codec.BOOL, false).forGetter(OldHolder::replace),
+            ExtraCodecs.list(Registries.BLOCK.getCodec()).fieldOf("identifier").forGetter(OldHolder::blocks),
+            Codec.FLOAT.fieldOf("min").forGetter(o -> o.temperatures()[1]),
+            Codec.FLOAT.fieldOf("max").forGetter(o -> o.temperatures()[2]),
+            Codec.FLOAT.fieldOf("aMin").forGetter(o -> o.temperatures()[0]),
+            Codec.FLOAT.fieldOf("aMax").forGetter(o -> o.temperatures()[3])
+    ).apply(data, (o, blocks, f1, f2, f3, f4) -> new OldHolder(o, blocks, new float[]{f1,f2,f3,f4})));
 
-    public static final Codec<float[]> BASE_CODEC = Codec.FLOAT.listOf().comapFlatMap(floats -> {
+    public static final Codec<float[]> FLOAT_ARRAY_CODEC = Codec.FLOAT.listOf().comapFlatMap(floats -> {
         if (floats.size() != 4) return DataResult.error(() -> "temperature array must contain exactly 4 floats!");
         return DataResult.success(new FloatArrayList(floats).toArray(new float[4]));
     }, floats -> Lists.newArrayList(floats[0], floats[1], floats[2], floats[3]));
 
-    public static final Codec<Map<Block, float[]>> MERGED_CODEC = ExtraCodecs.either(
+    private static final Codec<NewHolder> BASE_HOLDER = RecordCodecBuilder.create(data -> data.group(
+            ExtraCodecs.optional("replace", Codec.BOOL, false).forGetter(NewHolder::replace),
+            Codec.unboundedMap(Registries.BLOCK.getCodec(), FLOAT_ARRAY_CODEC).fieldOf("entries").forGetter(NewHolder::temperatures)
+    ).apply(data, NewHolder::new));
+
+    private static final Codec<NewHolder> MERGED_CODEC = ExtraCodecs.either(
             OLD_CODEC.xmap(pair -> {
                 Map<Block, float[]> map = new LinkedHashMap<>();
-                pair.getFirst().forEach(block1 -> map.put(block1, pair.getSecond()));
-                return map;
-            }, blockMap -> new Pair<>(List.copyOf(blockMap.keySet()), blockMap.values().stream().findFirst().orElseThrow())),
-            Codec.unboundedMap(Registries.BLOCK.getCodec(), BASE_CODEC))
+                pair.blocks().forEach(block1 -> map.put(block1, pair.temperatures));
+                return new NewHolder(pair.replace(), map);
+            }, newHolder -> new OldHolder(newHolder.replace(), List.copyOf(newHolder.temperatures.keySet()), newHolder.temperatures.values().stream().findFirst().orElseGet(() -> new float[4]))),
+            BASE_HOLDER)
             .xmap(e -> e.map(Function.identity(), Function.identity()), Either::left);
 
     public static final ReloaderType<Reloader> RELOADER = ReloaderType.create(Andromeda.id("crop_temperatures"));
@@ -75,6 +80,9 @@ public final class PlantTemperatureData {
         }
         return true;
     }
+
+    record OldHolder(boolean replace, List<Block> blocks, float[] temperatures) {}
+    record NewHolder(boolean replace, Map<Block, float[]> temperatures) {}
 
     public static boolean isPlant(Block block) {
         return block instanceof PlantBlock || block instanceof AbstractPlantPartBlock || block instanceof Fertilizable;
@@ -127,10 +135,15 @@ public final class PlantTemperatureData {
 
         @Override
         protected void apply(Map<Identifier, JsonElement> data, ResourceManager manager, Profiler profiler) {
+            IdentityHashMap<Block, float[]> replace = new IdentityHashMap<>();
             IdentityHashMap<Block, float[]> result = new IdentityHashMap<>();
             Maps.transformValues(data, input -> MERGED_CODEC.parse(JsonOps.INSTANCE, input).getOrThrow(false, string -> {
                 throw new JsonParseException(string);
-            })).values().forEach(result::putAll);
+            })).values().forEach(newHolder -> {
+                if (newHolder.replace()) replace.putAll(newHolder.temperatures());
+                else result.putAll(newHolder.temperatures());
+            });
+            result.putAll(replace);
             this.map = result;
 
             if (Debug.Keys.PRINT_MISSING_ASSIGNED_DATA.isPresent()) verifyPostLoad(module, this);
