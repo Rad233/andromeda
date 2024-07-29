@@ -45,7 +45,7 @@ public class BoatEntities {
                     UUID id = buf.readUuid();
                     server.execute(() -> {
                         Entity entity = player.world.getEntityLookup().get(id);
-                        if (entity instanceof TNTBoatEntity boat && boat.isAlive()) boat.explode();
+                        if (entity instanceof TNTBoatEntity boat && boat.isAlive() && player == boat.getFirstPassenger()) boat.explode();
                     });
                 }));
     }
