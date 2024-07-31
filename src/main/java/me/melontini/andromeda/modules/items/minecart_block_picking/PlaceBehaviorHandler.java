@@ -60,8 +60,10 @@ public class PlaceBehaviorHandler {
               .getModule(BetterFurnaceMinecart.class)
               .map(m -> Andromeda.ROOT_HANDLER.get(BetterFurnaceMinecart.CONFIG).maxFuel)
               .orElse(32000));
-      furnaceMinecart.pushX = furnaceMinecart.getX() - pos.getX();
-      furnaceMinecart.pushZ = furnaceMinecart.getZ() - pos.getZ();
+      if (furnaceMinecart.fuel > 0) {
+        furnaceMinecart.pushX = furnaceMinecart.getX() - pos.getX();
+        furnaceMinecart.pushZ = furnaceMinecart.getZ() - pos.getZ();
+      }
       if (stack.hasCustomName()) furnaceMinecart.setCustomName(stack.getName());
 
       return furnaceMinecart;
