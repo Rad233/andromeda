@@ -57,8 +57,10 @@ dependencies {
     modImplementation libs.fabric.loader
 
     def dm = libs.dark.matter
-    [dm.base, dm.mixin, dm.minecraft, dm.crash.handler, dm.data, dm.mirage, dm.glitter, dm.item.group].each {
-        modApi it
+    modApi(dm.base)
+    include(dm.base)
+    [dm.mixin, dm.minecraft, dm.crash.handler, dm.data, dm.mirage, dm.glitter, dm.item.group].each {
+        modImplementation it
         include it
     }
 
