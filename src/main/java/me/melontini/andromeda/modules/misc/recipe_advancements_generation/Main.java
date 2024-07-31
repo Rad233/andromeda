@@ -5,7 +5,9 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
+import me.melontini.andromeda.api.Routes;
 import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.dark_matter.api.base.util.MakeSure;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -30,6 +32,8 @@ public final class Main {
   private static final Keeper<AdvancementGeneration> MODULE = Keeper.create();
   private static final Map<RecipeType<?>, Function<Context, Return>> RECIPE_TYPE_HANDLERS =
       new HashMap<>();
+  private static final List<BiPredicate<Identifier, Recipe<?>>> FILTERS =
+      Collections.synchronizedList(new ArrayList<>());
 
   public static Function<Context, Return> basicConsumer(
       String typeName, AdvancementGeneration.Config config) {
@@ -56,10 +60,9 @@ public final class Main {
 
     List<CompletableFuture<Void>> futures = server.getRecipeManager().values().stream()
         .filter(recipe -> {
-          if (config.namespaceBlacklist.contains(recipe.getId().getNamespace())) return false;
-          if (config.recipeBlacklist.contains(recipe.getId())) return false;
-          if (recipe.isIgnoredInRecipeBook() && config.ignoreRecipesHiddenInTheRecipeBook)
-            return false;
+          for (BiPredicate<Identifier, Recipe<?>> filter : FILTERS) {
+            if (filter.test(recipe.getId(), recipe)) return false;
+          }
           return true;
         })
         .map(recipe -> CompletableFuture.runAsync(
@@ -161,6 +164,15 @@ public final class Main {
 
   static void init(AdvancementGeneration module, AdvancementGeneration.Config config) {
     Main.MODULE.init(module);
+
+    FILTERS.add((id, recipe) -> config.namespaceBlacklist.contains(id.getNamespace()));
+    FILTERS.add((id, recipe) -> config.recipeBlacklist.contains(id));
+    FILTERS.add((id, recipe) ->
+        recipe.isIgnoredInRecipeBook() && config.ignoreRecipesHiddenInTheRecipeBook);
+    module.apiContainer().propagateApi(Routes.AdvancementGeneration.RECIPE_FILTER, input -> {
+      FILTERS.add(input);
+      return null;
+    });
 
     ServerLifecycleEvents.SERVER_STARTING.register(
         server -> generateRecipeAdvancements(server, config));

@@ -3,7 +3,10 @@ package me.melontini.andromeda.modules.misc.recipe_advancements_generation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import lombok.ToString;
+import me.melontini.andromeda.api.ApiRoute;
+import me.melontini.andromeda.api.Routes;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.Environment;
@@ -24,6 +27,11 @@ public final class AdvancementGeneration extends Module {
   AdvancementGeneration() {
     this.defineConfig(ConfigState.MAIN, CONFIG);
     InitEvent.main(this).listen(() -> () -> Main.init(this, Andromeda.ROOT_HANDLER.get(CONFIG)));
+  }
+
+  @Override
+  public Set<ApiRoute<?, ?>> apiRoutes() {
+    return Set.of(Routes.AdvancementGeneration.RECIPE_FILTER);
   }
 
   @ToString

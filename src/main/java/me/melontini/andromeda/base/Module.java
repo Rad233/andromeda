@@ -3,10 +3,13 @@ package me.melontini.andromeda.base;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import lombok.*;
 import lombok.experimental.Accessors;
+import me.melontini.andromeda.api.ApiRoute;
 import me.melontini.andromeda.base.events.Bus;
+import me.melontini.andromeda.base.util.ApiContainer;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
@@ -30,16 +33,16 @@ public abstract class Module {
 
   private final Metadata info;
 
-  @Getter
-  private final PrependingLogger logger;
+  private final Supplier<PrependingLogger> logger = Memoize.supplier(
+      () -> PrependingLogger.get("Andromeda/" + meta().id(), PrependingLogger.LOGGER_NAME));
 
   private final Map<String, Bus<?>> busMap = new HashMap<>();
   private final EnumMap<ConfigState, ConfigDefinition<?>> configs =
       new EnumMap<>(ConfigState.class);
+  private final Supplier<ApiContainer> apiContainer = Memoize.supplier(ApiContainer::new);
 
   protected Module() {
     this.info = Metadata.fromAnnotation(this.getClass().getAnnotation(ModuleInfo.class));
-    this.logger = PrependingLogger.get("Andromeda/" + meta().id(), PrependingLogger.LOGGER_NAME);
   }
 
   protected void defineConfig(ConfigState state, ConfigDefinition<?> supplier) {
@@ -62,6 +65,18 @@ public abstract class Module {
   @ApiStatus.Internal
   public <E> Bus<E> getOrCreateBus(String id, @Nullable Supplier<Bus<E>> supplier) {
     return (Bus<E>) busMap.computeIfAbsent(id, aClass -> supplier == null ? null : supplier.get());
+  }
+
+  public PrependingLogger logger() {
+    return logger.get();
+  }
+
+  public final ApiContainer apiContainer() {
+    return apiContainer.get();
+  }
+
+  public Set<ApiRoute<?, ?>> apiRoutes() {
+    return Set.of();
   }
 
   public record Metadata(String name, String category, Environment environment, boolean withheld) {

@@ -1,12 +1,12 @@
 package me.melontini.andromeda.modules.blocks.guarded_loot;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import me.melontini.andromeda.base.ModuleManager;
+import java.util.function.BiPredicate;
+import me.melontini.andromeda.api.Routes;
 import me.melontini.andromeda.common.util.LootContextUtil;
-import me.melontini.andromeda.modules.items.lockpick.Lockpick;
-import me.melontini.andromeda.modules.items.lockpick.LockpickItem;
 import me.melontini.dark_matter.api.base.util.functions.Memoize;
 import me.melontini.dark_matter.api.minecraft.util.TextUtil;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -22,7 +22,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -31,7 +30,14 @@ import net.minecraft.world.event.GameEvent;
 
 public final class Main {
 
-  static void init() {
+  private static final List<BiPredicate<BlockEntity, PlayerEntity>> UNLOCKERS = new ArrayList<>();
+
+  static void init(GuardedLoot module) {
+    module.apiContainer().propagateApi(Routes.GuardedLoot.UNLOCKER, input -> {
+      UNLOCKERS.add(input);
+      return null;
+    });
+
     PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, blockEntity) -> {
       if (player.getAbilities().creativeMode) return true;
 
@@ -39,7 +45,7 @@ public final class Main {
           && world.am$get(GuardedLoot.CONFIG).breakingHandler
               == GuardedLoot.BreakingHandler.UNBREAKABLE) {
         var monsters = checkMonsterLock(world, state, player, pos, blockEntity);
-        if (monsters.isEmpty() || checkLockPicking(player)) return true;
+        if (monsters.isEmpty() || checkLockPicking(blockEntity, player)) return true;
         handleLockedContainer(player, monsters);
         return false;
       }
@@ -65,20 +71,13 @@ public final class Main {
         .toList();
   }
 
-  public static boolean checkLockPicking(PlayerEntity player) {
-    return ModuleManager.get()
-        .getModule(Lockpick.class)
-        .map(m -> {
-          if (player.world.am$get(GuardedLoot.CONFIG).allowLockPicking) {
-            if (player.getMainHandStack().isOf(LockpickItem.INSTANCE.orThrow())) {
-              return LockpickItem.INSTANCE
-                  .orThrow()
-                  .tryUse(player.getMainHandStack(), player, Hand.MAIN_HAND);
-            }
-          }
-          return false;
-        })
-        .orElse(false);
+  public static boolean checkLockPicking(BlockEntity entity, PlayerEntity player) {
+    if (UNLOCKERS.isEmpty()) return false;
+
+    for (BiPredicate<BlockEntity, PlayerEntity> unlocker : UNLOCKERS) {
+      if (unlocker.test(entity, player)) return true;
+    }
+    return false;
   }
 
   public static void handleLockedContainer(PlayerEntity player, Collection<LivingEntity> monsters) {

@@ -1,7 +1,10 @@
 package me.melontini.andromeda.modules.blocks.guarded_loot;
 
 import java.util.Optional;
+import java.util.Set;
 import lombok.ToString;
+import me.melontini.andromeda.api.ApiRoute;
+import me.melontini.andromeda.api.Routes;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
@@ -17,7 +20,12 @@ public final class GuardedLoot extends Module {
 
   GuardedLoot() {
     this.defineConfig(ConfigState.GAME, CONFIG);
-    InitEvent.main(this).listen(() -> Main::init);
+    InitEvent.main(this).listen(() -> () -> Main.init(this));
+  }
+
+  @Override
+  public Set<ApiRoute<?, ?>> apiRoutes() {
+    return Set.of(Routes.GuardedLoot.UNLOCKER);
   }
 
   @ToString

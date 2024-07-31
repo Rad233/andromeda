@@ -2,10 +2,13 @@ package me.melontini.andromeda.modules.items.lockpick;
 
 import static me.melontini.andromeda.common.Andromeda.id;
 
+import me.melontini.andromeda.api.Routes;
+import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.AndromedaItemGroup;
 import me.melontini.andromeda.common.util.Keeper;
 import me.melontini.andromeda.common.util.LootContextUtil;
+import me.melontini.andromeda.modules.blocks.guarded_loot.GuardedLoot;
 import me.melontini.dark_matter.api.base.util.MathUtil;
 import me.melontini.dark_matter.api.base.util.functions.Memoize;
 import me.melontini.dark_matter.api.minecraft.util.RegistryUtil;
@@ -82,5 +85,20 @@ public class LockpickItem extends Item {
 
     AndromedaItemGroup.accept(
         acceptor -> acceptor.keeper(module, ItemGroups.TOOLS, LockpickItem.INSTANCE));
+
+    ModuleManager.get()
+        .whenAvailable(
+            "blocks/guarded_loot",
+            Routes.GuardedLoot.UNLOCKER,
+            api -> api.apply((blockEntity, player) -> {
+              if (player.world.am$get(GuardedLoot.CONFIG).allowLockPicking) {
+                if (player.getMainHandStack().isOf(LockpickItem.INSTANCE.orThrow())) {
+                  return LockpickItem.INSTANCE
+                      .orThrow()
+                      .tryUse(player.getMainHandStack(), player, Hand.MAIN_HAND);
+                }
+              }
+              return false;
+            }));
   }
 }

@@ -20,6 +20,8 @@ import lombok.CustomLog;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import me.melontini.andromeda.api.ApiRoute;
+import me.melontini.andromeda.api.ModuleApiProvider;
 import me.melontini.andromeda.base.events.Bus;
 import me.melontini.andromeda.base.events.ConfigEvent;
 import me.melontini.andromeda.base.util.Promise;
@@ -40,7 +42,7 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @CustomLog
 @Accessors(fluent = true)
-public final class ModuleManager {
+public final class ModuleManager implements ModuleApiProvider {
 
   public static final List<String> CATEGORIES =
       List.of("world", "blocks", "entities", "items", "bugfixes", "mechanics", "gui", "misc");
@@ -376,5 +378,41 @@ public final class ModuleManager {
     } else {
       LOGGER.info(EarlyLanguage.translate("andromeda.module_manager.no_modules"));
     }
+  }
+
+  @Override
+  public <I, O> void whenAvailable(
+      String module, ApiRoute<I, O> route, ApiConsumer<I, O> consumer) {
+    var opt = getDiscovered(module).map(Promise::get);
+
+    if (opt.isEmpty()) {
+      LOGGER.error("'{}' requested a non-existent module '{}'!", module, route.route());
+      return;
+    }
+
+    var api = opt.get().apiRoutes().stream()
+        .filter(apiRoute -> apiRoute.equals(route))
+        .findFirst();
+    if (api.isEmpty()) {
+      LOGGER.error(
+          "'{}' requested a non-existent API route '{}'!",
+          Utilities.getCallerClass().getName(),
+          route.route());
+      return;
+    }
+
+    if (api.get().status() == ApiRoute.Status.DEPRECATED)
+      LOGGER.warn(
+          "'{}' requested a deprecated API route '{}'!",
+          Utilities.getCallerClass().getName(),
+          route.route());
+
+    if (api.get().status() == ApiRoute.Status.DEAD)
+      LOGGER.error(
+          "'{}' requested a dead API route '{}'!",
+          Utilities.getCallerClass().getName(),
+          route.route());
+
+    opt.get().apiContainer().awaitRequest(route, consumer);
   }
 }

@@ -31,7 +31,7 @@ abstract class LootableContainerBlockEntityMixin extends LockableContainerBlockE
       boolean locked, @Local(argsOnly = true) PlayerEntity player) {
     var monsters =
         checkMonsterLock(player.world, this.getCachedState(), player, this.getPos(), this);
-    if (monsters.isEmpty() || player.getAbilities().creativeMode || checkLockPicking(player))
+    if (monsters.isEmpty() || player.getAbilities().creativeMode || checkLockPicking(this, player))
       return locked;
 
     handleLockedContainer(player, monsters);

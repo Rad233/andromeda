@@ -73,8 +73,9 @@ public class ModulePlugin extends ExtendablePlugin {
   }
 
   private void wrapNodeWithErrorHandling(MethodNode handlerNode, String module) {
-    //Possible lambda, no reason to process.
-    if ((handlerNode.access & Opcodes.ACC_SYNTHETIC) != 0 && handlerNode.name.contains("lambda$")) return;
+    // Possible lambda, no reason to process.
+    if ((handlerNode.access & Opcodes.ACC_SYNTHETIC) != 0 && handlerNode.name.contains("lambda$"))
+      return;
 
     Label start = new Label(), end = new Label(), handler = new Label(), handlerEnd = new Label();
 
