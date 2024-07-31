@@ -56,19 +56,18 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation libs.fabric.loader
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation libs.fabric.api
-
     def dm = libs.dark.matter
     [dm.base, dm.mixin, dm.minecraft, dm.crash.handler, dm.data, dm.mirage, dm.glitter, dm.item.group].each {
         modApi it
         include it
     }
 
-    modApi libs.commander
-    modApi libs.modmenu
-    modApi(libs.cloth.config) {
-        exclude(group: "net.fabricmc.fabric-api")
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation libs.fabric.api
+
+    [libs.commander, libs.modmenu, libs.cloth.config].each {
+        modLocalRuntime it
+        modCompileOnly it
     }
 
     testmodImplementation sourceSets.main.output
@@ -231,13 +230,15 @@ publishing {
         }
     }
 
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/constellation-mc/andromeda"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+    if (!local) {
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = "https://maven.pkg.github.com/constellation-mc/andromeda"
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
             }
         }
     }
