@@ -60,7 +60,7 @@ public class ModulePlugin extends ExtendablePlugin {
       if (mixinMerged == null) continue;
 
       String mixin = Annotations.getValue(mixinMerged, "mixin");
-      if (mixin.startsWith(this.mixinPackage)) {
+      if (mixin.startsWith(mixinInfo.getClassName())) {
         wrapNodeWithErrorHandling(
             method,
             processor
@@ -73,6 +73,9 @@ public class ModulePlugin extends ExtendablePlugin {
   }
 
   private void wrapNodeWithErrorHandling(MethodNode handlerNode, String module) {
+    //Possible lambda, no reason to process.
+    if ((handlerNode.access & Opcodes.ACC_SYNTHETIC) != 0 && handlerNode.name.contains("lambda$")) return;
+
     Label start = new Label(), end = new Label(), handler = new Label(), handlerEnd = new Label();
 
     String throwable = Type.getInternalName(Throwable.class);
