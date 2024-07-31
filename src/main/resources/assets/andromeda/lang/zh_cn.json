@@ -29,6 +29,7 @@
     "andromeda.config.tooltip.origin": "[@] 灵感源于 %2$s 创作的 %1$s",
     "andromeda.config.tooltip.game_rule": "此选项是游戏规则的默认值！",
     "andromeda.config.tooltip.deprecated": "[!!!] 这一特性已经过时，将会在未来的版本移除！",
+    "andromeda.config.tooltip.withheld": "[!!!] 这一特性处于待定状态！\n可能在未来的版本被加入。",
 
     "config.andromeda.category.world": "世界",
 
