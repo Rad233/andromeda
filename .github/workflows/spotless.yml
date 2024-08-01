@@ -1,0 +1,9 @@
+
+name: spotless
+on: [ push ]
+
+jobs:
+  spotless:
+    uses: constellation-mc/actions/.github/workflows/spotless.yml@main
+    with:
+      java: 17
