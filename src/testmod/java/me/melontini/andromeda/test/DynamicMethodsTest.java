@@ -8,16 +8,16 @@ import org.slf4j.Logger;
 
 public class DynamicMethodsTest implements ModInitializer {
 
-    private static final Logger LOGGER = LogUtils.getLogger();
+  private static final Logger LOGGER = LogUtils.getLogger();
 
-    @Override
-    public void onInitialize() {
-        Lockpick.Config cfg = new Lockpick.Config();
+  @Override
+  public void onInitialize() {
+    Lockpick.Config cfg = new Lockpick.Config();
 
-        LOGGER.info(cfg.toString());
-        Lockpick.Config cloned = (Lockpick.Config) cfg.copy();
-        LOGGER.info("Equals {}", cfg.equals(cloned));
-        cloned.chance = LongIntermediary.of(4);
-        LOGGER.info("Equals {}", cfg.equals(cloned));
-    }
+    LOGGER.info(cfg.toString());
+    Lockpick.Config cloned = (Lockpick.Config) cfg.copy();
+    LOGGER.info("Equals {}", cfg.equals(cloned));
+    cloned.chance = LongIntermediary.of(4);
+    LOGGER.info("Equals {}", cfg.equals(cloned));
+  }
 }

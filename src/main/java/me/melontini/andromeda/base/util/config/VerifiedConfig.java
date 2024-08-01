@@ -1,8 +1,6 @@
 package me.melontini.andromeda.base.util.config;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
@@ -33,14 +31,18 @@ public abstract class VerifiedConfig {
       Collections.synchronizedMap(new IdentityHashMap<>());
 
   @ConfigEntry.Gui.Excluded
-  private transient final ClassBootstrap classData;
+  private final transient ClassBootstrap classData;
 
   public VerifiedConfig() {
     this.classData = CACHE.computeIfAbsent(this.getClass(), cls -> {
       for (Field field : this.getClass().getFields()) {
         if (Modifier.isStatic(field.getModifiers())) continue;
         if ("classData".equals(field.getName())) continue;
-        if (Modifier.isFinal(field.getModifiers())) // We use no-arg constructors, so final fields would be impossible to use in copy()
+        if (Modifier.isFinal(
+            field
+                .getModifiers())) // We use no-arg constructors, so final fields would be impossible
+          // to
+          // use in copy()
           throw new IllegalStateException("All config fields must not be final!");
       }
       return bootstrap((Class<? extends VerifiedConfig>) cls);

@@ -2,7 +2,6 @@ package me.melontini.andromeda.util.commander.bool;
 
 import com.mojang.serialization.Codec;
 import java.util.function.Supplier;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
