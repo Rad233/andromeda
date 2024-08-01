@@ -147,7 +147,11 @@ public final class ConfigHandler {
 
     var path = resolve(module);
     if (!Files.exists(path)) {
-      if (root != null) return root.load(module);
+      if (root != null) {
+        var cfg = root.get(definition);
+        if (cfg != null) return cfg.copy();
+        return root.load(module);
+      }
       return Exceptions.supply(
           () -> definition.supplier().get().getConstructor().newInstance());
     }
