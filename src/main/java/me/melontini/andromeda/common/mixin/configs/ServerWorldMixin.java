@@ -1,11 +1,11 @@
 package me.melontini.andromeda.common.mixin.configs;
 
 import java.util.function.Supplier;
-import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigHandler;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.VerifiedConfig;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.config.DataConfigs;
 import me.melontini.andromeda.common.config.ScopedConfigs;
@@ -80,7 +80,7 @@ abstract class ServerWorldMixin extends World implements ScopedConfigs.Attachmen
   }
 
   @Override
-  public <T extends Module.BaseConfig> T am$get(ConfigDefinition<T> module) {
+  public <T extends VerifiedConfig> T am$get(ConfigDefinition<T> module) {
     return this.andromeda$configs.get(module);
   }
 

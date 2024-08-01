@@ -2,12 +2,12 @@ package me.melontini.andromeda.common.config;
 
 import java.util.Collections;
 import lombok.CustomLog;
-import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.util.Experiments;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigHandler;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.VerifiedConfig;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
 import me.melontini.dark_matter.api.data.loading.ServerReloadersEvent;
@@ -20,14 +20,14 @@ import net.minecraft.world.World;
 public class ScopedConfigs {
 
   public interface WorldExtension {
-    default Module.BaseConfig am$get(String module) {
+    default VerifiedConfig am$get(String module) {
       return am$get(ModuleManager.get()
           .getModule(module)
           .orElseThrow(() -> new IllegalStateException("Module %s not found".formatted(module)))
           .getConfigDefinition(ConfigState.GAME));
     }
 
-    default <T extends Module.BaseConfig> T am$get(ConfigDefinition<T> definition) {
+    default <T extends VerifiedConfig> T am$get(ConfigDefinition<T> definition) {
       LOGGER.error(
           "Scoped configs requested on client! Returning un-scoped!",
           AndromedaException.builder()

@@ -9,6 +9,7 @@
   ],
   "entrypoints": {
     "main": [
+      "me.melontini.andromeda.test.DynamicMethodsTest",
       "me.melontini.andromeda.test.ModuleApiProviderTest"
     ]
   }

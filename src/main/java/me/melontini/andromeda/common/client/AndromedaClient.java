@@ -108,7 +108,7 @@ public final class AndromedaClient {
             .filter(f -> !f.isAnnotationPresent(ConfigEntry.Gui.Excluded.class))
             .map(field -> "config.andromeda.%s.option.%s.@Tooltip"
                 .formatted(module.meta().dotted(), field.getName()))
-            .filter(I18n::hasTranslation)
+            .filter(string -> !I18n.hasTranslation(string))
             .forEach(missing::add);
       }
     }

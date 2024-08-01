@@ -1,6 +1,5 @@
 package me.melontini.andromeda.modules.entities.boats;
 
-import lombok.ToString;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.Environment;
@@ -8,6 +7,7 @@ import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.SpecialEnvironment;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.VerifiedConfig;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.modules.entities.boats.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -27,8 +27,7 @@ public final class Boats extends Module {
     InitEvent.client(this).listen(() -> Client::init);
   }
 
-  @ToString
-  public static final class Config extends BaseConfig {
+  public static final class Config extends VerifiedConfig {
 
     @ConfigEntry.Gui.RequiresRestart
     @SpecialEnvironment(Environment.BOTH)

@@ -2,7 +2,6 @@ package me.melontini.andromeda.modules.blocks.guarded_loot;
 
 import java.util.Optional;
 import java.util.Set;
-import lombok.ToString;
 import me.melontini.andromeda.api.ApiRoute;
 import me.melontini.andromeda.api.Routes;
 import me.melontini.andromeda.base.Module;
@@ -10,6 +9,7 @@ import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.GameConfig;
 import me.melontini.andromeda.common.util.TranslationKeyProvider;
 import me.melontini.andromeda.util.commander.number.DoubleIntermediary;
 
@@ -28,7 +28,6 @@ public final class GuardedLoot extends Module {
     return Set.of(Routes.GuardedLoot.UNLOCKER);
   }
 
-  @ToString
   public static class Config extends GameConfig {
     public DoubleIntermediary range = DoubleIntermediary.of(4);
     public boolean allowLockPicking = true;

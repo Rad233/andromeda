@@ -23,6 +23,7 @@ import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.util.Experiments;
 import me.melontini.andromeda.base.util.Promise;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.GameConfig;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.client.AndromedaClient;
 import me.melontini.andromeda.util.CommonValues;
@@ -218,16 +219,16 @@ public class NewAutoConfigScreen {
             null,
             module);
         if ((Experiments.get().showAvailableOption || commander)
-            && Module.GameConfig.class.isAssignableFrom(definition.supplier().get())) {
+            && GameConfig.class.isAssignableFrom(definition.supplier().get())) {
           var availableKey = "config.andromeda.option.available";
 
           var available = avProvider
               .provider()
               .getEntry(
                   BooleanIntermediary.class,
-                  ((Module.GameConfig) config).available,
-                  ((Module.GameConfig) defaultConfig).available,
-                  object -> ((Module.GameConfig) config).available = (BooleanIntermediary) object,
+                  ((GameConfig) config).available,
+                  ((GameConfig) defaultConfig).available,
+                  object -> ((GameConfig) config).available = (BooleanIntermediary) object,
                   availableKey,
                   context);
           available.setErrorSupplier(() -> avProvider.errorSupplier().apply(available.getValue()));

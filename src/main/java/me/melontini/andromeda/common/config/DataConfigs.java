@@ -17,6 +17,7 @@ import me.melontini.andromeda.base.ModuleManager;
 import me.melontini.andromeda.base.util.Experiments;
 import me.melontini.andromeda.base.util.config.ConfigHandler;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.VerifiedConfig;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.common.util.IdentifiedJsonDataLoader;
 import me.melontini.andromeda.util.exceptions.AndromedaException;
@@ -92,7 +93,7 @@ public final class DataConfigs extends IdentifiedJsonDataLoader {
   }
 
   private CompletableFuture<Data> makeFuture(
-      Module m, Class<? extends Module.BaseConfig> cls, JsonElement element) {
+      Module m, Class<? extends VerifiedConfig> cls, JsonElement element) {
     return CompletableFuture.supplyAsync(
         () -> {
           try {
@@ -119,7 +120,7 @@ public final class DataConfigs extends IdentifiedJsonDataLoader {
         Util.getMainWorkerExecutor());
   }
 
-  public record Data(Set<Field> cFields, Module.BaseConfig config) {}
+  public record Data(Set<Field> cFields, VerifiedConfig config) {}
 
   public void apply(ScopedConfigs.AttachmentGetter getter, Identifier identifier) {
     MakeSure.notNull(configs);
@@ -138,7 +139,7 @@ public final class DataConfigs extends IdentifiedJsonDataLoader {
     }
   }
 
-  private void apply(Module.BaseConfig config, Data data) {
+  private void apply(VerifiedConfig config, Data data) {
     data.cFields().forEach((field) -> {
       try {
         field.set(config, field.get(data.config()));
@@ -151,7 +152,7 @@ public final class DataConfigs extends IdentifiedJsonDataLoader {
     });
   }
 
-  void applyDataPacks(Module.BaseConfig config, Module m, Identifier id) {
+  void applyDataPacks(VerifiedConfig config, Module m, Identifier id) {
     if (defaultConfigs != null) {
       var forModule = defaultConfigs.get(m);
       if (forModule != null) {

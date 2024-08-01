@@ -21,9 +21,8 @@ import net.fabricmc.loader.api.FabricLoader;
 @ToString
 public final class ConfigHandler {
 
-  private final Map<ConfigDefinition<?>, Module.BaseConfig> configs = new IdentityHashMap<>();
-  private final Map<ConfigDefinition<?>, Module.BaseConfig> defaultConfigs =
-      new IdentityHashMap<>();
+  private final Map<ConfigDefinition<?>, VerifiedConfig> configs = new IdentityHashMap<>();
+  private final Map<ConfigDefinition<?>, VerifiedConfig> defaultConfigs = new IdentityHashMap<>();
 
   private final Path path;
   private final boolean topLevel;
@@ -60,11 +59,11 @@ public final class ConfigHandler {
     return this.path.resolve("andromeda/" + module.meta().id() + ".json");
   }
 
-  public <T extends Module.BaseConfig> T get(ConfigDefinition<T> module) {
+  public <T extends VerifiedConfig> T get(ConfigDefinition<T> module) {
     return (T) this.configs.get(module);
   }
 
-  public <T extends Module.BaseConfig> T getDefault(ConfigDefinition<T> module) {
+  public <T extends VerifiedConfig> T getDefault(ConfigDefinition<T> module) {
     var entry = (T) this.defaultConfigs.get(module);
     if (entry == null) {
       if (root != null) return root.getDefault(module);
@@ -77,7 +76,7 @@ public final class ConfigHandler {
     return entry;
   }
 
-  public void forEach(BiConsumer<Module.BaseConfig, Module> consumer) {
+  public void forEach(BiConsumer<VerifiedConfig, Module> consumer) {
     this.modules.forEach(module -> consumer.accept(get(module.getConfigDefinition(state)), module));
   }
 
@@ -129,7 +128,7 @@ public final class ConfigHandler {
         .join();
   }
 
-  public Module.BaseConfig parse(JsonElement element, Module module) {
+  public VerifiedConfig parse(JsonElement element, Module module) {
     if (!element.isJsonObject()) throw new IllegalStateException("Not a JsonObject!");
 
     JsonObject object = element.getAsJsonObject();
@@ -141,7 +140,7 @@ public final class ConfigHandler {
         this.gson.fromJson(object, module.getConfigDefinition(state).supplier().get()));
   }
 
-  private Module.BaseConfig load(Module module) {
+  private VerifiedConfig load(Module module) {
     if (!this.modules.contains(module))
       throw new IllegalStateException(module.meta().id());
     var definition = module.getConfigDefinition(state);
@@ -169,8 +168,7 @@ public final class ConfigHandler {
   }
 
   public void loadAll() {
-    Map<ConfigDefinition<?>, CompletableFuture<Module.BaseConfig>> configs =
-        new IdentityHashMap<>();
+    Map<ConfigDefinition<?>, CompletableFuture<VerifiedConfig>> configs = new IdentityHashMap<>();
     for (Module module : this.modules) {
       configs.put(
           module.getConfigDefinition(state),

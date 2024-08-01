@@ -1,13 +1,13 @@
 package me.melontini.andromeda.modules.misc.tiny_storage;
 
 import java.util.Optional;
-import lombok.ToString;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.VerifiedConfig;
 import me.melontini.andromeda.common.util.TranslationKeyProvider;
 
 @ModuleInfo(name = "tiny_storage", category = "misc", environment = Environment.SERVER)
@@ -21,8 +21,7 @@ public final class TinyStorage extends Module {
     InitEvent.main(this).listen(() -> Main::init);
   }
 
-  @ToString
-  public static class Config extends BaseConfig {
+  public static class Config extends VerifiedConfig {
     public TransferMode transferMode = TransferMode.FOLLOW_GAMERULE;
   }
 

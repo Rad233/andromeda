@@ -1,12 +1,12 @@
 package me.melontini.andromeda.modules.entities.ghast_tweaks;
 
-import lombok.ToString;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.GameConfig;
 import me.melontini.andromeda.util.commander.bool.BooleanIntermediary;
 import me.melontini.andromeda.util.commander.number.DoubleIntermediary;
 
@@ -20,8 +20,7 @@ public final class GhastTweaks extends Module {
     InitEvent.main(this).listen(() -> Main::init);
   }
 
-  @ToString
-  public static class Config extends Module.GameConfig {
+  public static class Config extends GameConfig {
     public BooleanIntermediary explodeOnDeath = BooleanIntermediary.of(false);
     public DoubleIntermediary explosionPower = DoubleIntermediary.of(4);
   }

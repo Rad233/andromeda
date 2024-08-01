@@ -27,6 +27,7 @@ import me.melontini.andromeda.base.events.ConfigEvent;
 import me.melontini.andromeda.base.util.Promise;
 import me.melontini.andromeda.base.util.annotations.EnabledByDefault;
 import me.melontini.andromeda.base.util.config.BootstrapConfig;
+import me.melontini.andromeda.base.util.config.VerifiedConfig;
 import me.melontini.andromeda.util.CommonValues;
 import me.melontini.andromeda.util.Debug;
 import me.melontini.andromeda.util.EarlyLanguage;
@@ -46,7 +47,9 @@ public final class ModuleManager implements ModuleApiProvider {
 
   public static final List<String> CATEGORIES =
       List.of("world", "blocks", "entities", "items", "bugfixes", "mechanics", "gui", "misc");
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+  private static final Gson GSON = new GsonBuilder()
+      .setPrettyPrinting()
+      .create();
 
   static Supplier<ModuleManager> INSTANCE = () -> {
     throw new NullPointerException("ModuleManager requested too early!");
@@ -140,14 +143,14 @@ public final class ModuleManager implements ModuleApiProvider {
 
     this.modules = Utilities.supply(() -> {
       var m = sorted.stream()
-          .filter(module -> !module.meta().withheld() && getConfig(module).enabled())
+          .filter(module -> !module.meta().withheld() && getConfig(module).enabled)
           .collect(Collectors.toMap(
               Object::getClass, Function.identity(), (t, t2) -> t, LinkedHashMap::new));
       return Collections.unmodifiableMap(m);
     });
     this.moduleNames = Utilities.supply(() -> {
       var m = sorted.stream()
-          .filter(module -> !module.meta().withheld() && getConfig(module).enabled())
+          .filter(module -> !module.meta().withheld() && getConfig(module).enabled)
           .collect(Collectors.toMap(
               module -> module.meta().id(), Function.identity(), (t, t2) -> t, HashMap::new));
       return Collections.unmodifiableMap(m);

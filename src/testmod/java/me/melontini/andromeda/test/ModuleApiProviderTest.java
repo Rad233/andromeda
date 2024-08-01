@@ -3,6 +3,8 @@ package me.melontini.andromeda.test;
 import com.mojang.logging.LogUtils;
 import me.melontini.andromeda.api.ModuleApiProvider;
 import me.melontini.andromeda.api.Routes;
+import me.melontini.andromeda.modules.items.lockpick.Lockpick;
+import me.melontini.andromeda.util.commander.number.LongIntermediary;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 

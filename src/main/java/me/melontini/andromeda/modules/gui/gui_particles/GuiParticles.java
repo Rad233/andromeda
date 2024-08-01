@@ -1,12 +1,12 @@
 package me.melontini.andromeda.modules.gui.gui_particles;
 
-import lombok.ToString;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.VerifiedConfig;
 import me.melontini.andromeda.common.client.AndromedaClient;
 
 @ModuleInfo(name = "gui_particles", category = "gui", environment = Environment.CLIENT)
@@ -19,8 +19,7 @@ public final class GuiParticles extends Module {
     InitEvent.client(this).listen(() -> () -> Client.init(AndromedaClient.HANDLER.get(CONFIG)));
   }
 
-  @ToString
-  public static final class Config extends BaseConfig {
+  public static final class Config extends VerifiedConfig {
 
     public boolean anvilScreenParticles = true;
 

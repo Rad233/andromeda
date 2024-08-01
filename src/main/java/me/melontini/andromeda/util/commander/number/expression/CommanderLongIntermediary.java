@@ -2,12 +2,15 @@ package me.melontini.andromeda.util.commander.number.expression;
 
 import com.mojang.serialization.Codec;
 import java.util.function.Supplier;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import me.melontini.andromeda.util.commander.LongExpression;
 import me.melontini.andromeda.util.commander.number.LongIntermediary;
 import net.minecraft.loot.context.LootContext;
 
+@EqualsAndHashCode
 @ToString
 public final class CommanderLongIntermediary implements LongIntermediary {
 

@@ -1,11 +1,11 @@
 package me.melontini.andromeda.modules.items.pouches;
 
-import lombok.ToString;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.VerifiedConfig;
 import me.melontini.andromeda.common.Andromeda;
 import me.melontini.andromeda.modules.items.pouches.client.Client;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -26,8 +26,7 @@ public final class Pouches extends Module {
     InitEvent.server(this).listen(() -> () -> Main.testBlocks(this));
   }
 
-  @ToString
-  public static class Config extends BaseConfig {
+  public static class Config extends VerifiedConfig {
     @ConfigEntry.Gui.RequiresRestart
     public boolean seedPouch = true;
 

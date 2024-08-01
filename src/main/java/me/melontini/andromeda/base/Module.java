@@ -14,10 +14,8 @@ import me.melontini.andromeda.base.util.Environment;
 import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigState;
-import me.melontini.andromeda.util.commander.bool.BooleanIntermediary;
 import me.melontini.dark_matter.api.base.util.PrependingLogger;
 import me.melontini.dark_matter.api.base.util.functions.Memoize;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,13 +90,6 @@ public abstract class Module {
     public String dotted() {
       return id().replace('/', '.');
     }
-  }
-
-  public static class BaseConfig {}
-
-  public static class GameConfig extends BaseConfig {
-    @ConfigEntry.Gui.Excluded
-    public BooleanIntermediary available = BooleanIntermediary.of(true);
   }
 
   @Value

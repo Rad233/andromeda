@@ -1,6 +1,5 @@
 package me.melontini.andromeda.modules.blocks.incubator;
 
-import lombok.ToString;
 import me.melontini.andromeda.base.Module;
 import me.melontini.andromeda.base.events.InitEvent;
 import me.melontini.andromeda.base.util.Environment;
@@ -8,6 +7,7 @@ import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.annotations.SpecialEnvironment;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigState;
+import me.melontini.andromeda.base.util.config.VerifiedConfig;
 import me.melontini.andromeda.util.commander.CommanderSupport;
 
 @ModuleInfo(name = "incubator", category = "blocks")
@@ -23,8 +23,7 @@ public final class Incubator extends Module {
     CommanderSupport.require(this);
   }
 
-  @ToString
-  public static class Config extends BaseConfig {
+  public static class Config extends VerifiedConfig {
 
     @SpecialEnvironment(Environment.SERVER)
     public boolean randomness = true;

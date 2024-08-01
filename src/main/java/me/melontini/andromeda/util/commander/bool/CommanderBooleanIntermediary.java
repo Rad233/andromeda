@@ -2,11 +2,14 @@ package me.melontini.andromeda.util.commander.bool;
 
 import com.mojang.serialization.Codec;
 import java.util.function.Supplier;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import me.melontini.commander.api.expression.BooleanExpression;
 import net.minecraft.loot.context.LootContext;
 
+@EqualsAndHashCode
 @ToString
 public final class CommanderBooleanIntermediary implements BooleanIntermediary {
 
