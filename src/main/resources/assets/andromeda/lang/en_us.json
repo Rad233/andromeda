@@ -256,6 +256,8 @@
   "config.andromeda.entities.ghast_tweaks.option.explodeOnDeath.@Tooltip": "Ghasts will explode on death.",
   "config.andromeda.entities.ghast_tweaks.option.explosionPower": "Explosion Power",
   "config.andromeda.entities.ghast_tweaks.option.explosionPower.@Tooltip": "Ghast explosion power. The default is the same as TNT.",
+  "config.andromeda.entities.ghast_tweaks.option.fireBallsConvertObsidian": "Fireballs Convert Obsidian",
+  "config.andromeda.entities.ghast_tweaks.option.fireBallsConvertObsidian.@Tooltip": "Ghast fireballs explosions will convert regular obsidian into crying obsidian.",
 
   "config.andromeda.entities.vehicle_unentrapment": "Vehicle Unentrapment",
   "config.andromeda.entities.vehicle_unentrapment.@Tooltip": "Entities in the 'andromeda:escape_vehicles_on_hit' tag (Enderman by default) will stop riding whatever they're riding at the moment after getting hit. \nThe vehicle must be in the 'andromeda:escapable_vehicle' tag. (Boats and Mincarts by default)",
@@ -362,6 +364,8 @@
   "config.andromeda.mechanics.trading_goat_horn.option.cooldown": "Cooldown",
   "config.andromeda.mechanics.trading_goat_horn.option.cooldown.@Tooltip": "(in ticks)",
   "config.andromeda.mechanics.trading_goat_horn.option.instrumentId": "Instrument Identifier",
+  "config.andromeda.mechanics.trading_goat_horn.option.highlightTrader": "Highlight Trader",
+  "config.andromeda.mechanics.trading_goat_horn.option.highlightTrader.@Tooltip": "Blowing the horn will highlight the summoned trader.",
 
   "config.andromeda.category.gui": "GUI",
 

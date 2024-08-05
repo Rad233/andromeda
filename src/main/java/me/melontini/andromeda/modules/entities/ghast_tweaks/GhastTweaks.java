@@ -23,5 +23,6 @@ public final class GhastTweaks extends Module {
   public static class Config extends GameConfig {
     public BooleanIntermediary explodeOnDeath = BooleanIntermediary.of(false);
     public DoubleIntermediary explosionPower = DoubleIntermediary.of(4);
+    public boolean fireBallsConvertObsidian = false;
   }
 }
