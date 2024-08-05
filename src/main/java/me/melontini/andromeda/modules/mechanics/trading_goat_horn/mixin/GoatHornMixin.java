@@ -45,18 +45,18 @@ abstract class GoatHornMixin {
     if (!Objects.equals(identifier, world.am$get(GoatHorn.CONFIG).instrumentId)) return;
 
     ServerWorld sw = (ServerWorld) world;
-    if (!sw.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)
-        || !world
-            .am$get(GoatHorn.CONFIG)
-            .available
-            .asBoolean(LootContextUtil.fishing(
-                user.world, user.getPos(), user.getStackInHand(hand), user))) return;
+    if (!sw.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING)) return;
+    var cfg = world.am$get(GoatHorn.CONFIG);
+    var context =
+        LootContextUtil.fishing(user.world, user.getPos(), user.getStackInHand(hand), user);
+    if (!cfg.available.asBoolean(context)) return;
 
     sw.getAttachedOrCreate(CustomTraderManager.ATTACHMENT.get())
         .trySpawn(
             (ServerWorld) world,
             sw.getServer().getSaveProperties().getMainWorldProperties(),
             user.getStackInHand(hand),
-            user);
+            user,
+            cfg.highlightTrader.asBoolean(context));
   }
 }

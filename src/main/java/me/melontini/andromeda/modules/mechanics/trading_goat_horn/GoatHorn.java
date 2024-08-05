@@ -7,6 +7,7 @@ import me.melontini.andromeda.base.util.annotations.ModuleInfo;
 import me.melontini.andromeda.base.util.config.ConfigDefinition;
 import me.melontini.andromeda.base.util.config.ConfigState;
 import me.melontini.andromeda.base.util.config.GameConfig;
+import me.melontini.andromeda.util.commander.bool.BooleanIntermediary;
 import me.melontini.andromeda.util.commander.number.LongIntermediary;
 import net.minecraft.util.Identifier;
 
@@ -23,5 +24,6 @@ public final class GoatHorn extends Module {
   public static class Config extends GameConfig {
     public LongIntermediary cooldown = LongIntermediary.of(48000);
     public Identifier instrumentId = Identifier.of("minecraft", "sing_goat_horn");
+    public BooleanIntermediary highlightTrader = BooleanIntermediary.of(false);
   }
 }

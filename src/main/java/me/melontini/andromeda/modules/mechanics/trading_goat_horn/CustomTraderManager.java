@@ -17,6 +17,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.TraderLlamaEntity;
 import net.minecraft.entity.passive.WanderingTraderEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,20 +44,32 @@ public class CustomTraderManager {
   @Getter
   public int cooldown;
 
+  private WanderingTraderEntity trader;
+
   public CustomTraderManager(int cooldown) {
     this.cooldown = cooldown;
   }
 
   public void tick() {
     if (this.cooldown > 0) this.cooldown--;
+    if (trader != null && trader.isRemoved()) trader = null;
   }
 
   public void trySpawn(
       ServerWorld world,
       ServerWorldProperties properties,
       ItemStack stackInHand,
-      PlayerEntity player) {
-    if (cooldown > 0 || player == null) return;
+      PlayerEntity player,
+      boolean highlight) {
+    if (player == null) return;
+
+    if (cooldown > 0) {
+      if (!highlight || this.trader == null || this.trader.isRemoved()) return;
+
+      this.trader.addStatusEffect(
+          new StatusEffectInstance(StatusEffects.GLOWING, 20 * 5, 0, true, false));
+      return;
+    }
     BlockPos blockPos = player.getBlockPos();
 
     PointOfInterestStorage pointOfInterestStorage = world.getPointOfInterestStorage();
@@ -74,6 +88,8 @@ public class CustomTraderManager {
     WanderingTraderEntity wanderingTraderEntity =
         EntityType.WANDERING_TRADER.spawn(world, blockPos3, SpawnReason.EVENT);
     if (wanderingTraderEntity == null) return;
+    this.trader = wanderingTraderEntity;
+
     var tCooldown = world
         .am$get(GoatHorn.CONFIG)
         .cooldown
@@ -81,13 +97,15 @@ public class CustomTraderManager {
 
     cooldown = tCooldown;
     for (int j = 0; j < 2; ++j) {
-      spawnLlama(world, wanderingTraderEntity);
+      spawnLlama(world, this.trader);
     }
 
-    properties.setWanderingTraderId(wanderingTraderEntity.getUuid());
-    wanderingTraderEntity.setDespawnDelay(tCooldown);
-    wanderingTraderEntity.setWanderTarget(blockPos2);
-    wanderingTraderEntity.setPositionTarget(blockPos2, 16);
+    properties.setWanderingTraderId(this.trader.getUuid());
+    this.trader.setDespawnDelay(tCooldown);
+    this.trader.setWanderTarget(blockPos2);
+    this.trader.setPositionTarget(blockPos2, 16);
+    this.trader.addStatusEffect(
+        new StatusEffectInstance(StatusEffects.GLOWING, 20 * 8, 0, true, false));
   }
 
   private void spawnLlama(

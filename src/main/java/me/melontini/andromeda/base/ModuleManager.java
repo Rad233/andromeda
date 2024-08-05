@@ -165,6 +165,20 @@ public final class ModuleManager implements ModuleApiProvider {
         "Module category can't contain '/'! Module: " + module.getClass());
     MakeSure.notEmpty(
         module.meta().name(), "Module name can't be null or empty! Module: " + module.getClass());
+
+    for (char c : module.meta().category().toCharArray()) {
+      if (!isValidChar(c))
+        throw new IllegalStateException("Illegal character in module category %s".formatted(c));
+    }
+
+    for (char c : module.meta().name().toCharArray()) {
+      if (!isValidChar(c))
+        throw new IllegalStateException("Illegal character in module name %s".formatted(c));
+    }
+  }
+
+  private static boolean isValidChar(char c) {
+    return c >= 'a' && c <= 'z' || c == '_' || c == '/';
   }
 
   public void cleanConfigs(Path root, Collection<? extends Module> modules) {
@@ -407,11 +421,13 @@ public final class ModuleManager implements ModuleApiProvider {
           Utilities.getCallerClass().getName(),
           route.route());
 
-    if (api.get().status() == ApiRoute.Status.DEAD)
+    if (api.get().status() == ApiRoute.Status.DEAD) {
       LOGGER.error(
           "'{}' requested a dead API route '{}'!",
           Utilities.getCallerClass().getName(),
           route.route());
+      return;
+    }
 
     opt.get().apiContainer().awaitRequest(route, consumer);
   }
